@@ -452,15 +452,16 @@ try:
         else:
             return "Failed to retrieve webpage"
 
-    image_urls = get_image_url('https://www.sugarbowl.com/webcams#lightbox_webcams-5')
+    image_urls = get_image_url('https://www.sugarbowl.com/webcams#lightbox_webcams-1')
 
     # If get_image_url fails, it returns a string, so check type
     if isinstance(image_urls, list):
-        nobhill = [match for match in image_urls if "https://sugar3.sugarbowl.com/graphics/webcams/nobhill/XMasTreeTop" in match]
+        # Look for the Judah Lodge webcam image (based on 'lightbox_webcams-1')
+        judah_cam = [match for match in image_urls if "judah/judahdeck" in match]
 
-        if nobhill:
-            nobhill = nobhill[0]
-            nobhill = nobhill.split(' ')[0]
+        if judah_cam:
+            judah_cam_url = judah_cam[0]
+            judah_cam_url = judah_cam_url.split(' ')[0]
 
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
@@ -473,7 +474,7 @@ try:
                 else:
                     raise Exception(f"Failed to retrieve the image, status code: {response.status_code}")
 
-            image = open_image_from_url(nobhill)
+            image = open_image_from_url(judah_cam_url)
 
             angle = 3 # degrees
             rotated = image.rotate(angle, resample=Image.BICUBIC, expand = True)
