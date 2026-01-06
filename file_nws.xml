@@ -3,7 +3,7 @@
  <head>
   <product concise-name="tabular-digital" operational-mode="developmental" srsName="WGS 1984">
    <creation-date refresh-frequency="PT1H">
-    2023-12-06T03:30:06-08:00
+    2026-01-06T01:06:18-08:00
    </creation-date>
   </product>
   <source>
@@ -39,1024 +39,1036 @@
     k-p1h-n1-0
    </layout-key>
    <start-valid-time>
-    2023-12-06T10:00:00-08:00
+    2026-01-06T06:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T11:00:00-08:00
+    2026-01-06T07:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T11:00:00-08:00
+    2026-01-06T07:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T12:00:00-08:00
+    2026-01-06T08:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T12:00:00-08:00
+    2026-01-06T08:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T13:00:00-08:00
+    2026-01-06T09:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T13:00:00-08:00
+    2026-01-06T09:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T14:00:00-08:00
+    2026-01-06T10:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T14:00:00-08:00
+    2026-01-06T10:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T15:00:00-08:00
+    2026-01-06T11:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T15:00:00-08:00
+    2026-01-06T11:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T16:00:00-08:00
+    2026-01-06T12:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T16:00:00-08:00
+    2026-01-06T12:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T17:00:00-08:00
+    2026-01-06T13:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T17:00:00-08:00
+    2026-01-06T13:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T18:00:00-08:00
+    2026-01-06T14:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T18:00:00-08:00
+    2026-01-06T14:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T19:00:00-08:00
+    2026-01-06T15:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T19:00:00-08:00
+    2026-01-06T15:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T20:00:00-08:00
+    2026-01-06T16:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T20:00:00-08:00
+    2026-01-06T16:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T21:00:00-08:00
+    2026-01-06T17:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T21:00:00-08:00
+    2026-01-06T17:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T22:00:00-08:00
+    2026-01-06T18:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T22:00:00-08:00
+    2026-01-06T18:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-06T23:00:00-08:00
+    2026-01-06T19:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-06T23:00:00-08:00
+    2026-01-06T19:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T00:00:00-08:00
+    2026-01-06T20:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T00:00:00-08:00
+    2026-01-06T20:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T01:00:00-08:00
+    2026-01-06T21:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T01:00:00-08:00
+    2026-01-06T21:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T02:00:00-08:00
+    2026-01-06T22:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T02:00:00-08:00
+    2026-01-06T22:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T03:00:00-08:00
+    2026-01-06T23:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T03:00:00-08:00
+    2026-01-06T23:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T04:00:00-08:00
+    2026-01-07T00:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T04:00:00-08:00
+    2026-01-07T00:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T05:00:00-08:00
+    2026-01-07T01:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T05:00:00-08:00
+    2026-01-07T01:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T06:00:00-08:00
+    2026-01-07T02:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T06:00:00-08:00
+    2026-01-07T02:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T07:00:00-08:00
+    2026-01-07T03:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T07:00:00-08:00
+    2026-01-07T03:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T08:00:00-08:00
+    2026-01-07T04:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T08:00:00-08:00
+    2026-01-07T04:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T09:00:00-08:00
+    2026-01-07T05:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T09:00:00-08:00
+    2026-01-07T05:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T10:00:00-08:00
+    2026-01-07T06:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T10:00:00-08:00
+    2026-01-07T06:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T11:00:00-08:00
+    2026-01-07T07:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T11:00:00-08:00
+    2026-01-07T07:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T12:00:00-08:00
+    2026-01-07T08:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T12:00:00-08:00
+    2026-01-07T08:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T13:00:00-08:00
+    2026-01-07T09:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T13:00:00-08:00
+    2026-01-07T09:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T14:00:00-08:00
+    2026-01-07T10:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T14:00:00-08:00
+    2026-01-07T10:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T15:00:00-08:00
+    2026-01-07T11:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T15:00:00-08:00
+    2026-01-07T11:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T16:00:00-08:00
+    2026-01-07T12:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T16:00:00-08:00
+    2026-01-07T12:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T17:00:00-08:00
+    2026-01-07T13:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T17:00:00-08:00
+    2026-01-07T13:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T18:00:00-08:00
+    2026-01-07T14:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T18:00:00-08:00
+    2026-01-07T14:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T19:00:00-08:00
+    2026-01-07T15:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T19:00:00-08:00
+    2026-01-07T15:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T20:00:00-08:00
+    2026-01-07T16:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T20:00:00-08:00
+    2026-01-07T16:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T21:00:00-08:00
+    2026-01-07T17:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T21:00:00-08:00
+    2026-01-07T17:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T22:00:00-08:00
+    2026-01-07T18:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T22:00:00-08:00
+    2026-01-07T18:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-07T23:00:00-08:00
+    2026-01-07T19:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-07T23:00:00-08:00
+    2026-01-07T19:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T00:00:00-08:00
+    2026-01-07T20:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T00:00:00-08:00
+    2026-01-07T20:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T01:00:00-08:00
+    2026-01-07T21:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T01:00:00-08:00
+    2026-01-07T21:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T02:00:00-08:00
+    2026-01-07T22:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T02:00:00-08:00
+    2026-01-07T22:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T03:00:00-08:00
+    2026-01-07T23:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T03:00:00-08:00
+    2026-01-07T23:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T04:00:00-08:00
+    2026-01-08T00:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T04:00:00-08:00
+    2026-01-08T00:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T05:00:00-08:00
+    2026-01-08T01:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T05:00:00-08:00
+    2026-01-08T01:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T06:00:00-08:00
+    2026-01-08T02:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T06:00:00-08:00
+    2026-01-08T02:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T07:00:00-08:00
+    2026-01-08T03:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T07:00:00-08:00
+    2026-01-08T03:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T08:00:00-08:00
+    2026-01-08T04:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T08:00:00-08:00
+    2026-01-08T04:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T09:00:00-08:00
+    2026-01-08T05:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T09:00:00-08:00
+    2026-01-08T05:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T10:00:00-08:00
+    2026-01-08T06:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T10:00:00-08:00
+    2026-01-08T06:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T11:00:00-08:00
+    2026-01-08T07:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T11:00:00-08:00
+    2026-01-08T07:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T12:00:00-08:00
+    2026-01-08T08:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T12:00:00-08:00
+    2026-01-08T08:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T13:00:00-08:00
+    2026-01-08T09:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T13:00:00-08:00
+    2026-01-08T09:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T14:00:00-08:00
+    2026-01-08T10:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T14:00:00-08:00
+    2026-01-08T10:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T15:00:00-08:00
+    2026-01-08T11:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T15:00:00-08:00
+    2026-01-08T11:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T16:00:00-08:00
+    2026-01-08T12:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T16:00:00-08:00
+    2026-01-08T12:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T17:00:00-08:00
+    2026-01-08T13:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T17:00:00-08:00
+    2026-01-08T13:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T18:00:00-08:00
+    2026-01-08T14:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T18:00:00-08:00
+    2026-01-08T14:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T19:00:00-08:00
+    2026-01-08T15:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T19:00:00-08:00
+    2026-01-08T15:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T20:00:00-08:00
+    2026-01-08T16:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T20:00:00-08:00
+    2026-01-08T16:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T21:00:00-08:00
+    2026-01-08T17:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T21:00:00-08:00
+    2026-01-08T17:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T22:00:00-08:00
+    2026-01-08T18:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T22:00:00-08:00
+    2026-01-08T18:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-08T23:00:00-08:00
+    2026-01-08T19:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-08T23:00:00-08:00
+    2026-01-08T19:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T00:00:00-08:00
+    2026-01-08T20:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T00:00:00-08:00
+    2026-01-08T20:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T01:00:00-08:00
+    2026-01-08T21:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T01:00:00-08:00
+    2026-01-08T21:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T02:00:00-08:00
+    2026-01-08T22:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T02:00:00-08:00
+    2026-01-08T22:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T03:00:00-08:00
+    2026-01-08T23:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T03:00:00-08:00
+    2026-01-08T23:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T04:00:00-08:00
+    2026-01-09T00:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T04:00:00-08:00
+    2026-01-09T00:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T05:00:00-08:00
+    2026-01-09T01:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T05:00:00-08:00
+    2026-01-09T01:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T06:00:00-08:00
+    2026-01-09T02:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T06:00:00-08:00
+    2026-01-09T02:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T07:00:00-08:00
+    2026-01-09T03:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T07:00:00-08:00
+    2026-01-09T03:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T08:00:00-08:00
+    2026-01-09T04:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T08:00:00-08:00
+    2026-01-09T04:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T09:00:00-08:00
+    2026-01-09T05:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T09:00:00-08:00
+    2026-01-09T05:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T10:00:00-08:00
+    2026-01-09T06:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T10:00:00-08:00
+    2026-01-09T06:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T11:00:00-08:00
+    2026-01-09T07:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T11:00:00-08:00
+    2026-01-09T07:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T12:00:00-08:00
+    2026-01-09T08:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T12:00:00-08:00
+    2026-01-09T08:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T13:00:00-08:00
+    2026-01-09T09:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T13:00:00-08:00
+    2026-01-09T09:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T14:00:00-08:00
+    2026-01-09T10:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T14:00:00-08:00
+    2026-01-09T10:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T15:00:00-08:00
+    2026-01-09T11:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T15:00:00-08:00
+    2026-01-09T11:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T16:00:00-08:00
+    2026-01-09T12:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T16:00:00-08:00
+    2026-01-09T12:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T17:00:00-08:00
+    2026-01-09T13:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T17:00:00-08:00
+    2026-01-09T13:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T18:00:00-08:00
+    2026-01-09T14:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T18:00:00-08:00
+    2026-01-09T14:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T19:00:00-08:00
+    2026-01-09T15:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T19:00:00-08:00
+    2026-01-09T15:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T20:00:00-08:00
+    2026-01-09T16:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T20:00:00-08:00
+    2026-01-09T16:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T21:00:00-08:00
+    2026-01-09T17:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T21:00:00-08:00
+    2026-01-09T17:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T22:00:00-08:00
+    2026-01-09T18:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T22:00:00-08:00
+    2026-01-09T18:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-09T23:00:00-08:00
+    2026-01-09T19:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-09T23:00:00-08:00
+    2026-01-09T19:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T00:00:00-08:00
+    2026-01-09T20:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T00:00:00-08:00
+    2026-01-09T20:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T01:00:00-08:00
+    2026-01-09T21:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T01:00:00-08:00
+    2026-01-09T21:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T02:00:00-08:00
+    2026-01-09T22:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T02:00:00-08:00
+    2026-01-09T22:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T03:00:00-08:00
+    2026-01-09T23:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T03:00:00-08:00
+    2026-01-09T23:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T04:00:00-08:00
+    2026-01-10T00:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T04:00:00-08:00
+    2026-01-10T00:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T05:00:00-08:00
+    2026-01-10T01:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T05:00:00-08:00
+    2026-01-10T01:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T06:00:00-08:00
+    2026-01-10T02:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T06:00:00-08:00
+    2026-01-10T02:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T07:00:00-08:00
+    2026-01-10T03:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T07:00:00-08:00
+    2026-01-10T03:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T08:00:00-08:00
+    2026-01-10T04:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T08:00:00-08:00
+    2026-01-10T04:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T09:00:00-08:00
+    2026-01-10T05:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T09:00:00-08:00
+    2026-01-10T05:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T10:00:00-08:00
+    2026-01-10T06:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T10:00:00-08:00
+    2026-01-10T06:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T11:00:00-08:00
+    2026-01-10T07:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T11:00:00-08:00
+    2026-01-10T07:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T12:00:00-08:00
+    2026-01-10T08:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T12:00:00-08:00
+    2026-01-10T08:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T13:00:00-08:00
+    2026-01-10T09:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T13:00:00-08:00
+    2026-01-10T09:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T14:00:00-08:00
+    2026-01-10T10:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T14:00:00-08:00
+    2026-01-10T10:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T15:00:00-08:00
+    2026-01-10T11:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T15:00:00-08:00
+    2026-01-10T11:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T16:00:00-08:00
+    2026-01-10T12:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T16:00:00-08:00
+    2026-01-10T12:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T17:00:00-08:00
+    2026-01-10T13:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T17:00:00-08:00
+    2026-01-10T13:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T18:00:00-08:00
+    2026-01-10T14:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T18:00:00-08:00
+    2026-01-10T14:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T19:00:00-08:00
+    2026-01-10T15:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T19:00:00-08:00
+    2026-01-10T15:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T20:00:00-08:00
+    2026-01-10T16:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T20:00:00-08:00
+    2026-01-10T16:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T21:00:00-08:00
+    2026-01-10T17:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T21:00:00-08:00
+    2026-01-10T17:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T22:00:00-08:00
+    2026-01-10T18:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T22:00:00-08:00
+    2026-01-10T18:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-10T23:00:00-08:00
+    2026-01-10T19:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-10T23:00:00-08:00
+    2026-01-10T19:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T00:00:00-08:00
+    2026-01-10T20:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T00:00:00-08:00
+    2026-01-10T20:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T01:00:00-08:00
+    2026-01-10T21:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T01:00:00-08:00
+    2026-01-10T21:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T02:00:00-08:00
+    2026-01-10T22:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T02:00:00-08:00
+    2026-01-10T22:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T03:00:00-08:00
+    2026-01-10T23:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T03:00:00-08:00
+    2026-01-10T23:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T04:00:00-08:00
+    2026-01-11T00:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T04:00:00-08:00
+    2026-01-11T00:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T05:00:00-08:00
+    2026-01-11T01:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T05:00:00-08:00
+    2026-01-11T01:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T06:00:00-08:00
+    2026-01-11T02:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T06:00:00-08:00
+    2026-01-11T02:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T07:00:00-08:00
+    2026-01-11T03:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T07:00:00-08:00
+    2026-01-11T03:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T08:00:00-08:00
+    2026-01-11T04:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T08:00:00-08:00
+    2026-01-11T04:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T09:00:00-08:00
+    2026-01-11T05:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T09:00:00-08:00
+    2026-01-11T05:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T10:00:00-08:00
+    2026-01-11T06:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T10:00:00-08:00
+    2026-01-11T06:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T11:00:00-08:00
+    2026-01-11T07:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T11:00:00-08:00
+    2026-01-11T07:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T12:00:00-08:00
+    2026-01-11T08:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T12:00:00-08:00
+    2026-01-11T08:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T13:00:00-08:00
+    2026-01-11T09:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T13:00:00-08:00
+    2026-01-11T09:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T14:00:00-08:00
+    2026-01-11T10:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T14:00:00-08:00
+    2026-01-11T10:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T15:00:00-08:00
+    2026-01-11T11:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T15:00:00-08:00
+    2026-01-11T11:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T16:00:00-08:00
+    2026-01-11T12:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T16:00:00-08:00
+    2026-01-11T12:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T17:00:00-08:00
+    2026-01-11T13:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T17:00:00-08:00
+    2026-01-11T13:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T18:00:00-08:00
+    2026-01-11T14:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T18:00:00-08:00
+    2026-01-11T14:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T19:00:00-08:00
+    2026-01-11T15:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T19:00:00-08:00
+    2026-01-11T15:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T20:00:00-08:00
+    2026-01-11T16:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T20:00:00-08:00
+    2026-01-11T16:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T21:00:00-08:00
+    2026-01-11T17:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T21:00:00-08:00
+    2026-01-11T17:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T22:00:00-08:00
+    2026-01-11T18:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T22:00:00-08:00
+    2026-01-11T18:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-11T23:00:00-08:00
+    2026-01-11T19:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-11T23:00:00-08:00
+    2026-01-11T19:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T00:00:00-08:00
+    2026-01-11T20:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T00:00:00-08:00
+    2026-01-11T20:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T01:00:00-08:00
+    2026-01-11T21:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T01:00:00-08:00
+    2026-01-11T21:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T02:00:00-08:00
+    2026-01-11T22:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T02:00:00-08:00
+    2026-01-11T22:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T03:00:00-08:00
+    2026-01-11T23:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T03:00:00-08:00
+    2026-01-11T23:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T04:00:00-08:00
+    2026-01-12T00:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T04:00:00-08:00
+    2026-01-12T00:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T05:00:00-08:00
+    2026-01-12T01:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T05:00:00-08:00
+    2026-01-12T01:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T06:00:00-08:00
+    2026-01-12T02:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T06:00:00-08:00
+    2026-01-12T02:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T07:00:00-08:00
+    2026-01-12T03:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T07:00:00-08:00
+    2026-01-12T03:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T08:00:00-08:00
+    2026-01-12T04:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T08:00:00-08:00
+    2026-01-12T04:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T09:00:00-08:00
+    2026-01-12T05:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T09:00:00-08:00
+    2026-01-12T05:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T10:00:00-08:00
+    2026-01-12T06:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T10:00:00-08:00
+    2026-01-12T06:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T11:00:00-08:00
+    2026-01-12T07:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T11:00:00-08:00
+    2026-01-12T07:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T12:00:00-08:00
+    2026-01-12T08:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T12:00:00-08:00
+    2026-01-12T08:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T13:00:00-08:00
+    2026-01-12T09:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T13:00:00-08:00
+    2026-01-12T09:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T14:00:00-08:00
+    2026-01-12T10:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T14:00:00-08:00
+    2026-01-12T10:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T15:00:00-08:00
+    2026-01-12T11:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T15:00:00-08:00
+    2026-01-12T11:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T16:00:00-08:00
+    2026-01-12T12:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T16:00:00-08:00
+    2026-01-12T12:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T17:00:00-08:00
+    2026-01-12T13:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T17:00:00-08:00
+    2026-01-12T13:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T18:00:00-08:00
+    2026-01-12T14:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T18:00:00-08:00
+    2026-01-12T14:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T19:00:00-08:00
+    2026-01-12T15:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T19:00:00-08:00
+    2026-01-12T15:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T20:00:00-08:00
+    2026-01-12T16:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T20:00:00-08:00
+    2026-01-12T16:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T21:00:00-08:00
+    2026-01-12T17:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T21:00:00-08:00
+    2026-01-12T17:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T22:00:00-08:00
+    2026-01-12T18:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T22:00:00-08:00
+    2026-01-12T18:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-12T23:00:00-08:00
+    2026-01-12T19:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-12T23:00:00-08:00
+    2026-01-12T19:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-13T00:00:00-08:00
+    2026-01-12T20:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-13T00:00:00-08:00
+    2026-01-12T20:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-13T01:00:00-08:00
+    2026-01-12T21:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-13T01:00:00-08:00
+    2026-01-12T21:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-13T02:00:00-08:00
+    2026-01-12T22:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-13T02:00:00-08:00
+    2026-01-12T22:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-13T03:00:00-08:00
+    2026-01-12T23:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-13T03:00:00-08:00
+    2026-01-12T23:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-13T04:00:00-08:00
+    2026-01-13T00:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-13T04:00:00-08:00
+    2026-01-13T00:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-13T05:00:00-08:00
+    2026-01-13T01:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-13T05:00:00-08:00
+    2026-01-13T01:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-13T06:00:00-08:00
+    2026-01-13T02:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-13T06:00:00-08:00
+    2026-01-13T02:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-13T07:00:00-08:00
+    2026-01-13T03:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-13T07:00:00-08:00
+    2026-01-13T03:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-13T08:00:00-08:00
+    2026-01-13T04:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-13T08:00:00-08:00
+    2026-01-13T04:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-13T09:00:00-08:00
+    2026-01-13T05:00:00-08:00
    </end-valid-time>
    <start-valid-time>
-    2023-12-13T09:00:00-08:00
+    2026-01-13T05:00:00-08:00
    </start-valid-time>
    <end-valid-time>
-    2023-12-13T10:00:00-08:00
+    2026-01-13T06:00:00-08:00
    </end-valid-time>
   </time-layout>
   <parameters applicable-location="point1">
-   <temperature time-layout="k-p1h-n1-0" type="dew point">
+   <temperature time-layout="k-p1h-n1-0" type="hourly">
     <value>
-     25
+     22
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     24
     </value>
     <value>
      27
     </value>
     <value>
-     28
+     30
+    </value>
+    <value>
+     32
+    </value>
+    <value>
+     32
     </value>
     <value>
      33
@@ -1065,298 +1077,301 @@
      32
     </value>
     <value>
+     32
+    </value>
+    <value>
+     32
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     30
+    </value>
+    <value>
+     30
+    </value>
+    <value>
+     30
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     30
+    </value>
+    <value>
+     32
+    </value>
+    <value>
+     32
+    </value>
+    <value>
+     32
+    </value>
+    <value>
+     31
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     30
+    </value>
+    <value>
      33
     </value>
     <value>
-     32
+     36
     </value>
     <value>
-     30
+     37
     </value>
     <value>
-     30
+     37
     </value>
     <value>
-     31
+     36
     </value>
     <value>
-     30
+     35
     </value>
     <value>
-     30
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     12
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     15
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     12
-    </value>
-    <value>
-     12
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
+     33
     </value>
     <value>
      31
@@ -1365,704 +1380,52 @@
      29
     </value>
     <value>
-     27
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     27
-    </value>
-    <value>
      28
     </value>
     <value>
-     29
+     27
     </value>
     <value>
-     30
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     28
     </value>
     <value>
      31
     </value>
     <value>
-     31
+     34
     </value>
     <value>
-     31
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     23
-    </value>
-   </temperature>
-   <temperature time-layout="k-p1h-n1-0" type="wind chill">
-    <value>
-     26
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     15
-    </value>
-    <value>
-     15
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     15
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     12
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     6
-    </value>
-    <value>
-     6
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     12
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     6
-    </value>
-    <value>
-     5
-    </value>
-    <value>
-     4
-    </value>
-    <value>
-     3
-    </value>
-    <value>
-     4
-    </value>
-    <value>
-     6
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     12
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     12
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     6
-    </value>
-    <value>
-     6
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     8
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     6
-    </value>
-    <value>
-     6
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     19
-    </value>
-   </temperature>
-   <wind-speed time-layout="k-p1h-n1-0" type="sustained">
-    <value>
-     39
+     36
     </value>
     <value>
      38
@@ -2071,37 +1434,19 @@
      40
     </value>
     <value>
-     34
+     40
+    </value>
+    <value>
+     39
+    </value>
+    <value>
+     37
+    </value>
+    <value>
+     35
     </value>
     <value>
      33
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     33
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     38
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     36
-    </value>
-    <value>
-     34
     </value>
     <value>
      31
@@ -2110,55 +1455,162 @@
      30
     </value>
     <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     30
+    </value>
+    <value>
+     33
+    </value>
+    <value>
+     34
+    </value>
+    <value>
+     36
+    </value>
+    <value>
+     37
+    </value>
+    <value>
+     37
+    </value>
+    <value>
+     36
+    </value>
+    <value>
+     35
+    </value>
+    <value>
+     34
+    </value>
+    <value>
+     32
+    </value>
+    <value>
      31
     </value>
     <value>
+     30
+    </value>
+    <value>
      29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+   </temperature>
+   <temperature time-layout="k-p1h-n1-0" type="dew point">
+    <value>
+     18
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     27
     </value>
     <value>
      26
     </value>
     <value>
-     26
+     23
     </value>
     <value>
-     26
+     22
     </value>
     <value>
-     25
+     21
     </value>
     <value>
-     25
+     21
     </value>
     <value>
-     25
+     21
     </value>
     <value>
-     29
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     34
+     23
     </value>
     <value>
      24
@@ -2170,13 +1622,130 @@
      24
     </value>
     <value>
-     14
+     25
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     15
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     13
     </value>
     <value>
      14
     </value>
     <value>
+     15
+    </value>
+    <value>
+     16
+    </value>
+    <value>
+     16
+    </value>
+    <value>
+     16
+    </value>
+    <value>
+     16
+    </value>
+    <value>
+     15
+    </value>
+    <value>
      14
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
     </value>
     <value>
      11
@@ -2197,37 +1766,88 @@
      10
     </value>
     <value>
-     10
+     9
     </value>
     <value>
-     10
+     8
     </value>
     <value>
-     10
+     8
     </value>
     <value>
-     14
+     8
     </value>
     <value>
-     14
+     9
     </value>
     <value>
-     14
-    </value>
-    <value>
-     14
+     12
     </value>
     <value>
      14
     </value>
     <value>
-     14
+     17
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     17
     </value>
     <value>
      14
     </value>
     <value>
-     14
+     12
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     12
     </value>
     <value>
      14
@@ -2236,22 +1856,121 @@
      16
     </value>
     <value>
-     16
+     18
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     17
     </value>
     <value>
      16
     </value>
     <value>
-     16
+     15
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     14
     </value>
     <value>
      16
     </value>
     <value>
-     16
+     18
     </value>
     <value>
-     16
+     21
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     17
     </value>
     <value>
      16
@@ -2266,18 +1985,1143 @@
      15
     </value>
     <value>
+     14
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     15
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     16
+    </value>
+    <value>
+     15
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     15
+    </value>
+    <value>
+     16
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     17
+    </value>
+   </temperature>
+   <temperature time-layout="k-p1h-n1-0" type="wind chill">
+    <value>
+     15
+    </value>
+    <value>
+     16
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     16
+    </value>
+    <value>
+     16
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     15
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     10
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     7
+    </value>
+    <value>
+     7
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     16
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     16
+    </value>
+    <value>
      15
     </value>
     <value>
      13
     </value>
     <value>
+     10
+    </value>
+    <value>
+     10
+    </value>
+    <value>
+     10
+    </value>
+    <value>
+     9
+    </value>
+    <value>
+     9
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     9
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     7
+    </value>
+    <value>
+     7
+    </value>
+    <value>
+     9
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     14
+    </value>
+    <value>
      13
     </value>
     <value>
      13
     </value>
     <value>
+     12
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     12
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     33
+    </value>
+    <value>
+     33
+    </value>
+    <value>
+     32
+    </value>
+    <value>
+     30
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     31
+    </value>
+    <value>
+     34
+    </value>
+    <value>
+     36
+    </value>
+    <value>
+     36
+    </value>
+    <value>
+     35
+    </value>
+    <value>
+     32
+    </value>
+    <value>
+     30
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     18
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     22
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     30
+    </value>
+    <value>
+     31
+    </value>
+    <value>
+     31
+    </value>
+    <value>
+     30
+    </value>
+    <value>
+     28
+    </value>
+    <value>
+     26
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
+   </temperature>
+   <probability-of-precipitation time-layout="k-p1h-n1-0" type="floating" units="percent">
+    <value>
+     2
+    </value>
+    <value>
+     2
+    </value>
+    <value>
+     2
+    </value>
+    <value>
+     2
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     3
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     3
+    </value>
+    <value>
+     3
+    </value>
+    <value>
+     3
+    </value>
+    <value>
+     3
+    </value>
+    <value>
+     3
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     45
+    </value>
+    <value>
+     45
+    </value>
+    <value>
+     45
+    </value>
+    <value>
+     45
+    </value>
+    <value>
+     45
+    </value>
+    <value>
+     45
+    </value>
+    <value>
+     40
+    </value>
+    <value>
+     40
+    </value>
+    <value>
+     40
+    </value>
+    <value>
+     40
+    </value>
+    <value>
+     40
+    </value>
+    <value>
+     40
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     2
+    </value>
+    <value>
+     2
+    </value>
+    <value>
+     2
+    </value>
+    <value>
+     2
+    </value>
+    <value>
+     2
+    </value>
+    <value>
+     2
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     1
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+   </probability-of-precipitation>
+   <wind-speed time-layout="k-p1h-n1-0" type="sustained">
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     7
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     7
+    </value>
+    <value>
+     7
+    </value>
+    <value>
+     7
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
      9
     </value>
     <value>
@@ -2294,42 +3138,6 @@
     </value>
     <value>
      10
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
-    </value>
-    <value>
-     9
     </value>
     <value>
      10
@@ -2359,40 +3167,49 @@
      8
     </value>
     <value>
-     9
+     10
     </value>
     <value>
-     9
+     10
     </value>
     <value>
-     9
+     10
     </value>
     <value>
-     9
+     13
     </value>
     <value>
-     9
+     13
     </value>
     <value>
-     9
+     13
     </value>
     <value>
-     9
+     15
     </value>
     <value>
-     9
+     15
     </value>
     <value>
-     9
+     15
     </value>
     <value>
-     9
+     16
     </value>
     <value>
-     9
+     16
     </value>
     <value>
-     9
+     16
+    </value>
+    <value>
+     15
+    </value>
+    <value>
+     15
+    </value>
+    <value>
+     15
     </value>
     <value>
      10
@@ -2404,22 +3221,31 @@
      10
     </value>
     <value>
-     10
+     9
     </value>
     <value>
-     10
+     9
     </value>
     <value>
-     10
+     9
     </value>
     <value>
-     10
+     8
     </value>
     <value>
-     10
+     8
     </value>
     <value>
-     10
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
     </value>
     <value>
      9
@@ -2440,6 +3266,78 @@
      11
     </value>
     <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     10
+    </value>
+    <value>
+     10
+    </value>
+    <value>
+     10
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     10
+    </value>
+    <value>
+     10
+    </value>
+    <value>
+     10
+    </value>
+    <value>
      13
     </value>
     <value>
@@ -2458,115 +3356,47 @@
      11
     </value>
     <value>
-     13
+     11
     </value>
     <value>
-     13
+     11
     </value>
     <value>
-     13
+     11
     </value>
     <value>
-     13
+     10
     </value>
     <value>
-     13
+     10
     </value>
     <value>
-     13
+     10
     </value>
     <value>
-     13
+     8
     </value>
     <value>
-     13
+     8
     </value>
     <value>
-     13
+     8
     </value>
     <value>
-     14
+     6
     </value>
     <value>
-     14
+     6
     </value>
     <value>
-     14
+     6
     </value>
     <value>
-     13
+     6
     </value>
     <value>
-     13
+     6
     </value>
-    <value>
-     13
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     15
-    </value>
-    <value>
-     15
-    </value>
-    <value>
-     15
-    </value>
-    <value>
-     15
-    </value>
-    <value>
-     15
-    </value>
-    <value>
-     15
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-    <value>
-     14
-    </value>
-   </wind-speed>
-   <cloud-amount time-layout="k-p1h-n1-0" type="total" units="percent">
     <value>
      6
     </value>
@@ -2574,1516 +3404,534 @@
      9
     </value>
     <value>
-     26
+     9
     </value>
     <value>
-     63
+     9
     </value>
     <value>
-     73
+     9
     </value>
     <value>
-     91
+     9
     </value>
     <value>
-     93
+     9
     </value>
     <value>
-     96
+     9
     </value>
     <value>
-     96
+     9
     </value>
     <value>
-     92
+     9
     </value>
     <value>
-     88
+     9
     </value>
     <value>
-     86
+     9
     </value>
     <value>
-     84
+     9
     </value>
     <value>
-     84
+     8
     </value>
     <value>
-     84
+     8
     </value>
     <value>
-     82
+     8
     </value>
     <value>
-     79
+     6
     </value>
     <value>
-     76
+     6
     </value>
     <value>
-     80
+     6
     </value>
     <value>
-     80
+     5
     </value>
     <value>
-     80
+     5
     </value>
     <value>
-     76
+     5
     </value>
     <value>
-     76
+     6
     </value>
     <value>
-     76
+     6
     </value>
     <value>
-     88
+     6
     </value>
     <value>
-     88
+     8
     </value>
     <value>
-     88
+     8
     </value>
     <value>
-     88
+     8
     </value>
     <value>
-     88
+     9
     </value>
     <value>
-     88
+     9
     </value>
     <value>
-     90
+     9
     </value>
     <value>
-     90
+     9
     </value>
     <value>
-     90
+     9
     </value>
     <value>
-     90
+     9
     </value>
     <value>
-     90
+     9
     </value>
     <value>
-     90
+     9
     </value>
     <value>
-     68
+     9
     </value>
     <value>
-     68
+     9
     </value>
     <value>
-     68
+     9
     </value>
     <value>
-     59
+     9
     </value>
     <value>
-     59
+     8
     </value>
     <value>
-     59
+     8
     </value>
     <value>
-     57
+     8
     </value>
     <value>
-     57
+     8
     </value>
     <value>
-     57
+     8
     </value>
     <value>
-     34
+     8
     </value>
     <value>
-     34
+     9
     </value>
     <value>
-     34
+     9
     </value>
     <value>
-     16
+     9
     </value>
     <value>
-     16
+     11
     </value>
     <value>
-     16
+     11
     </value>
     <value>
-     22
+     11
     </value>
     <value>
-     22
+     13
     </value>
     <value>
-     22
+     13
     </value>
     <value>
-     27
+     13
     </value>
     <value>
-     27
+     13
     </value>
     <value>
-     27
+     13
     </value>
     <value>
-     15
+     13
     </value>
     <value>
-     15
+     13
     </value>
     <value>
-     15
+     13
     </value>
+   </wind-speed>
+   <wind-speed time-layout="k-p1h-n1-0" type="gust">
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
     <value>
-     19
+     20
     </value>
     <value>
-     19
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     48
-    </value>
-    <value>
-     48
-    </value>
-    <value>
-     48
-    </value>
-    <value>
-     66
-    </value>
-    <value>
-     66
-    </value>
-    <value>
-     66
-    </value>
-    <value>
-     63
-    </value>
-    <value>
-     63
-    </value>
-    <value>
-     63
-    </value>
-    <value>
-     61
-    </value>
-    <value>
-     61
-    </value>
-    <value>
-     61
-    </value>
-    <value>
-     72
-    </value>
-    <value>
-     72
-    </value>
-    <value>
-     72
-    </value>
-    <value>
-     79
-    </value>
-    <value>
-     79
-    </value>
-    <value>
-     79
-    </value>
-    <value>
-     75
-    </value>
-    <value>
-     75
-    </value>
-    <value>
-     75
-    </value>
-    <value>
-     79
-    </value>
-    <value>
-     79
-    </value>
-    <value>
-     79
-    </value>
-    <value>
-     58
-    </value>
-    <value>
-     58
-    </value>
-    <value>
-     58
-    </value>
-    <value>
-     63
-    </value>
-    <value>
-     63
-    </value>
-    <value>
-     63
-    </value>
-    <value>
-     67
-    </value>
-    <value>
-     67
-    </value>
-    <value>
-     67
-    </value>
-    <value>
-     59
-    </value>
-    <value>
-     59
-    </value>
-    <value>
-     59
-    </value>
-    <value>
-     45
-    </value>
-    <value>
-     45
-    </value>
-    <value>
-     45
-    </value>
-    <value>
-     56
-    </value>
-    <value>
-     56
-    </value>
-    <value>
-     56
-    </value>
-    <value>
-     52
-    </value>
-    <value>
-     52
-    </value>
-    <value>
-     52
-    </value>
-    <value>
-     60
-    </value>
-    <value>
-     60
-    </value>
-    <value>
-     60
-    </value>
-    <value>
-     45
-    </value>
-    <value>
-     45
-    </value>
-    <value>
-     45
-    </value>
-    <value>
-     48
-    </value>
-    <value>
-     48
-    </value>
-    <value>
-     48
-    </value>
-    <value>
-     51
-    </value>
-    <value>
-     51
-    </value>
-    <value>
-     51
-    </value>
-    <value>
-     45
-    </value>
-    <value>
-     45
-    </value>
-    <value>
-     45
-    </value>
-    <value>
-     43
-    </value>
-    <value>
-     43
-    </value>
-    <value>
-     43
-    </value>
-    <value>
-     39
-    </value>
-    <value>
-     39
-    </value>
-    <value>
-     39
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     36
-    </value>
-    <value>
-     36
-    </value>
-    <value>
-     36
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     43
-    </value>
-    <value>
-     43
-    </value>
-    <value>
-     43
-    </value>
-   </cloud-amount>
-   <probability-of-precipitation time-layout="k-p1h-n1-0" type="floating" units="percent">
-    <value>
-     1
-    </value>
-    <value>
-     2
-    </value>
-    <value>
-     12
-    </value>
-    <value>
-     41
-    </value>
-    <value>
-     59
-    </value>
-    <value>
-     86
-    </value>
-    <value>
-     88
-    </value>
-    <value>
-     94
-    </value>
-    <value>
-     93
-    </value>
-    <value>
-     87
-    </value>
-    <value>
-     82
-    </value>
-    <value>
-     72
-    </value>
-    <value>
-     63
-    </value>
-    <value>
-     51
-    </value>
-    <value>
-     44
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     27
+     20
     </value>
     <value>
      21
     </value>
     <value>
-     53
+     21
     </value>
     <value>
-     53
+     22
     </value>
     <value>
-     53
+     22
     </value>
     <value>
-     53
+     23
     </value>
     <value>
-     53
+     23
     </value>
     <value>
-     53
+     23
     </value>
     <value>
-     82
+     21
     </value>
     <value>
-     82
+     21
     </value>
     <value>
-     82
+     21
     </value>
     <value>
-     82
+     18
     </value>
     <value>
-     82
+     18
     </value>
     <value>
-     82
+     18
     </value>
     <value>
-     85
+     22
     </value>
     <value>
-     85
+     22
     </value>
     <value>
-     85
+     22
     </value>
     <value>
-     85
+     25
     </value>
     <value>
-     85
+     25
     </value>
     <value>
-     85
+     25
     </value>
     <value>
-     38
+     32
     </value>
     <value>
-     38
+     32
     </value>
     <value>
-     38
+     32
     </value>
     <value>
-     38
+     34
     </value>
     <value>
-     38
+     34
     </value>
     <value>
-     38
+     34
     </value>
     <value>
-     10
+     31
     </value>
     <value>
-     10
+     31
     </value>
     <value>
-     10
+     31
     </value>
     <value>
-     10
+     24
     </value>
     <value>
-     10
+     24
     </value>
     <value>
-     10
+     24
     </value>
     <value>
-     7
+     18
     </value>
     <value>
-     7
+     18
     </value>
     <value>
-     7
+     18
     </value>
     <value>
-     7
+     18
     </value>
     <value>
-     7
+     18
     </value>
     <value>
-     7
+     18
     </value>
     <value>
-     2
+     18
     </value>
     <value>
-     2
+     18
     </value>
     <value>
-     2
+     18
     </value>
     <value>
-     2
+     18
     </value>
     <value>
-     2
+     18
     </value>
     <value>
-     2
+     18
     </value>
     <value>
-     1
+     24
     </value>
     <value>
-     1
+     24
     </value>
     <value>
-     1
+     24
     </value>
     <value>
-     1
+     28
     </value>
     <value>
-     1
+     28
     </value>
     <value>
-     1
+     28
     </value>
     <value>
-     1
+     25
     </value>
     <value>
-     1
+     25
     </value>
     <value>
-     1
+     25
     </value>
     <value>
-     1
+     23
     </value>
     <value>
-     1
+     23
     </value>
     <value>
-     1
+     23
     </value>
     <value>
-     2
+     22
     </value>
     <value>
-     2
+     22
     </value>
     <value>
-     2
+     22
     </value>
     <value>
-     2
+     20
     </value>
     <value>
-     2
+     20
     </value>
     <value>
-     2
+     20
     </value>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
     <value>
-     9
+     21
     </value>
     <value>
-     9
+     21
     </value>
     <value>
-     9
+     21
     </value>
     <value>
-     9
+     24
     </value>
     <value>
-     9
+     24
     </value>
     <value>
-     9
+     24
     </value>
     <value>
-     11
+     22
     </value>
     <value>
-     11
+     22
     </value>
     <value>
-     11
+     22
     </value>
     <value>
-     11
+     22
     </value>
     <value>
-     11
+     22
     </value>
     <value>
-     11
+     22
     </value>
     <value>
-     8
+     20
     </value>
     <value>
-     8
+     20
     </value>
     <value>
-     8
+     20
     </value>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
     <value>
-     8
+     18
     </value>
     <value>
-     8
+     18
     </value>
     <value>
-     8
+     18
     </value>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
     <value>
-     9
+     22
     </value>
     <value>
-     9
+     22
     </value>
     <value>
-     9
+     22
     </value>
     <value>
-     9
+     24
     </value>
     <value>
-     9
+     24
     </value>
     <value>
-     9
+     24
     </value>
     <value>
-     10
+     23
     </value>
     <value>
-     10
+     23
     </value>
     <value>
-     10
+     23
     </value>
     <value>
-     10
+     24
     </value>
     <value>
-     10
+     24
     </value>
-    <value>
-     10
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     10
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     13
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     7
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-    <value>
-     11
-    </value>
-   </probability-of-precipitation>
-   <humidity time-layout="k-p1h-n1-0" type="relative" units="percent">
-    <value>
-     56
-    </value>
-    <value>
-     61
-    </value>
-    <value>
-     65
-    </value>
-    <value>
-     78
-    </value>
-    <value>
-     88
-    </value>
-    <value>
-     97
-    </value>
-    <value>
-     99
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     95
-    </value>
-    <value>
-     93
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     91
-    </value>
-    <value>
-     88
-    </value>
-    <value>
-     87
-    </value>
-    <value>
-     85
-    </value>
-    <value>
-     88
-    </value>
-    <value>
-     86
-    </value>
-    <value>
-     86
-    </value>
-    <value>
-     91
-    </value>
-    <value>
-     88
-    </value>
-    <value>
-     89
-    </value>
-    <value>
-     89
-    </value>
-    <value>
-     89
-    </value>
-    <value>
-     92
-    </value>
-    <value>
-     96
-    </value>
-    <value>
-     99
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     96
-    </value>
-    <value>
-     91
-    </value>
-    <value>
-     87
-    </value>
-    <value>
-     85
-    </value>
-    <value>
-     84
-    </value>
-    <value>
-     83
-    </value>
-    <value>
-     82
-    </value>
-    <value>
-     82
-    </value>
-    <value>
-     81
-    </value>
-    <value>
-     80
-    </value>
-    <value>
-     78
-    </value>
-    <value>
-     77
-    </value>
-    <value>
-     76
-    </value>
-    <value>
-     74
-    </value>
-    <value>
-     73
-    </value>
-    <value>
-     71
-    </value>
-    <value>
-     69
-    </value>
-    <value>
-     68
-    </value>
-    <value>
-     69
-    </value>
-    <value>
-     72
-    </value>
-    <value>
-     74
-    </value>
-    <value>
-     75
-    </value>
-    <value>
-     75
-    </value>
-    <value>
-     74
-    </value>
-    <value>
-     70
-    </value>
-    <value>
-     66
-    </value>
-    <value>
-     62
-    </value>
-    <value>
-     60
-    </value>
-    <value>
-     59
-    </value>
-    <value>
-     59
-    </value>
-    <value>
-     59
-    </value>
-    <value>
-     59
-    </value>
-    <value>
-     59
-    </value>
-    <value>
-     60
-    </value>
-    <value>
-     61
-    </value>
-    <value>
-     62
-    </value>
-    <value>
-     63
-    </value>
-    <value>
-     64
-    </value>
-    <value>
-     65
-    </value>
-    <value>
-     66
-    </value>
-    <value>
-     68
-    </value>
-    <value>
-     70
-    </value>
-    <value>
-     74
-    </value>
-    <value>
-     79
-    </value>
-    <value>
-     81
-    </value>
-    <value>
-     80
-    </value>
-    <value>
-     76
-    </value>
-    <value>
-     71
-    </value>
-    <value>
-     66
-    </value>
-    <value>
-     61
-    </value>
-    <value>
-     57
-    </value>
-    <value>
-     56
-    </value>
-    <value>
-     55
-    </value>
-    <value>
-     56
-    </value>
-    <value>
-     56
-    </value>
-    <value>
-     56
-    </value>
-    <value>
-     57
-    </value>
-    <value>
-     58
-    </value>
-    <value>
-     59
-    </value>
-    <value>
-     61
-    </value>
-    <value>
-     63
-    </value>
-    <value>
-     66
-    </value>
-    <value>
-     68
-    </value>
-    <value>
-     69
-    </value>
-    <value>
-     70
-    </value>
-    <value>
-     72
-    </value>
-    <value>
-     78
-    </value>
-    <value>
-     85
-    </value>
-    <value>
-     89
-    </value>
-    <value>
-     89
-    </value>
-    <value>
-     85
-    </value>
-    <value>
-     81
-    </value>
-    <value>
-     76
-    </value>
-    <value>
-     71
-    </value>
-    <value>
-     67
-    </value>
-    <value>
-     64
-    </value>
-    <value>
-     63
-    </value>
-    <value>
-     62
-    </value>
-    <value>
-     62
-    </value>
-    <value>
-     63
-    </value>
-    <value>
-     65
-    </value>
-    <value>
-     67
-    </value>
-    <value>
-     69
-    </value>
-    <value>
-     71
-    </value>
-    <value>
-     73
-    </value>
-    <value>
-     75
-    </value>
-    <value>
-     77
-    </value>
-    <value>
-     78
-    </value>
-    <value>
-     79
-    </value>
-    <value>
-     81
-    </value>
-    <value>
-     85
-    </value>
-    <value>
-     89
-    </value>
-    <value>
-     92
-    </value>
-    <value>
-     92
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     87
-    </value>
-    <value>
-     83
-    </value>
-    <value>
-     78
-    </value>
-    <value>
-     74
-    </value>
-    <value>
-     71
-    </value>
-    <value>
-     70
-    </value>
-    <value>
-     69
-    </value>
-    <value>
-     69
-    </value>
-    <value>
-     69
-    </value>
-    <value>
-     70
-    </value>
-    <value>
-     71
-    </value>
-    <value>
-     73
-    </value>
-    <value>
-     75
-    </value>
-    <value>
-     77
-    </value>
-    <value>
-     80
-    </value>
-    <value>
-     82
-    </value>
-    <value>
-     83
-    </value>
-    <value>
-     83
-    </value>
-    <value>
-     84
-    </value>
-    <value>
-     88
-    </value>
-    <value>
-     92
-    </value>
-    <value>
-     94
-    </value>
-    <value>
-     93
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     85
-    </value>
-    <value>
-     80
-    </value>
-    <value>
-     74
-    </value>
-    <value>
-     70
-    </value>
-    <value>
-     68
-    </value>
-    <value>
-     66
-    </value>
-    <value>
-     66
-    </value>
-    <value>
-     65
-    </value>
-    <value>
-     65
-    </value>
-    <value>
-     66
-    </value>
-    <value>
-     67
-    </value>
-    <value>
-     69
-    </value>
-    <value>
-     71
-    </value>
-    <value>
-     73
-    </value>
-    <value>
-     74
-    </value>
-   </humidity>
+   </wind-speed>
    <direction time-layout="k-p1h-n1-0" type="wind" units="degrees true">
     <value>
      220
@@ -4095,31 +3943,43 @@
      220
     </value>
     <value>
-     220
-    </value>
-    <value>
      230
     </value>
     <value>
      220
     </value>
     <value>
+     230
+    </value>
+    <value>
+     230
+    </value>
+    <value>
+     230
+    </value>
+    <value>
+     240
+    </value>
+    <value>
+     240
+    </value>
+    <value>
+     240
+    </value>
+    <value>
+     240
+    </value>
+    <value>
+     230
+    </value>
+    <value>
+     230
+    </value>
+    <value>
      220
     </value>
     <value>
-     210
-    </value>
-    <value>
-     220
-    </value>
-    <value>
      230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     240
     </value>
     <value>
      230
@@ -4128,16 +3988,7 @@
      230
     </value>
     <value>
-     240
-    </value>
-    <value>
      230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     240
     </value>
     <value>
      240
@@ -4158,22 +4009,13 @@
      230
     </value>
     <value>
-     230
+     240
     </value>
     <value>
-     230
+     240
     </value>
     <value>
-     230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     230
+     240
     </value>
     <value>
      240
@@ -4203,13 +4045,67 @@
      250
     </value>
     <value>
-     270
+     240
     </value>
     <value>
-     270
+     240
     </value>
     <value>
-     270
+     240
+    </value>
+    <value>
+     240
+    </value>
+    <value>
+     240
+    </value>
+    <value>
+     240
+    </value>
+    <value>
+     260
+    </value>
+    <value>
+     260
+    </value>
+    <value>
+     260
+    </value>
+    <value>
+     260
+    </value>
+    <value>
+     260
+    </value>
+    <value>
+     260
+    </value>
+    <value>
+     320
+    </value>
+    <value>
+     320
+    </value>
+    <value>
+     320
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     40
+    </value>
+    <value>
+     40
+    </value>
+    <value>
+     40
     </value>
     <value>
      50
@@ -4221,13 +4117,31 @@
      50
     </value>
     <value>
-     60
+     80
     </value>
     <value>
-     60
+     80
     </value>
     <value>
-     60
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
     </value>
     <value>
      80
@@ -4257,175 +4171,67 @@
      80
     </value>
     <value>
-     90
+     80
     </value>
     <value>
-     90
+     80
     </value>
     <value>
-     90
+     80
     </value>
     <value>
-     90
+     80
     </value>
     <value>
-     90
+     80
     </value>
     <value>
-     90
+     80
     </value>
     <value>
-     100
+     80
     </value>
     <value>
-     100
+     80
     </value>
     <value>
-     100
+     80
     </value>
     <value>
-     110
+     80
     </value>
     <value>
-     110
+     80
     </value>
     <value>
-     110
+     80
     </value>
     <value>
-     120
+     80
     </value>
     <value>
-     120
+     80
     </value>
     <value>
-     120
+     80
     </value>
     <value>
-     140
+     80
     </value>
     <value>
-     140
+     80
     </value>
     <value>
-     140
+     80
     </value>
     <value>
-     230
+     80
     </value>
     <value>
-     230
+     80
     </value>
     <value>
-     230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     210
-    </value>
-    <value>
-     210
-    </value>
-    <value>
-     210
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     230
-    </value>
-    <value>
-     220
-    </value>
-    <value>
-     220
-    </value>
-    <value>
-     220
-    </value>
-    <value>
-     200
-    </value>
-    <value>
-     200
-    </value>
-    <value>
-     200
-    </value>
-    <value>
-     240
-    </value>
-    <value>
-     240
-    </value>
-    <value>
-     240
-    </value>
-    <value>
-     280
-    </value>
-    <value>
-     280
-    </value>
-    <value>
-     280
-    </value>
-    <value>
-     280
-    </value>
-    <value>
-     280
-    </value>
-    <value>
-     280
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
+     80
     </value>
     <value>
      80
@@ -4464,6 +4270,54 @@
      80
     </value>
     <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     50
+    </value>
+    <value>
      50
     </value>
     <value>
@@ -4471,6 +4325,66 @@
     </value>
     <value>
      50
+    </value>
+    <value>
+     50
+    </value>
+    <value>
+     50
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
     </value>
     <value>
      80
@@ -4491,24 +4405,6 @@
      70
     </value>
     <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
      80
     </value>
     <value>
@@ -4540,63 +4436,9 @@
     </value>
     <value>
      80
-    </value>
-    <value>
-     80
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     90
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     110
-    </value>
-    <value>
-     110
-    </value>
-    <value>
-     110
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
-    </value>
-    <value>
-     100
     </value>
    </direction>
-   <temperature time-layout="k-p1h-n1-0" type="hourly">
-    <value>
-     40
-    </value>
-    <value>
-     40
-    </value>
+   <cloud-amount time-layout="k-p1h-n1-0" type="total" units="percent">
     <value>
      39
     </value>
@@ -4604,1004 +4446,1148 @@
      39
     </value>
     <value>
-     35
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     26
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     19
-    </value>
-    <value>
-     17
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     16
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     33
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     33
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     33
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     36
-    </value>
-    <value>
      37
     </value>
     <value>
-     38
+     30
     </value>
     <value>
-     37
-    </value>
-    <value>
-     36
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     33
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     32
+     29
     </value>
     <value>
      31
     </value>
     <value>
-     30
+     44
     </value>
     <value>
-     30
+     50
     </value>
     <value>
-     29
+     50
     </value>
     <value>
-     29
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     33
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     35
-    </value>
-    <value>
-     34
-    </value>
-    <value>
-     33
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     27
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     33
-    </value>
-    <value>
-     33
-    </value>
-    <value>
-     33
-    </value>
-    <value>
-     32
-    </value>
-    <value>
-     31
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     30
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     28
-    </value>
-    <value>
-     29
-    </value>
-    <value>
-     30
-    </value>
-   </temperature>
-   <wind-speed time-layout="k-p1h-n1-0" type="gust">
-    <value>
-     59
-    </value>
-    <value>
-     59
-    </value>
-    <value>
-     60
-    </value>
-    <value>
-     52
+     40
     </value>
     <value>
      49
     </value>
     <value>
+     58
+    </value>
+    <value>
      46
+    </value>
+    <value>
+     40
+    </value>
+    <value>
+     39
+    </value>
+    <value>
+     54
     </value>
     <value>
      47
     </value>
     <value>
-     49
+     62
     </value>
     <value>
-     53
+     65
     </value>
     <value>
-     51
+     78
     </value>
     <value>
-     56
+     83
+    </value>
+    <value>
+     94
+    </value>
+    <value>
+     96
+    </value>
+    <value>
+     96
+    </value>
+    <value>
+     96
+    </value>
+    <value>
+     89
+    </value>
+    <value>
+     89
+    </value>
+    <value>
+     89
+    </value>
+    <value>
+     76
+    </value>
+    <value>
+     76
+    </value>
+    <value>
+     76
+    </value>
+    <value>
+     73
+    </value>
+    <value>
+     73
+    </value>
+    <value>
+     73
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     70
+    </value>
+    <value>
+     70
+    </value>
+    <value>
+     70
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
     </value>
     <value>
      52
     </value>
     <value>
+     52
+    </value>
+    <value>
+     52
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     23
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     4
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     6
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     34
+    </value>
+    <value>
+     34
+    </value>
+    <value>
+     34
+    </value>
+    <value>
+     35
+    </value>
+    <value>
+     35
+    </value>
+    <value>
+     35
+    </value>
+    <value>
+     34
+    </value>
+    <value>
+     34
+    </value>
+    <value>
+     34
+    </value>
+    <value>
+     32
+    </value>
+    <value>
+     32
+    </value>
+    <value>
+     32
+    </value>
+    <value>
+     35
+    </value>
+    <value>
+     35
+    </value>
+    <value>
+     35
+    </value>
+    <value>
+     33
+    </value>
+    <value>
+     33
+    </value>
+    <value>
+     33
+    </value>
+    <value>
+     42
+    </value>
+    <value>
+     42
+    </value>
+    <value>
+     42
+    </value>
+    <value>
+     56
+    </value>
+    <value>
+     56
+    </value>
+    <value>
+     56
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     50
+    </value>
+    <value>
+     50
+    </value>
+    <value>
+     50
+    </value>
+    <value>
+     51
+    </value>
+    <value>
+     51
+    </value>
+    <value>
+     51
+    </value>
+    <value>
+     50
+    </value>
+    <value>
+     50
+    </value>
+    <value>
+     50
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     38
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     14
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     20
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     27
+    </value>
+    <value>
+     15
+    </value>
+    <value>
+     15
+    </value>
+    <value>
+     15
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     11
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     25
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     21
+    </value>
+    <value>
+     7
+    </value>
+    <value>
+     7
+    </value>
+    <value>
+     7
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     8
+    </value>
+    <value>
+     9
+    </value>
+    <value>
+     9
+    </value>
+   </cloud-amount>
+   <humidity time-layout="k-p1h-n1-0" type="relative" units="percent">
+    <value>
+     84
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     88
+    </value>
+    <value>
+     89
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     84
+    </value>
+    <value>
+     84
+    </value>
+    <value>
+     84
+    </value>
+    <value>
+     87
+    </value>
+    <value>
+     88
+    </value>
+    <value>
+     89
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     89
+    </value>
+    <value>
+     85
+    </value>
+    <value>
+     81
+    </value>
+    <value>
+     75
+    </value>
+    <value>
+     79
+    </value>
+    <value>
+     79
+    </value>
+    <value>
+     81
+    </value>
+    <value>
+     89
+    </value>
+    <value>
+     87
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     88
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     93
+    </value>
+    <value>
+     93
+    </value>
+    <value>
+     93
+    </value>
+    <value>
+     95
+    </value>
+    <value>
+     88
+    </value>
+    <value>
+     89
+    </value>
+    <value>
+     91
+    </value>
+    <value>
+     92
+    </value>
+    <value>
+     90
+    </value>
+    <value>
+     88
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     86
+    </value>
+    <value>
+     85
+    </value>
+    <value>
+     84
+    </value>
+    <value>
+     82
+    </value>
+    <value>
+     81
+    </value>
+    <value>
+     79
+    </value>
+    <value>
+     77
+    </value>
+    <value>
+     74
+    </value>
+    <value>
+     70
+    </value>
+    <value>
+     67
+    </value>
+    <value>
+     65
+    </value>
+    <value>
+     64
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     64
+    </value>
+    <value>
+     64
+    </value>
+    <value>
+     64
+    </value>
+    <value>
+     64
+    </value>
+    <value>
+     64
+    </value>
+    <value>
+     64
+    </value>
+    <value>
+     64
+    </value>
+    <value>
+     64
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     56
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     59
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     58
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     63
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     62
+    </value>
+    <value>
+     61
+    </value>
+    <value>
+     60
+    </value>
+    <value>
+     57
+    </value>
+    <value>
+     54
+    </value>
+    <value>
      53
     </value>
     <value>
-     51
+     55
     </value>
     <value>
-     46
+     58
     </value>
     <value>
-     45
+     60
     </value>
     <value>
-     46
+     61
     </value>
-    <value>
-     43
-    </value>
-    <value>
-     41
-    </value>
-    <value>
-     41
-    </value>
-    <value>
-     41
-    </value>
-    <value>
-     38
-    </value>
-    <value>
-     38
-    </value>
-    <value>
-     38
-    </value>
-    <value>
-     43
-    </value>
-    <value>
-     43
-    </value>
-    <value>
-     43
-    </value>
-    <value>
-     48
-    </value>
-    <value>
-     48
-    </value>
-    <value>
-     48
-    </value>
-    <value>
-     51
-    </value>
-    <value>
-     51
-    </value>
-    <value>
-     51
-    </value>
-    <value>
-     36
-    </value>
-    <value>
-     36
-    </value>
-    <value>
-     36
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     24
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     25
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     18
-    </value>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value>
-     18
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     18
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     20
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     23
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     22
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-    <value>
-     21
-    </value>
-   </wind-speed>
+   </humidity>
    <hourly-qpf time-layout="k-p1h-n1-0" type="floating" units="inches">
     <value>
-     0.0400
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
     </value>
     <value>
-     0.0400
+     0
     </value>
     <value>
-     0.0400
+     0
     </value>
     <value>
-     0.0400
+     0
     </value>
     <value>
-     0.0400
+     0
     </value>
     <value>
-     0.0400
+     0
     </value>
     <value>
-     0.1133
+     0
     </value>
     <value>
-     0.1133
+     0
     </value>
     <value>
-     0.1133
+     0
     </value>
     <value>
-     0.1133
+     0
     </value>
     <value>
-     0.1133
+     0
     </value>
     <value>
-     0.1133
+     0
     </value>
     <value>
-     0.0233
+     0.0050
     </value>
     <value>
-     0.0233
+     0.0050
     </value>
     <value>
-     0.0233
+     0.0050
     </value>
     <value>
-     0.0233
+     0.0050
     </value>
     <value>
-     0.0233
+     0.0050
     </value>
     <value>
-     0.0233
+     0.0050
     </value>
     <value>
-     0.0067
+     0.0183
     </value>
     <value>
-     0.0067
+     0.0183
     </value>
     <value>
-     0.0067
+     0.0183
     </value>
     <value>
-     0.0067
+     0.0183
     </value>
     <value>
-     0.0067
+     0.0183
     </value>
     <value>
-     0.0067
+     0.0183
     </value>
     <value>
-     0.0400
+     0.0083
     </value>
     <value>
-     0.0400
+     0.0083
     </value>
     <value>
-     0.0400
+     0.0083
     </value>
     <value>
-     0.0400
+     0.0083
     </value>
     <value>
-     0.0400
+     0.0083
     </value>
     <value>
-     0.0400
+     0.0083
     </value>
     <value>
-     0.0300
+     0.0050
     </value>
     <value>
-     0.0300
+     0.0050
     </value>
     <value>
-     0.0300
+     0.0050
     </value>
     <value>
-     0.0300
+     0.0050
     </value>
     <value>
-     0.0300
+     0.0050
     </value>
     <value>
-     0.0300
+     0.0050
     </value>
     <value>
-     0.0017
+     0.0083
     </value>
     <value>
-     0.0017
+     0.0083
     </value>
     <value>
-     0.0017
+     0.0083
     </value>
     <value>
-     0.0017
+     0.0083
     </value>
     <value>
-     0.0017
+     0.0083
     </value>
     <value>
-     0.0017
+     0.0083
     </value>
     <value>
      0
@@ -5963,10 +5949,6 @@
     <value>
      0
     </value>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
     <value xsi:nil="true"/>
     <value xsi:nil="true"/>
    </hourly-qpf>
@@ -5974,48 +5956,24 @@
     <weather-conditions xsi:nil="true"/>
     <weather-conditions xsi:nil="true"/>
     <weather-conditions xsi:nil="true"/>
-    <weather-conditions>
-     <value coverage="chance" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="likely" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="likely" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="likely" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="chance" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="chance" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="chance" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="chance" weather-type="snow"/>
-    </weather-conditions>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
     <weather-conditions>
      <value coverage="slight chance" weather-type="snow"/>
     </weather-conditions>
@@ -6038,40 +5996,22 @@
      <value coverage="chance" weather-type="snow"/>
     </weather-conditions>
     <weather-conditions>
-     <value coverage="" weather-type="snow"/>
+     <value coverage="chance" weather-type="snow"/>
     </weather-conditions>
     <weather-conditions>
-     <value coverage="" weather-type="snow"/>
+     <value coverage="chance" weather-type="snow"/>
     </weather-conditions>
     <weather-conditions>
-     <value coverage="" weather-type="snow"/>
+     <value coverage="chance" weather-type="snow"/>
     </weather-conditions>
     <weather-conditions>
-     <value coverage="" weather-type="snow"/>
+     <value coverage="chance" weather-type="snow"/>
     </weather-conditions>
     <weather-conditions>
-     <value coverage="" weather-type="snow"/>
+     <value coverage="chance" weather-type="snow"/>
     </weather-conditions>
     <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
-    </weather-conditions>
-    <weather-conditions>
-     <value coverage="" weather-type="snow"/>
+     <value coverage="chance" weather-type="snow"/>
     </weather-conditions>
     <weather-conditions>
      <value coverage="chance" weather-type="snow"/>
@@ -6091,10 +6031,24 @@
     <weather-conditions>
      <value coverage="chance" weather-type="snow"/>
     </weather-conditions>
-    <weather-conditions xsi:nil="true"/>
-    <weather-conditions xsi:nil="true"/>
-    <weather-conditions xsi:nil="true"/>
-    <weather-conditions xsi:nil="true"/>
+    <weather-conditions>
+     <value coverage="chance" weather-type="snow"/>
+    </weather-conditions>
+    <weather-conditions>
+     <value coverage="chance" weather-type="snow"/>
+    </weather-conditions>
+    <weather-conditions>
+     <value coverage="chance" weather-type="snow"/>
+    </weather-conditions>
+    <weather-conditions>
+     <value coverage="chance" weather-type="snow"/>
+    </weather-conditions>
+    <weather-conditions>
+     <value coverage="chance" weather-type="snow"/>
+    </weather-conditions>
+    <weather-conditions>
+     <value coverage="chance" weather-type="snow"/>
+    </weather-conditions>
     <weather-conditions xsi:nil="true"/>
     <weather-conditions xsi:nil="true"/>
     <weather-conditions xsi:nil="true"/>

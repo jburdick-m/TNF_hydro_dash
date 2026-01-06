@@ -1,0 +1,8 @@
+dash
+pandas
+plotly
+scipy
+beautifulsoup4
+lxml
+requests
+Pillow
