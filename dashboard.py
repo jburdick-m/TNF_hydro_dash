@@ -434,97 +434,103 @@ map_fig.update_traces(marker={'size': 15})
 print('processing header')
 import requests
 from bs4 import BeautifulSoup as bs
-#parse webpage for webcam image url
-def get_image_url(page_url):
-    response = requests.get(page_url)
-    if response.status_code == 200:
-        soup = bs(response.text,'html.parser')
-        images = soup.find_all('img')
-        image_url = [img['src'] for img in images if 'src' in img.attrs]
-        return image_url
-    else:
-        return "Failed to retrieve webpage"
-
-image_urls = get_image_url('https://www.sugarbowl.com/webcams#lightbox_webcams-5')
-nobhill = [match for match in image_urls if "https://sugar3.sugarbowl.com/graphics/webcams/nobhill/XMasTreeTop" in match]
-nobhill = nobhill[0]
-nobhill = nobhill.split(' ')[0]
 from PIL import Image
 from io import BytesIO
-
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
-
-def open_image_from_url(url):
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        image = Image.open(BytesIO(response.content))
-        return image
-    else:
-        raise Exception(f"Failed to retrieve the image, status code: {response.status_code}")
-
-
-image = open_image_from_url(nobhill)
-
-angle = 3 # degrees
-rotated = image.rotate(angle, resample=Image.BICUBIC, expand = True)
-# Get the dimensions of the rotated image
-
-# Calculate the largest rectangle
-# This depends on the original image's aspect ratio and the rotation degree
-# Assuming you have an image object 'image' and a rotation angle 'angle'
-# For example:
-# image = Image.open('path_to_your_image.jpg')
-# angle = 45 # Replace with your rotation angle
-
-
-w, h = image.size
-angleR = math.radians(angle)
-
-# Dimensions of the rotated image
-rotated_width, rotated_height = rotated.size
-
-def rotatedRectWithMaxArea(w, h, angleR):
-  """
-  Given a rectangle of size wxh that has been rotated by 'angle' (in
-  radians), computes the width and height of the largest possible
-  axis-aligned rectangle (maximal area) within the rotated rectangle.
-  """
-  if w <= 0 or h <= 0:
-    return 0,0
-
-  width_is_longer = w >= h
-  side_long, side_short = (w,h) if width_is_longer else (h,w)
-
-  # since the solutions for angle, -angle and 180-angle are all the same,
-  # if suffices to look at the first quadrant and the absolute values of sin,cos:
-  sin_a, cos_a = abs(math.sin(angleR)), abs(math.cos(angleR))
-  if side_short <= 2.*sin_a*cos_a*side_long or abs(sin_a-cos_a) < 1e-10:
-    # half constrained case: two crop corners touch the longer side,
-    #   the other two corners are on the mid-line parallel to the longer line
-    x = 0.5*side_short
-    wr,hr = (x/sin_a,x/cos_a) if width_is_longer else (x/cos_a,x/sin_a)
-  else:
-    # fully constrained case: crop touches all 4 sides
-    cos_2a = cos_a*cos_a - sin_a*sin_a
-    wr,hr = (w*cos_a - h*sin_a)/cos_2a, (h*cos_a - w*sin_a)/cos_2a
-
-  return wr,hr
-
-dims = rotatedRectWithMaxArea(w,h,angleR)
-w,h = rotated.size
-L = (w - dims[0])/2
-T = h - (h - dims[1])/2
-R = w - (w - dims[0])/2
-B = (h - dims[1])/2
-
-cropped = rotated.crop((L,B,R,T))
-
 import base64
-buffer = BytesIO()
-cropped.save(buffer, format = 'JPEG')
-encoded_image = base64.b64encode(buffer.getvalue()).decode()
-encoded_image_src = 'data:image/jpeg;base64,' + encoded_image
+
+# Attempt to fetch webcam image; fallback to placeholder if offline/unavailable
+encoded_image_src = ''
+try:
+    #parse webpage for webcam image url
+    def get_image_url(page_url):
+        response = requests.get(page_url)
+        if response.status_code == 200:
+            soup = bs(response.text,'html.parser')
+            images = soup.find_all('img')
+            image_url = [img['src'] for img in images if 'src' in img.attrs]
+            return image_url
+        else:
+            return "Failed to retrieve webpage"
+
+    image_urls = get_image_url('https://www.sugarbowl.com/webcams#lightbox_webcams-5')
+
+    # If get_image_url fails, it returns a string, so check type
+    if isinstance(image_urls, list):
+        nobhill = [match for match in image_urls if "https://sugar3.sugarbowl.com/graphics/webcams/nobhill/XMasTreeTop" in match]
+
+        if nobhill:
+            nobhill = nobhill[0]
+            nobhill = nobhill.split(' ')[0]
+
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+
+            def open_image_from_url(url):
+                response = requests.get(url, headers=headers)
+                if response.status_code == 200:
+                    image = Image.open(BytesIO(response.content))
+                    return image
+                else:
+                    raise Exception(f"Failed to retrieve the image, status code: {response.status_code}")
+
+            image = open_image_from_url(nobhill)
+
+            angle = 3 # degrees
+            rotated = image.rotate(angle, resample=Image.BICUBIC, expand = True)
+
+            w, h = image.size
+            angleR = math.radians(angle)
+
+            # Dimensions of the rotated image
+            rotated_width, rotated_height = rotated.size
+
+            def rotatedRectWithMaxArea(w, h, angleR):
+              """
+              Given a rectangle of size wxh that has been rotated by 'angle' (in
+              radians), computes the width and height of the largest possible
+              axis-aligned rectangle (maximal area) within the rotated rectangle.
+              """
+              if w <= 0 or h <= 0:
+                return 0,0
+
+              width_is_longer = w >= h
+              side_long, side_short = (w,h) if width_is_longer else (h,w)
+
+              # since the solutions for angle, -angle and 180-angle are all the same,
+              # if suffices to look at the first quadrant and the absolute values of sin,cos:
+              sin_a, cos_a = abs(math.sin(angleR)), abs(math.cos(angleR))
+              if side_short <= 2.*sin_a*cos_a*side_long or abs(sin_a-cos_a) < 1e-10:
+                # half constrained case: two crop corners touch the longer side,
+                #   the other two corners are on the mid-line parallel to the longer line
+                x = 0.5*side_short
+                wr,hr = (x/sin_a,x/cos_a) if width_is_longer else (x/cos_a,x/sin_a)
+              else:
+                # fully constrained case: crop touches all 4 sides
+                cos_2a = cos_a*cos_a - sin_a*sin_a
+                wr,hr = (w*cos_a - h*sin_a)/cos_2a, (h*cos_a - w*sin_a)/cos_2a
+
+              return wr,hr
+
+            dims = rotatedRectWithMaxArea(w,h,angleR)
+            w,h = rotated.size
+            L = (w - dims[0])/2
+            T = h - (h - dims[1])/2
+            R = w - (w - dims[0])/2
+            B = (h - dims[1])/2
+
+            cropped = rotated.crop((L,B,R,T))
+
+            buffer = BytesIO()
+            cropped.save(buffer, format = 'JPEG')
+            encoded_image = base64.b64encode(buffer.getvalue()).decode()
+            encoded_image_src = 'data:image/jpeg;base64,' + encoded_image
+        else:
+             print("Webcam image URL not found in page content.")
+    else:
+        print("Failed to retrieve webcam page.")
+
+except Exception as e:
+    print(f"Error fetching webcam image: {e}. Using default/empty banner.")
 
 print('building dashboard')
 # Create the Dash app
@@ -599,7 +605,7 @@ def update_graph(clickData):
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run(debug=True)
 
 
 
