@@ -157,8 +157,15 @@ try:
 
     if len(row_data) > 0 and len(time_data) >= len(row_data):
         df = pd.DataFrame()
-        df['datetime'] = pd.to_datetime(time_data[:len(row_data)])
-        df['qpf'] = pd.to_numeric(row_data, errors='coerce').fillna(0)
+        # Parse datetime with ISO8601 inference which NWS uses
+        df['datetime'] = pd.to_datetime(time_data[:len(row_data)], format='ISO8601')
+
+        # safely convert to numeric and fillna
+        qpf_series = pd.to_numeric(row_data, errors='coerce')
+        # If result is numpy array (pandas < 2.0 behavior for list input sometimes), wrap in Series
+        if not isinstance(qpf_series, pd.Series):
+            qpf_series = pd.Series(qpf_series)
+        df['qpf'] = qpf_series.fillna(0)
 
         # Calculate totals
         start_dt = df.iloc[0]['datetime']

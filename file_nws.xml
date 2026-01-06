@@ -39,18 +39,6 @@
     k-p1h-n1-0
    </layout-key>
    <start-valid-time>
-    2026-01-06T06:00:00-08:00
-   </start-valid-time>
-   <end-valid-time>
-    2026-01-06T07:00:00-08:00
-   </end-valid-time>
-   <start-valid-time>
-    2026-01-06T07:00:00-08:00
-   </start-valid-time>
-   <end-valid-time>
-    2026-01-06T08:00:00-08:00
-   </end-valid-time>
-   <start-valid-time>
     2026-01-06T08:00:00-08:00
    </start-valid-time>
    <end-valid-time>
@@ -1046,15 +1034,21 @@
    <end-valid-time>
     2026-01-13T06:00:00-08:00
    </end-valid-time>
+   <start-valid-time>
+    2026-01-13T06:00:00-08:00
+   </start-valid-time>
+   <end-valid-time>
+    2026-01-13T07:00:00-08:00
+   </end-valid-time>
+   <start-valid-time>
+    2026-01-13T07:00:00-08:00
+   </start-valid-time>
+   <end-valid-time>
+    2026-01-13T08:00:00-08:00
+   </end-valid-time>
   </time-layout>
   <parameters applicable-location="point1">
    <temperature time-layout="k-p1h-n1-0" type="hourly">
-    <value>
-     22
-    </value>
-    <value>
-     23
-    </value>
     <value>
      24
     </value>
@@ -1553,15 +1547,15 @@
     <value>
      29
     </value>
+    <value>
+     29
+    </value>
+    <value>
+     29
+    </value>
    </temperature>
    <temperature time-layout="k-p1h-n1-0" type="dew point">
     <value>
-     18
-    </value>
-    <value>
-     20
-    </value>
-    <value>
      21
     </value>
     <value>
@@ -2052,6 +2046,12 @@
     </value>
     <value>
      16
+    </value>
+    <value>
+     17
+    </value>
+    <value>
+     17
     </value>
     <value>
      17
@@ -2061,12 +2061,6 @@
     </value>
    </temperature>
    <temperature time-layout="k-p1h-n1-0" type="wind chill">
-    <value>
-     15
-    </value>
-    <value>
-     16
-    </value>
     <value>
      17
     </value>
@@ -2565,14 +2559,14 @@
     <value>
      19
     </value>
+    <value>
+     19
+    </value>
+    <value>
+     19
+    </value>
    </temperature>
    <probability-of-precipitation time-layout="k-p1h-n1-0" type="floating" units="percent">
-    <value>
-     2
-    </value>
-    <value>
-     2
-    </value>
     <value>
      2
     </value>
@@ -3028,6 +3022,12 @@
     </value>
     <value>
      1
+    </value>
+    <value>
+     0
+    </value>
+    <value>
+     0
     </value>
     <value>
      0
@@ -3089,12 +3089,6 @@
      6
     </value>
     <value>
-     6
-    </value>
-    <value>
-     6
-    </value>
-    <value>
      7
     </value>
     <value>
@@ -3552,6 +3546,12 @@
     </value>
     <value>
      11
+    </value>
+    <value>
+     13
+    </value>
+    <value>
+     13
     </value>
     <value>
      13
@@ -3593,8 +3593,6 @@
     <value xsi:nil="true"/>
     <value xsi:nil="true"/>
     <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
-    <value xsi:nil="true"/>
     <value>
      20
     </value>
@@ -3930,6 +3928,12 @@
     </value>
     <value>
      24
+    </value>
+    <value>
+     24
+    </value>
+    <value>
+     23
     </value>
    </wind-speed>
    <direction time-layout="k-p1h-n1-0" type="wind" units="degrees true">
@@ -3937,12 +3941,6 @@
      220
     </value>
     <value>
-     220
-    </value>
-    <value>
-     220
-    </value>
-    <value>
      230
     </value>
     <value>
@@ -4403,6 +4401,12 @@
     </value>
     <value>
      70
+    </value>
+    <value>
+     80
+    </value>
+    <value>
+     80
     </value>
     <value>
      80
@@ -4439,12 +4443,6 @@
     </value>
    </direction>
    <cloud-amount time-layout="k-p1h-n1-0" type="total" units="percent">
-    <value>
-     39
-    </value>
-    <value>
-     39
-    </value>
     <value>
      37
     </value>
@@ -4943,14 +4941,14 @@
     <value>
      9
     </value>
+    <value>
+     9
+    </value>
+    <value>
+     12
+    </value>
    </cloud-amount>
    <humidity time-layout="k-p1h-n1-0" type="relative" units="percent">
-    <value>
-     84
-    </value>
-    <value>
-     86
-    </value>
     <value>
      88
     </value>
@@ -5449,6 +5447,12 @@
     <value>
      61
     </value>
+    <value>
+     60
+    </value>
+    <value>
+     60
+    </value>
    </humidity>
    <hourly-qpf time-layout="k-p1h-n1-0" type="floating" units="inches">
     <value>
@@ -5494,12 +5498,6 @@
      0
     </value>
     <value>
-     0
-    </value>
-    <value>
-     0
-    </value>
-    <value>
      0.0050
     </value>
     <value>
@@ -5949,12 +5947,12 @@
     <value>
      0
     </value>
+    <value xsi:nil="true"/>
+    <value xsi:nil="true"/>
     <value xsi:nil="true"/>
     <value xsi:nil="true"/>
    </hourly-qpf>
    <weather time-layout="k-p1h-n1-0">
-    <weather-conditions xsi:nil="true"/>
-    <weather-conditions xsi:nil="true"/>
     <weather-conditions xsi:nil="true"/>
     <weather-conditions xsi:nil="true"/>
     <weather-conditions xsi:nil="true"/>
@@ -6049,6 +6047,8 @@
     <weather-conditions>
      <value coverage="chance" weather-type="snow"/>
     </weather-conditions>
+    <weather-conditions xsi:nil="true"/>
+    <weather-conditions xsi:nil="true"/>
     <weather-conditions xsi:nil="true"/>
     <weather-conditions xsi:nil="true"/>
     <weather-conditions xsi:nil="true"/>
