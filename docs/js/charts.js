@@ -69,7 +69,9 @@ export function showMessage(el, msg) {
 
 // bands: {min,p10,p25,p50,p75,p90,max} arrays indexed by doy-1 (366 long)
 // recent: {dates: [YYYY-MM-DD], values: []}
-export function ribbonChart(el, { recent, bands, unit, seriesName, forecast }) {
+// showBands=false plots only the median reference line from `bands` (used for
+// streamflow, where stacked fills drown out the observed trace at summer lows).
+export function ribbonChart(el, { recent, bands, unit, seriesName, forecast, showBands = true }) {
   const dates = recent.dates;
   const doyIdx = dates.map((d) => {
     const [, m, day] = d.split("-").map(Number);
@@ -78,7 +80,7 @@ export function ribbonChart(el, { recent, bands, unit, seriesName, forecast }) {
   const band = (key) => doyIdx.map((i) => bands?.[key]?.[i] ?? null);
 
   const traces = [];
-  if (bands) {
+  if (bands && showBands) {
     const fill = (name, key, rgb, alpha, opts = {}) => traces.push({
       x: dates, y: band(key), name,
       mode: "lines", line: { width: 0 },
@@ -96,15 +98,17 @@ export function ribbonChart(el, { recent, bands, unit, seriesName, forecast }) {
     fill("75–90th", "p90", WET, 0.16);
     // hidden by default: record maxima dwarf everything else and crush the y-scale
     fill("90th–max (wet)", "max", WET, 0.34, { hidden: true });
+  }
+  if (bands) {
     traces.push({
-      x: dates, y: band("p50"), name: "median",
+      x: dates, y: band("p50"), name: "median (day of year)",
       mode: "lines", line: { width: 1.5, color: INK_MUTED },
       hovertemplate: "median: %{y:,.0f}<extra></extra>",
     });
   }
   traces.push({
     x: dates, y: recent.values, name: seriesName || "last 12 months",
-    mode: "lines", line: { width: 2, color: "#ffffff", shape: "spline", smoothing: 0.6 },
+    mode: "lines", line: { width: 2, color: "#ffffff" },
     hovertemplate: `%{y:,.1f} ${unit}<extra>${seriesName || "observed"}</extra>`,
   });
   if (forecast) {

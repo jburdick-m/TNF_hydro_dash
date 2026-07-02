@@ -373,7 +373,7 @@ async function renderFlow(id) {
     if (st.source === "usgs") {
       [recent, bands] = await Promise.all([getUsgsDaily(id), getUsgsBands(id)]);
       latest = state.usgsLatest[id];
-      $("flow-note").textContent = bands ? "percentiles from USGS daily statistics" : "no long-term statistics for this gage";
+      $("flow-note").textContent = bands ? "median from USGS period-of-record daily statistics" : "no long-term statistics for this gage";
     } else if (st.source === "dreamflows") {
       const e = state.local.dreamflows?.[id];
       if (!e) throw new Error("no Dreamflows data yet");
@@ -387,7 +387,7 @@ async function renderFlow(id) {
       recent = e.recent;
       bands = e.bands || null;
       latest = e.latest;
-      $("flow-note").textContent = bands ? "percentiles from CDEC period of record" : "record too short for percentiles";
+      $("flow-note").textContent = bands ? "median from CDEC period of record" : "record too short for a median";
     }
     if (!recent.dates.length) throw new Error("empty series");
     // Extend the observed line to "now" with the latest instantaneous reading,
@@ -399,7 +399,8 @@ async function renderFlow(id) {
     if (forecast) $("flow-note").textContent += " · dashed line: CNRFC 5-day forecast";
     charts.ribbonChart(el, {
       recent, bands, unit: "cfs", forecast,
-      seriesName: st.source === "dreamflows" ? "observed flow" : "daily mean flow",
+      seriesName: "observed flow",
+      showBands: false,
     });
     ribbonTable($("flow-table"), recent, bands, "flow (cfs)");
   } catch (e) {
