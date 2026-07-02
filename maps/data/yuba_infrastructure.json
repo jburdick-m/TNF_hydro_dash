@@ -1,0 +1,626 @@
+{
+ "_sources": "FERC 2310/2266/2246 relicensing records; SWRCB water-quality certifications (2020); USGS gauges 11408000/11408550/11416000/11416500/11408850/11408880; CDEC YRS full-natural-flow; PG&E, NID, Yuba Water Agency documents; USACE 905(b) Yuba analysis; compiled 2026-07",
+ "reservoirs": [
+  {
+   "name": "Jackson Meadows Res.",
+   "lon": -120.5557,
+   "lat": 39.50896,
+   "af": 69205,
+   "owner": "NID",
+   "year": 1965,
+   "label": "Jackson Meadows",
+   "sub": "69,205 af \u00b7 NID \u00b7 1965"
+  },
+  {
+   "name": "Milton Diversion",
+   "lon": -120.58271,
+   "lat": 39.52225,
+   "af": 295,
+   "owner": "NID",
+   "kind": "diversion_dam",
+   "label": "Milton Div. Dam",
+   "sub": "295 af"
+  },
+  {
+   "name": "Bowman Lake",
+   "lon": -120.63121,
+   "lat": 39.45115,
+   "af": 68510,
+   "owner": "NID",
+   "year": 1927,
+   "label": "Bowman Lake",
+   "sub": "68,510 af \u00b7 NID \u00b7 1876/1927"
+  },
+  {
+   "name": "French Lake",
+   "lon": -120.53422,
+   "lat": 39.41675,
+   "af": 13940,
+   "owner": "NID",
+   "year": 1859,
+   "label": "French Lake",
+   "sub": "13,940 af \u00b7 1859"
+  },
+  {
+   "name": "Faucherie Lake",
+   "lon": -120.56891,
+   "lat": 39.42427,
+   "af": 3980,
+   "owner": "NID",
+   "label": "Faucherie",
+   "sub": null
+  },
+  {
+   "name": "Sawmill Lake",
+   "lon": -120.59699,
+   "lat": 39.44165,
+   "af": 3030,
+   "owner": "NID",
+   "label": "Sawmill",
+   "sub": null
+  },
+  {
+   "name": "Fordyce Lake",
+   "lon": -120.49619,
+   "lat": 39.38004,
+   "af": 49426,
+   "owner": "PG&E",
+   "year": 1873,
+   "label": "Fordyce Lake",
+   "sub": "49,426 af \u00b7 PG&E \u00b7 1873"
+  },
+  {
+   "name": "Lake Spaulding",
+   "lon": -120.64287,
+   "lat": 39.32714,
+   "af": 75912,
+   "owner": "PG&E",
+   "year": 1913,
+   "label": "LAKE SPAULDING",
+   "sub": "75,912 af \u00b7 PG&E \u00b7 1913",
+   "major": true
+  },
+  {
+   "name": "New Bullards Bar Res.",
+   "lon": -121.1431,
+   "lat": 39.3933,
+   "af": 966103,
+   "owner": "YWA",
+   "year": 1969,
+   "label": "NEW BULLARDS BAR",
+   "sub": "966,103 af \u00b7 Yuba Water \u00b7 1969",
+   "major": true
+  },
+  {
+   "name": "Englebright Lake",
+   "lon": -121.2694,
+   "lat": 39.24,
+   "af": 70000,
+   "owner": "USACE",
+   "year": 1941,
+   "label": "ENGLEBRIGHT",
+   "sub": "70,000 af \u00b7 USACE \u00b7 1941",
+   "major": true
+  },
+  {
+   "name": "Scotts Flat Res.",
+   "lon": -120.9305,
+   "lat": 39.2727,
+   "af": 48547,
+   "owner": "NID",
+   "year": 1948,
+   "label": "Scotts Flat",
+   "sub": "48,547 af \u00b7 NID \u00b7 1948"
+  },
+  {
+   "name": "Lake Wildwood",
+   "lon": -121.218,
+   "lat": 39.2361,
+   "af": 3840,
+   "owner": "private",
+   "year": 1970,
+   "label": "Lake Wildwood",
+   "sub": null
+  },
+  {
+   "name": "Collins Lake",
+   "lon": -121.3476,
+   "lat": 39.3389,
+   "af": 57000,
+   "owner": "BVID",
+   "year": 1963,
+   "label": "Collins Lake",
+   "sub": "57,000 af \u00b7 Browns Valley ID \u00b7 1963"
+  }
+ ],
+ "structures": [
+  {
+   "name": "Our House Div. Dam",
+   "lon": -120.9973,
+   "lat": 39.4122,
+   "kind": "diversion_dam",
+   "owner": "YWA",
+   "label": "Our House Div. Dam",
+   "sub": null
+  },
+  {
+   "name": "Log Cabin Div. Dam",
+   "lon": -121.0588,
+   "lat": 39.4398,
+   "kind": "diversion_dam",
+   "owner": "YWA",
+   "label": "Log Cabin Div. Dam",
+   "sub": null
+  },
+  {
+   "name": "Daguerre Point Dam",
+   "lon": -121.4439,
+   "lat": 39.2087,
+   "kind": "diversion_dam",
+   "owner": "USACE",
+   "label": "Daguerre Point Dam",
+   "sub": "1906 debris dam"
+  },
+  {
+   "name": "New Colgate PH",
+   "lon": -121.1908,
+   "lat": 39.3307,
+   "kind": "powerhouse",
+   "owner": "YWA",
+   "label": "New Colgate PH",
+   "sub": "340 MW"
+  },
+  {
+   "name": "Narrows 1 & 2 PH",
+   "lon": -121.2715,
+   "lat": 39.2381,
+   "kind": "powerhouse",
+   "owner": "YWA",
+   "label": "Narrows 1 & 2",
+   "sub": "12 + 55 MW"
+  },
+  {
+   "name": "Deer Creek PH",
+   "lon": -120.84411,
+   "lat": 39.29823,
+   "kind": "powerhouse",
+   "owner": "NID",
+   "label": "Deer Creek PH",
+   "sub": "5.7 MW \u00b7 1908"
+  },
+  {
+   "name": "Spaulding powerhouses",
+   "lon": -120.6445,
+   "lat": 39.3244,
+   "kind": "powerhouse",
+   "owner": "PG&E",
+   "label": "Spaulding PH 1\u20133",
+   "sub": "17 MW"
+  },
+  {
+   "name": "Drum PH 1 & 2",
+   "lon": -120.767,
+   "lat": 39.2571,
+   "kind": "powerhouse",
+   "owner": "PG&E",
+   "label": "Drum 1 & 2",
+   "sub": "105.9 MW \u00b7 1913",
+   "context": true
+  },
+  {
+   "name": "Bowman PH",
+   "lon": -120.65344,
+   "lat": 39.44834,
+   "kind": "powerhouse",
+   "owner": "NID",
+   "label": null,
+   "sub": null
+  }
+ ],
+ "conveyances": [
+  {
+   "name": "Milton\u2013Bowman Tunnel",
+   "kind": "tunnel",
+   "owner": "NID",
+   "cfs": 450,
+   "geometry": [
+    [
+     -120.58271,
+     39.52225
+    ],
+    [
+     -120.5985,
+     39.4955
+    ],
+    [
+     -120.61132,
+     39.46018
+    ]
+   ],
+   "label": "MILTON\u2013BOWMAN TUNNEL",
+   "sub": "450 cfs \u00b7 ~96% of summer flow",
+   "label_frac": 0.45,
+   "label_side": "left"
+  },
+  {
+   "name": "Bowman\u2013Spaulding Conduit",
+   "kind": "canal",
+   "owner": "NID",
+   "cfs": 300,
+   "geometry": [
+    [
+     -120.65938,
+     39.44046
+    ],
+    [
+     -120.6543,
+     39.4143
+    ],
+    [
+     -120.6604,
+     39.3894
+    ],
+    [
+     -120.6558,
+     39.3634
+    ],
+    [
+     -120.65086,
+     39.34488
+    ],
+    [
+     -120.6355,
+     39.33768
+    ],
+    [
+     -120.6389,
+     39.3312
+    ]
+   ],
+   "label": "BOWMAN\u2013SPAULDING CONDUIT",
+   "sub": "300 cfs",
+   "label_frac": 0.42,
+   "label_side": "left"
+  },
+  {
+   "name": "Lohman Ridge Tunnel",
+   "kind": "tunnel",
+   "owner": "YWA",
+   "cfs": 860,
+   "geometry": [
+    [
+     -120.9973,
+     39.4122
+    ],
+    [
+     -121.0575,
+     39.4415
+    ]
+   ],
+   "label": "LOHMAN RIDGE TUNNEL",
+   "sub": "860 cfs \u00b7 3.7 mi",
+   "label_frac": 0.5,
+   "label_side": "above"
+  },
+  {
+   "name": "Camptonville Tunnel",
+   "kind": "tunnel",
+   "owner": "YWA",
+   "cfs": 1100,
+   "geometry": [
+    [
+     -121.0591,
+     39.4393
+    ],
+    [
+     -121.081,
+     39.436
+    ]
+   ],
+   "label": "CAMPTONVILLE TUNNEL",
+   "sub": "1,100 cfs",
+   "label_frac": 0.5,
+   "label_side": "below"
+  },
+  {
+   "name": "New Colgate Tunnel & Penstock",
+   "kind": "penstock",
+   "owner": "YWA",
+   "cfs": 3430,
+   "geometry": [
+    [
+     -121.1431,
+     39.3933
+    ],
+    [
+     -121.1625,
+     39.3655
+    ],
+    [
+     -121.1908,
+     39.3307
+    ]
+   ],
+   "label": "NEW COLGATE TUNNEL & PENSTOCK",
+   "sub": "3,430 cfs \u00b7 1,306-ft drop",
+   "label_frac": 0.5,
+   "label_side": "right"
+  },
+  {
+   "name": "South Yuba Canal",
+   "kind": "canal",
+   "owner": "PG&E",
+   "cfs": 146,
+   "nhd": "South Yuba Canal",
+   "label": "SOUTH YUBA CANAL",
+   "sub": "146 cfs \u00b7 dug 1854\u201358",
+   "label_frac": 0.45,
+   "label_side": "above"
+  },
+  {
+   "name": "Drum Canal",
+   "kind": "canal",
+   "owner": "PG&E",
+   "cfs": 840,
+   "nhd": "Drum Canal",
+   "label": "DRUM CANAL",
+   "sub": "840 cfs \u2192 Bear basin",
+   "label_frac": 0.55,
+   "label_side": "below"
+  },
+  {
+   "name": "Cascade Canal",
+   "kind": "canal",
+   "owner": "NID",
+   "cfs": 53,
+   "nhd": "Cascade Canal",
+   "label": "CASCADE CANAL",
+   "sub": null,
+   "label_frac": 0.35,
+   "label_side": "above"
+  },
+  {
+   "name": "D-S Canal",
+   "kind": "canal",
+   "owner": "NID",
+   "cfs": 49,
+   "nhd": "D-S Canal",
+   "label": "D\u2013S CANAL",
+   "sub": null,
+   "label_frac": 0.5,
+   "label_side": "below"
+  },
+  {
+   "name": "Hallwood-Cordua Canal",
+   "kind": "canal",
+   "owner": "DEBRIS",
+   "cfs": 625,
+   "nhd": "Cordua Canal",
+   "label": "HALLWOOD\u2013CORDUA",
+   "sub": "625 cfs",
+   "label_frac": 0.8,
+   "label_side": "above"
+  },
+  {
+   "name": "South Yuba-Brophy Canal",
+   "kind": "canal",
+   "owner": "DEBRIS",
+   "cfs": 460,
+   "geometry": [
+    [
+     -121.4415,
+     39.2055
+    ],
+    [
+     -121.4335,
+     39.1918
+    ],
+    [
+     -121.4426,
+     39.1782
+    ]
+   ],
+   "label": null,
+   "sub": null
+  }
+ ],
+ "cities": [
+  {
+   "name": "Downieville",
+   "lon": -120.827,
+   "lat": 39.5593
+  },
+  {
+   "name": "Sierra City",
+   "lon": -120.6322,
+   "lat": 39.5663
+  },
+  {
+   "name": "Camptonville",
+   "lon": -121.0483,
+   "lat": 39.4521
+  },
+  {
+   "name": "North San Juan",
+   "lon": -121.1022,
+   "lat": 39.3666
+  },
+  {
+   "name": "Washington",
+   "lon": -120.798,
+   "lat": 39.3632
+  },
+  {
+   "name": "Nevada City",
+   "lon": -121.0161,
+   "lat": 39.2616
+  },
+  {
+   "name": "Grass Valley",
+   "lon": -121.0608,
+   "lat": 39.2191
+  },
+  {
+   "name": "Smartsville",
+   "lon": -121.2977,
+   "lat": 39.2071
+  },
+  {
+   "name": "Marysville",
+   "lon": -121.5911,
+   "lat": 39.1457
+  }
+ ],
+ "landmarks": [
+  {
+   "name": "Malakoff Diggins",
+   "lon": -120.9114,
+   "lat": 39.3706,
+   "note": "hydraulic mine, 1866\u201384"
+  },
+  {
+   "name": "Mount Lola \u00b7 9,148 ft",
+   "lon": -120.366,
+   "lat": 39.4353,
+   "note": null
+  },
+  {
+   "name": "Sierra Buttes \u00b7 8,591 ft",
+   "lon": -120.645,
+   "lat": 39.595,
+   "note": null
+  }
+ ],
+ "stories": [
+  {
+   "title": "A river sent through a mountain",
+   "text": "At Milton, NID skims the Middle Yuba into a 22,600-ft tunnel bored through the divide into Bowman Lake. USGS gauges show the tunnel taking ~96% of the river's July\u2013September flow \u2014 94\u2013139 cfs into the mountain, 4\u20136 cfs left in the riverbed.",
+   "anchor": [
+    -120.5985,
+    39.4955
+   ],
+   "box": [
+    -120.502,
+    39.688
+   ],
+   "width": 11.0
+  },
+  {
+   "title": "Grand Central, elevation 5,014 ft",
+   "text": "Nearly every drop of two FERC projects funnels through Lake Spaulding, then splits three ways: up to 840 cfs west into the Drum Canal toward the Bear River, 146 cfs to Nevada City down the 1850s South Yuba Canal \u2014 and just 16 cfs out the dam's river outlet.",
+   "anchor": [
+    -120.64287,
+    39.32714
+   ],
+   "box": [
+    -120.502,
+    39.302
+   ],
+   "width": 11.0
+  },
+  {
+   "title": "The two-tunnel relay",
+   "text": "Our House Dam pushes the Middle Yuba through Lohman Ridge into Oregon Creek; 1,000 ft later Log Cabin Dam re-diverts everything through the Camptonville Tunnel into New Bullards Bar. In an average July, roughly half the Middle Yuba's flow ends up in the reservoir.",
+   "anchor": [
+    -121.02,
+    39.428
+   ],
+   "box": [
+    -121.245,
+    39.668
+   ],
+   "width": 14.5
+  },
+  {
+   "title": "One dam, two-thirds of the basin's storage",
+   "text": "New Bullards Bar (1969) stores 966,103 af behind a 645-ft arch \u2014 water that drops 1,306 ft to spin New Colgate's 340-MW Pelton wheels, the largest ever cast. Its high spillway gates, an Oroville-style flaw, will be fixed by new gates 31.5 ft lower: the ARC spillway.",
+   "anchor": [
+    -121.1431,
+    39.3933
+   ],
+   "box": [
+    -121.395,
+    39.475
+   ],
+   "width": 14.0
+  },
+  {
+   "title": "Dams built for mud, not water",
+   "text": "Hydraulic monitors washed ~680 million cubic yards of the Sierra into the Yuba \u2014 triple the Panama Canal's dig \u2014 burying farms and raising riverbeds. Daguerre Point (1906) and Englebright (1941) were built to trap that debris; Englebright still walls salmon out of the entire upper watershed.",
+   "anchor": [
+    -121.2694,
+    39.24
+   ],
+   "box": [
+    -121.658,
+    39.125
+   ],
+   "width": 16.0
+  },
+  {
+   "title": "A creek that runs on borrowed water",
+   "text": "Deer Creek's own watershed yields little; its dependable flow is Yuba headwater imported through the South Yuba Canal. From Scotts Flat, NID meters ~53,000 af a year into 75 canals serving 25,000 connections \u2014 Gold Rush ditches still delivering the drinking water.",
+   "anchor": [
+    -120.93,
+    39.268
+   ],
+   "box": [
+    -121.06,
+    39.118
+   ],
+   "width": 15.0
+  },
+  {
+   "title": "February 2026 \u2014 the plumbing breaks",
+   "text": "On Feb 13, 2026, New Colgate's 14-ft penstock ruptured, sending ~400 acre-feet down the hillside and knocking out the basin's biggest powerhouse. One pipe failure re-plumbed the river: flood releases shifted to the spillway and the lower Yuba's fish flows now lean on Englebright.",
+   "anchor": [
+    -121.1908,
+    39.3307
+   ],
+   "box": [
+    -121.545,
+    39.302
+   ],
+   "width": 14.5
+  }
+ ],
+ "stats": {
+  "runoff_af": 2359000,
+  "runoff_range": [
+   369000,
+   5604000
+  ],
+  "storage_af": 1430000,
+  "mw_total": 676,
+  "export_bear_af": 200000,
+  "lower_diversions_af": 262000,
+  "area_sqmi": 1339
+ },
+ "annotations": [
+  {
+   "lon": -120.895,
+   "lat": 39.535,
+   "text": "the free-flowing fork \u2014 Class IV\u2013V\nsnowmelt whitewater below Goodyears Bar"
+  },
+  {
+   "lon": -120.975,
+   "lat": 39.318,
+   "text": "state Wild & Scenic candidate, yet artificially low\nall summer \u2014 its headwaters left at Spaulding"
+  },
+  {
+   "lon": -120.74,
+   "lat": 39.452,
+   "text": "the emptied reach \u2014 ~96% of summer\nflow exits at Milton"
+  },
+  {
+   "lon": -121.302,
+   "lat": 39.252,
+   "text": "absolute upstream limit\nfor salmon & steelhead"
+  },
+  {
+   "lon": -120.522,
+   "lat": 39.462,
+   "text": "five lakes feed Canyon Creek \u2014\nall 1859\u20131870s mining works"
+  }
+ ]
+}
