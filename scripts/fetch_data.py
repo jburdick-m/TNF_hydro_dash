@@ -165,31 +165,18 @@ def build_flow(stations):
 
 
 DREAMFLOWS_REALTIME = "https://www.dreamflows.com/realtime.csv.php"
+DREAMFLOWS_DAILY = "https://www.dreamflows.com/flows-canv.csv.php"
 
 
-def build_dreamflows(stations, keep_days=180):
-    """Operator gages (PG&E / NID / PCWA / YCWA FERC points) via Dreamflows'
-    bulk realtime CSV — the only machine-readable source for these. One gentle
-    fetch per scheduled run; history accumulates across runs since the feed
-    only carries current values. Credit Dreamflows.com wherever displayed.
-    """
-    if not stations:
-        return {}
-    out_path = DATA_DIR / "dreamflows.json"
-    old = json.loads(out_path.read_text()) if out_path.exists() else {}
-
+def _dreamflows_rows(url):
+    """Parse a Dreamflows CSV feed -> list of {river_id, ts, flow, confidence}.
+    Both feeds share a 15-column format behind a several-line preamble."""
     import csv as csv_mod
-    try:
-        r = SESSION.get(DREAMFLOWS_REALTIME, timeout=60)
-        r.raise_for_status()
-    except Exception as e:  # noqa: BLE001
-        print(f"  ! dreamflows fetch failed: {e}", file=sys.stderr)
-        return old
-
-    rows = {}
-    reader = csv_mod.reader(r.text.splitlines())
+    r = SESSION.get(url, timeout=60)
+    r.raise_for_status()
     header = None
-    for row in reader:
+    out = []
+    for row in csv_mod.reader(r.text.splitlines()):
         if not row:
             continue
         if header is None:
@@ -198,32 +185,60 @@ def build_dreamflows(stations, keep_days=180):
             continue
         if len(row) < len(header):
             continue
-        rows[row[header["RiverId"]].strip()] = row
+        try:
+            flow = float(row[header["RiverFlow"]])
+        except ValueError:  # qualitative entries like "Low", or "n/a"
+            continue
+        out.append({
+            "river_id": row[header["RiverId"]].strip(),
+            "ts": f"{row[header['Date']].strip()} {row[header['Time']].strip()}",
+            "flow": round(flow, 1),
+            "confidence": row[header["Confidence"]].strip(),
+        })
+    return out
+
+
+def build_dreamflows(stations, keep_days=180):
+    """Operator gages (PG&E / NID / PCWA / YCWA FERC points) via Dreamflows'
+    bulk CSV feeds — the only machine-readable source for these. One gentle
+    fetch of each feed per scheduled run; history accumulates across runs
+    since the feeds carry only current/last-3-day values. Credit
+    Dreamflows.com wherever displayed.
+    """
+    if not stations:
+        return {}
+    out_path = DATA_DIR / "dreamflows.json"
+    old = json.loads(out_path.read_text()) if out_path.exists() else {}
+
+    points = {}   # river_id -> {ts: flow}
+    latest = {}   # river_id -> (ts, flow, confidence)
+    for url in (DREAMFLOWS_DAILY, DREAMFLOWS_REALTIME):
+        try:
+            for p in _dreamflows_rows(url):
+                points.setdefault(p["river_id"], {})[p["ts"]] = p["flow"]
+                cur = latest.get(p["river_id"])
+                if cur is None or p["ts"] > cur[0]:
+                    latest[p["river_id"]] = (p["ts"], p["flow"], p["confidence"])
+        except Exception as e:  # noqa: BLE001
+            print(f"  ! dreamflows fetch failed ({url}): {e}", file=sys.stderr)
+
+    if not points:
+        return old
 
     cutoff = (datetime.now() - timedelta(days=keep_days)).strftime("%Y-%m-%d")
     out = {}
     for st in stations:
         ent = old.get(st["id"], {"recent": {"dates": [], "values": []}, "latest": None})
-        row = rows.get(str(st["df_id"]))
-        if row is not None and header is not None:
-            try:
-                flow = float(row[header["RiverFlow"]])
-                ts = f"{row[header['Date']].strip()} {row[header['Time']].strip()}"
-                ent["confidence"] = row[header["Confidence"]].strip()
-                if ts not in ent["recent"]["dates"]:
-                    ent["recent"]["dates"].append(ts)
-                    ent["recent"]["values"].append(round(flow, 1))
-                ent["latest"] = {"t": ts, "v": round(flow, 1)}
-            except (ValueError, IndexError):
-                pass  # "n/a" or malformed reading; keep prior history
-        # trim accumulated history
-        keep = [i for i, t in enumerate(ent["recent"]["dates"]) if t >= cutoff]
-        ent["recent"] = {
-            "dates": [ent["recent"]["dates"][i] for i in keep],
-            "values": [ent["recent"]["values"][i] for i in keep],
-        }
+        merged = dict(zip(ent["recent"]["dates"], ent["recent"]["values"]))
+        merged.update(points.get(str(st["df_id"]), {}))
+        keep = sorted(t for t in merged if t >= cutoff)
+        ent["recent"] = {"dates": keep, "values": [merged[t] for t in keep]}
+        lv = latest.get(str(st["df_id"]))
+        if lv:
+            ent["latest"] = {"t": lv[0], "v": lv[1]}
+            ent["confidence"] = lv[2]
         out[st["id"]] = ent
-        print(f"dreamflows: {st['id']} ({st['name']}) -> {ent['latest']}")
+        print(f"dreamflows: {st['id']} ({st['name']}) -> {ent['latest']} ({len(keep)} pts)")
     return out
 
 

@@ -380,7 +380,7 @@ async function renderFlow(id) {
       recent = e.recent;
       bands = null;
       latest = e.latest;
-      $("flow-note").textContent = `operator gage via Dreamflows.com${e.confidence && e.confidence !== "Gage" ? ` · reading is an ${e.confidence.toLowerCase()} estimate` : ""} — record builds as the dashboard collects it; no historical statistics`;
+      $("flow-note").textContent = `operator gage via Dreamflows.com${e.confidence && e.confidence !== "Gage" ? ` · reading may be estimated (confidence: ${e.confidence})` : ""} — record builds as the dashboard collects it; no historical statistics`;
     } else {
       const e = state.local.flow?.[id];
       if (!e) throw new Error("no CDEC data yet");
