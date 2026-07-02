@@ -71,10 +71,14 @@
 
     <section id="soil">
       <h2>Soil moisture</h2>
-      <p class="section-sub">Volumetric soil moisture by depth (CDEC / CW3E &amp; UC Davis research stations), last ~4 months.</p>
+      <p class="section-sub">Volumetric soil moisture at CDEC / CW3E &amp; UC Davis research stations. These records only start in 2021–2023, so historical context is shown as a year-over-year comparison rather than percentile bands.</p>
       <div class="card">
         <div class="panel-head">
           <select id="soil-select" aria-label="Choose soil moisture station"></select>
+          <select id="soil-view" aria-label="Choose soil moisture view">
+            <option value="recent">Last 4 months · all depths</option>
+            <option value="context">All years · one depth</option>
+          </select>
           <span class="note" id="soil-note"></span>
         </div>
         <div id="soil-chart" class="chart"></div>

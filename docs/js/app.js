@@ -356,6 +356,7 @@ function buildSelectors() {
     soilSel.appendChild(new Option(`${st.name} (${(st.elev_ft || 0).toLocaleString()} ft)`, st.id));
   }
   soilSel.addEventListener("change", () => renderSoil(soilSel.value));
+  $("soil-view").addEventListener("change", () => renderSoil(soilSel.value));
 }
 
 /* ---------- streamflow ---------- */
@@ -436,11 +437,27 @@ function renderSoil(id) {
     charts.showMessage(el, `No data available for ${st?.name || id}.`);
     return;
   }
-  $("soil-note").textContent = e.nodes_reporting != null
+  const meshNote = e.nodes_reporting != null
     ? `median of ${e.nodes_reporting}/${e.nodes_total} mesh nodes`
     : "";
-  charts.soilChart(el, e.depths);
-  soilTable($("soil-table"), e.depths);
+  const view = $("soil-view").value;
+  if (view === "context") {
+    if (!e.context) {
+      charts.showMessage(el, `No multi-year record yet for ${st?.name || id}.`);
+      $("soil-note").textContent = meshNote;
+      return;
+    }
+    const firstYear = e.context.dates[0]?.slice(0, 4);
+    $("soil-note").textContent =
+      `${e.context.depth} depth · each line is one water year (Oct–Sep) · record since ${firstYear}${meshNote ? " · " + meshNote : ""}`;
+    charts.waterYearChart(el, e.context);
+    charts.fillTable($("soil-table"), ["date", `${e.context.depth} (%)`],
+      e.context.dates.map((d, i) => [d, e.context.values[i]]).reverse());
+  } else {
+    $("soil-note").textContent = meshNote;
+    charts.soilChart(el, e.depths);
+    soilTable($("soil-table"), e.depths);
+  }
 }
 
 /* ---------- reservoirs ---------- */
