@@ -139,7 +139,7 @@ class LabelEngine:
         ux, uy = tx - px, ty - py
         d = np.hypot(ux, uy)
         sx, sy = px + ux / d * 5, py + uy / d * 5
-        ex, ey = px + ux / d * (d - 4), py + uy / d * (d - 4)
+        ex, ey = px + ux / d * (d - 1.5), py + uy / d * (d - 1.5)
         (x0, y0), (x1, y1) = inv.transform([(sx, sy), (ex, ey)])
         self.ax.plot([x0, x1], [y0, y1], solid_capstyle="round", **kw)
 

@@ -1,5 +1,5 @@
 {
- "_sources": "FERC 2310/2266/2246 relicensing records; SWRCB water-quality certifications (2020); USGS gauges 11408000/11408550/11416000/11416500/11408850/11408880; CDEC YRS full-natural-flow; PG&E, NID, Yuba Water Agency documents; USACE 905(b) Yuba analysis; compiled 2026-07",
+ "_sources": "FERC 2310/2266/2246 relicensing records; SWRCB water-quality certifications (2020); USGS gauges 11408000/11408550/11416000/11416500/11408850/11408880; CDEC YRS full-natural-flow; PG&E, NID, Yuba Water Agency documents; USACE 905(b) Yuba analysis; compiled 2026-07; BVID (bvid.org/dam); CA Wild & Scenic SB 496 (1999)",
  "reservoirs": [
   {
    "name": "Jackson Meadows Res.",
@@ -195,7 +195,7 @@
    "kind": "powerhouse",
    "owner": "PG&E",
    "label": "Spaulding PH 1\u20133",
-   "sub": "17 MW"
+   "sub": "17.2 MW"
   },
   {
    "name": "Drum PH 1 & 2",
@@ -299,7 +299,7 @@
    ],
    "label": "LOHMAN RIDGE TUNNEL",
    "sub": "860 cfs \u00b7 3.7 mi",
-   "label_frac": 0.5,
+   "label_frac": 0.3,
    "label_side": "above"
   },
   {
@@ -343,7 +343,7 @@
    ],
    "label": "NEW COLGATE TUNNEL & PENSTOCK",
    "sub": "3,430 cfs \u00b7 1,306-ft drop",
-   "label_frac": 0.5,
+   "label_frac": 0.55,
    "label_side": "right"
   },
   {
@@ -355,7 +355,8 @@
    "label": "SOUTH YUBA CANAL",
    "sub": "146 cfs \u00b7 dug 1854\u201358",
    "label_frac": 0.45,
-   "label_side": "above"
+   "label_side": "above",
+   "label_off": 2.1
   },
   {
    "name": "Drum Canal",
@@ -376,7 +377,7 @@
    "nhd": "Cascade Canal",
    "label": "CASCADE CANAL",
    "sub": null,
-   "label_frac": 0.35,
+   "label_frac": 0.14,
    "label_side": "above"
   },
   {
@@ -516,7 +517,8 @@
     -120.502,
     39.302
    ],
-   "width": 11.0
+   "width": 11.0,
+   "leader": false
   },
   {
    "title": "The two-tunnel relay",
@@ -526,8 +528,8 @@
     39.428
    ],
    "box": [
-    -121.245,
-    39.668
+    -121.222,
+    39.664
    ],
    "width": 14.5
   },
@@ -559,13 +561,13 @@
   },
   {
    "title": "A creek that runs on borrowed water",
-   "text": "Deer Creek's own watershed yields little; its dependable flow is Yuba headwater imported through the South Yuba Canal. From Scotts Flat, NID meters ~53,000 af a year into 75 canals serving 25,000 connections \u2014 Gold Rush ditches still delivering the drinking water.",
+   "text": "Deer Creek's own watershed yields little; its dependable flow is Yuba headwater imported through the South Yuba Canal. From Scotts Flat, NID meters ~53,000 af a year into 75 canals serving ~52,000 people \u2014 Gold Rush ditches still delivering the drinking water.",
    "anchor": [
     -120.93,
     39.268
    ],
    "box": [
-    -121.06,
+    -121.028,
     39.118
    ],
    "width": 15.0
@@ -578,8 +580,8 @@
     39.3307
    ],
    "box": [
-    -121.545,
-    39.302
+    -121.552,
+    39.316
    ],
    "width": 14.5
   }
@@ -605,7 +607,7 @@
   {
    "lon": -120.975,
    "lat": 39.318,
-   "text": "state Wild & Scenic candidate, yet artificially low\nall summer \u2014 its headwaters left at Spaulding"
+   "text": "state Wild & Scenic since 1999, yet artificially low\nall summer \u2014 its headwaters left at Spaulding"
   },
   {
    "lon": -120.74,
@@ -613,8 +615,8 @@
    "text": "the emptied reach \u2014 ~96% of summer\nflow exits at Milton"
   },
   {
-   "lon": -121.302,
-   "lat": 39.252,
+   "lon": -121.325,
+   "lat": 39.263,
    "text": "absolute upstream limit\nfor salmon & steelhead"
   },
   {

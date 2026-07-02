@@ -93,7 +93,7 @@ def draw_basins(ax):
     return yuba, bear
 
 
-RIVER_LW = {1: 3.4, 2: 2.3, 3: 1.5, 4: 1.0}
+RIVER_LW = {1: 3.4, 2: 2.3, 3: 1.3, 4: 0.85}
 CONTEXT_RIVERS = {"Bear River", "Feather River", "Wolf Creek"}
 
 
@@ -108,9 +108,10 @@ def draw_rivers(ax, eng=None):
             p = geo.project_arr(np.array(c))
             p = geo.chaikin(geo.simplify(p, 0.03), 2)
             width = RIVER_LW[cls] * (0.75 if ctx else 1.0)
+            a = 0.45 if ctx else (0.95 if cls <= 2 else 0.8)
             ax.plot(p[:, 0], p[:, 1], color=style.RIVER, lw=width,
                     solid_capstyle="round", solid_joinstyle="round",
-                    zorder=4, alpha=0.45 if ctx else 0.95)
+                    zorder=4, alpha=a)
             if eng is not None:
                 eng.add_line_data(p[:, 0], p[:, 1],
                                   step=max(1, len(p) // 150))
@@ -136,7 +137,7 @@ def draw_canals(ax, eng=None):
         for c in chains:
             p = geo.project_arr(np.array(c))
             p = geo.chaikin(geo.simplify(p, 0.02), 2)
-            ax.plot(p[:, 0], p[:, 1], color=col, lw=1.2 if ctx else 1.8,
+            ax.plot(p[:, 0], p[:, 1], color=col, lw=1.2 if ctx else 2.2,
                     zorder=5, solid_capstyle="round",
                     alpha=0.45 if ctx else 1.0)
             if eng is not None:
@@ -187,7 +188,7 @@ def draw_conveyances(ax, eng, infra, nhd_canals):
             pts = geo.project_arr(np.array(cv["geometry"]))
             pts = geo.chaikin(pts, 2)
             ls = style.LINESTYLE.get(cv["kind"], "-")
-            ax.plot(pts[:, 0], pts[:, 1], color=col, lw=2.0, linestyle=ls,
+            ax.plot(pts[:, 0], pts[:, 1], color=col, lw=2.4, linestyle=ls,
                     zorder=5.5, solid_capstyle="round")
             symbols.mid_arrowhead(ax, pts, col, frac=0.5, size=9, zorder=5.6)
             eng.add_line_data(pts[:, 0], pts[:, 1], step=max(1, len(pts)//40))
@@ -199,6 +200,8 @@ def draw_conveyances(ax, eng, infra, nhd_canals):
         rad = math.radians(ang + 90)
         off = {"above": 1.15, "below": -1.7, "left": 1.15,
                "right": -1.7}[side]
+        if cv.get("label_off"):
+            off = cv["label_off"] * (1 if off > 0 else -1)
         sx, sy = lx + math.cos(rad) * off, ly + math.sin(rad) * off
         t = ax.text(sx, sy, cv["label"], fontsize=8.2, family=style.SANS,
                     fontweight=600, color=col, ha="center", va="center",
@@ -314,6 +317,8 @@ def draw_stories(ax, rects):
         ex = min(max(axp, x), x + w)
         ey = min(max(ayp, y), y + h)
         d = math.hypot(axp - ex, ayp - ey)
+        if st.get("leader") is False:
+            d = 0
         if 1.0 < d < 14.0:
             ux, uy = axp - ex, ayp - ey
             ax.plot([ex + ux * 0.02, axp - ux * 0.06],
@@ -329,7 +334,7 @@ RIVER_LABELS = [
     ("South Yuba River", -120.88, 0.0, "SOUTH YUBA RIVER", 10.5),
     ("Yuba River", -121.505, 0.0, "YUBA RIVER", 12.5),
     ("Deer Creek", -121.115, 0.0, "Deer Creek", 9.0),
-    ("Canyon Creek", -120.638, 0.0, "Canyon Ck", 8.5),
+    ("Canyon Creek", -120.612, 0.0, "Canyon Ck", 8.5),
     ("Oregon Creek", -121.083, 0.0, "Oregon Ck", 8.0),
     ("Dry Creek", -121.36, 0.0, "Dry Creek", 8.5),
     ("Slate Creek", -121.09, 0.0, "Slate Ck", 8.0),
@@ -376,7 +381,7 @@ def draw_title_block(ax):
             fontsize=17.5, family=style.SERIF, fontstyle="italic",
             color=style.INK_SOFT, va="top", **kw)
     ax.text(x + 0.15, y - 7.0,
-            "Yuba River watershed, California  ·  1,339 square miles  ·  drawn from USGS NHDPlus HR hydrography & 3DEP terrain",
+            "Yuba River watershed, California  ·  1,339 square miles",
             fontsize=10.5, family=style.SANS, color=style.INK_MUTE,
             va="top", **kw)
     rule_y = y - 6.0
@@ -407,8 +412,8 @@ def legend_line(ax, x, y, color, kind, label, sub=None):
 
 def draw_legend(ax):
     """'How to read this map' card, left edge under the title block."""
-    cx, cy = geo.project(-121.669, 39.368)   # card lower-left
-    W, H = 22.5, 29.8
+    cx, cy = geo.project(-121.669, 39.34)   # card lower-left
+    W, H = 22.5, 32.5
     draw_card(ax, cx, cy, W, H)
     x = cx + 1.5
     y = cy + H - 2.2
@@ -499,7 +504,9 @@ def main():
     infra = load_infra()
     ratio = (Y1 - Y0) / (X1 - X0)
     fig = plt.figure(figsize=(FIG_W, FIG_W * ratio), dpi=100)
-    ax = fig.add_axes([0, 0, 1, 1])
+    pad = 0.018
+    pad_v = pad / ratio
+    ax = fig.add_axes([pad, pad_v, 1 - 2 * pad, 1 - 2 * pad_v])
     ax.set_xlim(X0, X1)
     ax.set_ylim(Y0, Y1)
     ax.set_aspect("equal")
@@ -587,7 +594,8 @@ def main():
         txt = lm["name"] + (f"\n{lm['note']}" if lm.get("note") else "")
         t = place2(x, y, txt, fontsize=8, family=style.SANS,
                    color=style.INK_SOFT, linespacing=1.25,
-                   path_effects=halo(), zorder=12, leader=False)
+                   path_effects=halo(), zorder=12,
+                   leader="ft" not in lm["name"])
         if t is None:
             misses.append(("landmark", lm["name"]))
     # free-floating italic annotations
@@ -605,13 +613,13 @@ def main():
     draw_stories(ax, rects)
     ax.text(*P(-120.372, 39.028),
             "Hydrography: USGS NHDPlus HR  ·  Terrain: USGS 3DEP  ·  Statistics: FERC 2310 / 2266 / 2246 records, SWRCB certifications, USGS & CDEC gauges  ·  An artistic schematic — not for navigation",
-            fontsize=7.5, family=style.SANS, color=style.INK_MUTE,
+            fontsize=7.5, family=style.SANS, color=style.INK_SOFT,
             ha="right", va="bottom", zorder=22, path_effects=halo())
     draw_title_block(ax)
     draw_legend(ax)
     draw_frame(ax, fig)
-    draw_scalebar(ax, *geo.project(-121.425, 39.045))
-    draw_north(ax, *geo.project(-121.135, 39.038))
+    draw_scalebar(ax, *geo.project(-120.645, 39.055))
+    draw_north(ax, *geo.project(-120.68, 39.049))
 
     os.makedirs(OUT, exist_ok=True)
     fig.savefig(os.path.join(OUT, "yuba_plumbing_map.pdf"))

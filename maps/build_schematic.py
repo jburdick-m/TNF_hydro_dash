@@ -154,10 +154,10 @@ def main():
     conveyance(ax, [(45.0, Y_DEER - 0.2), (48.8, Y_DEER - 4.0)], style.NID,
                "canal", lw=1.4)
     # Daguerre Point diversions (steep exits)
-    conveyance(ax, [(90, Y_MAIN + 0.2), (91.6, Y_MAIN + 3.1)], style.DEBRIS,
-               "canal", lw=1.4)
-    conveyance(ax, [(90, Y_MAIN - 0.2), (91.6, Y_MAIN - 3.1)], style.DEBRIS,
-               "canal", lw=1.4)
+    conveyance(ax, [(90.55, Y_MAIN + 1.15), (91.6, Y_MAIN + 3.1)],
+               style.DEBRIS, "canal", lw=1.4)
+    conveyance(ax, [(90.55, Y_MAIN - 1.15), (91.6, Y_MAIN - 3.1)],
+               style.DEBRIS, "canal", lw=1.4)
 
     # ------------------------------------------------------------ reservoirs
     R = {
@@ -171,7 +171,7 @@ def main():
         "Lake Spaulding": (33, Y_SOUTH, 75912),
         "New Bullards Bar": (51.8, Y_NORTH, 966103),
         "Scotts Flat": (46.5, Y_DEER, 48547),
-        "Lake Wildwood": (60, Y_DEER, 4700),
+        "Lake Wildwood": (60, Y_DEER, 3840),
         "Englebright Lake": (79, Y_MAIN, 70000),
         "Drum Forebay": (35.6, Y_BEAR + 0.6, 800),
     }
@@ -190,7 +190,7 @@ def main():
         (36.9, Y_BEAR + 1.6, "Drum", style.PGE),
         (39.6, Y_DEER + 0.55, "Deer Creek", style.NID),
         (72.0, Y_MAIN + 1.35, "New Colgate", style.YWA),
-        (80.9, Y_MAIN - 0.75, "Narrows", style.YWA),
+        (79.6, Y_MAIN - 0.9, "Narrows", style.YWA),
     ]
     for x, y, nm, col in PH:
         symbols.draw_powerhouse(ax, FX(x), y, 1.15, col)
@@ -199,7 +199,7 @@ def main():
         symbols.draw_div_dam(ax, FX(x), y, 1.5, style.INK, zorder=8)
     # storage dam ticks
     symbols.draw_dam_tick(ax, FX(54.15), Y_NORTH, 2.6, style.INK)
-    symbols.draw_dam_tick(ax, FX(81.1), Y_MAIN, 2.2, style.INK)
+    symbols.draw_dam_tick(ax, FX(81.15), Y_MAIN, 1.8, style.INK)
 
     fig.canvas.draw()
 
@@ -229,9 +229,9 @@ def main():
               col=style.RIVER_DK, ha="right")
     T(5.4, Y_NORTH, "NORTH YUBA", **RN)
     T(7.4, Y_MIDDLE - 1.5, "MIDDLE YUBA", **RN)
-    T(12.4, Y_CANYON, "CANYON CREEK", **RN)
+    T(10.2, Y_CANYON, "CANYON CREEK", **RN)
     T(11.4, Y_SOUTH, "SOUTH YUBA", **RN)
-    T(39.4, Y_DEER, "DEER CREEK", **RN)
+    T(38.2, Y_DEER, "DEER CREEK", **RN)
     T(37.4, Y_OREGON, "OREGON CK", fs=10, fam=style.SERIF, fstyle="italic",
       fw=600, col=style.RIVER_DK, ha="right")
     T(27.4, Y_BEAR, "BEAR RIVER", fs=13, fam=style.SERIF, fstyle="italic",
@@ -239,7 +239,7 @@ def main():
     T(96.2, Y_MAIN - 11.5, "FEATHER\nRIVER", fs=11, fam=style.SERIF,
       fstyle="italic", fw=600, col=style.RIVER, ha="right", va="top",
       alpha=0.75)
-    T(76.4, Y_MAIN + 0.6, "Yuba River", fs=11.5, fam=style.SERIF,
+    T(75.2, Y_MAIN + 0.6, "Yuba River", fs=11.5, fam=style.SERIF,
       fstyle="italic", fw=700, col=style.RIVER_DK, va="bottom")
     T(94.6, Y_MAIN - 1.1, "Marysville", fs=9, fam=style.SERIF,
       fstyle="italic", fw=400, col=style.INK_SOFT, va="top")
@@ -265,7 +265,7 @@ def main():
     rlabel("Milton", 3.4, 2.3, "Milton Diversion Dam · 295 af", fs=9.5)
     rlabel("French Lake", -2.6, 1.9, "French Lake",
            "13,940 af · 1859", ha="right", fs=9.5)
-    rlabel("Faucherie", -2.5, 1.9, "Faucherie · 3,980 af", fs=9.5)
+    rlabel("Faucherie", 0, 1.9, "Faucherie · 3,980 af", fs=9.5)
     rlabel("Sawmill", -0.4, -1.8, "Sawmill · 3,030 af", fs=9.5)
     rlabel("Bowman Lake", 0.6, 4.4, "Bowman Lake",
            "68,510 af · NID · 1876 / 1927")
@@ -275,8 +275,8 @@ def main():
            "75,912 af · PG&E · 1913", fw=700)
     rlabel("New Bullards Bar", 0, 4.6, "NEW BULLARDS BAR",
            "966,103 af · Yuba Water · 1969", fw=700)
-    rlabel("Scotts Flat", 1.1, 2.4, "Scotts Flat", "48,547 af · NID · 1948")
-    rlabel("Lake Wildwood", 0, 2.1, "Lake Wildwood",
+    rlabel("Scotts Flat", 1.1, 3.1, "Scotts Flat", "48,547 af · NID · 1948")
+    rlabel("Lake Wildwood", 0, 2.75, "Lake Wildwood",
            "3,840 af · private · 1970", fs=9.5)
     rlabel("Englebright Lake", -1.9, 3.4, "ENGLEBRIGHT",
            "70,000 af · USACE · 1941", fw=700)
@@ -303,7 +303,7 @@ def main():
     SUB(69.4, Y_MAIN - 3.1, "340 MW · 1,306-ft head · largest Pelton wheels ever cast")
     ax.plot([FX(70.6), FX(71.8)], [Y_MAIN - 1.55, Y_MAIN + 0.75],
             color=style.INK_MUTE, lw=0.6, zorder=11)
-    T(84.3, Y_MAIN - 1.2, "Narrows 1 & 2\n12 + 55 MW", fs=8.5, ha="left",
+    T(76.0, Y_MAIN - 0.9, "Narrows 1 & 2\n12 + 55 MW", fs=8.5, ha="left",
       va="top")
 
     # ----------------------------------------------------- conveyance labels
@@ -318,19 +318,19 @@ def main():
     T(48.4, 49.6, "CAMPTONVILLE TUNNEL", fs=9.5, col=YWA_, ha="right")
     SUB(48.4, 48.5, "1,100 cfs · 1.2 mi", ha="right")
     T(63.2, 42.3, "NEW COLGATE TUNNEL & PENSTOCK", fs=9.5, col=YWA_, rot=-45)
-    SUB(64.35, 43.35, "3,430 cfs · 26-ft bore · 5.2 mi", rot=-45)
+    SUB(59.7, 38.5, "3,430 cfs · 26-ft bore · 5.2 mi")
     T(30.9, 13.2, "DRUM CANAL", fs=9.5, col=PGE_, ha="right")
     SUB(30.9, 11.6, "840 cfs · ~200,000 af/yr\nexported to the Bear basin",
         ha="right")
     T(36.2, 16.9, "SOUTH YUBA CANAL", fs=9.5, col=PGE_, rot=-50)
-    SUB(37.35, 17.75, "146 cfs · dug 1854–58", rot=-50)
-    T(53.6, 8.6, "CASCADE CANAL", fs=8.5, col=NID_, rot=-45)
-    T(46.4, 8.6, "D–S CANAL", fs=8.5, col=NID_, rot=-45)
-    SUB(53.5, 6.6, "NID distribution — 500 mi of canals serve\nNevada City, Grass Valley & 30,000 acres")
+    SUB(42.7, 16.1, "146 cfs · dug 1854–58")
+    T(52.8, 9.4, "CASCADE CANAL", fs=8.5, col=NID_, rot=-45)
+    T(45.6, 9.4, "D–S CANAL", fs=8.5, col=NID_, rot=-45)
+    SUB(45.5, 6.4, "NID distribution — 500 mi of canals serve\nNevada City, Grass Valley & 30,000 acres")
     T(91.6, Y_MAIN + 4.6, "HALLWOOD–CORDUA", fs=9, col=DEB_)
     SUB(91.6, Y_MAIN + 3.7, "625 cfs")
     T(91.6, Y_MAIN - 4.1, "SOUTH YUBA–BROPHY", fs=9, col=DEB_)
-    SUB(91.6, Y_MAIN - 5.1, "Daguerre total: 1,085 cfs")
+    SUB(91.6, Y_MAIN - 5.1, "lower-river diversions: 1,085 cfs")
     SUB(66, Y_BEAR + 1.1,
         "→ Dutch Flat · Chicago Park · Rollins — the Bear River staircase runs largely on Yuba water")
 
@@ -338,7 +338,7 @@ def main():
     BD = dict(fs=8.2, fam=style.SANS, fw=400, col=style.INK_SOFT,
               fstyle="italic")
     T(31, Y_MIDDLE + 0.9, "for 50 years the river below kept 3–5 cfs;\nnew license: 11–120 cfs by season", va="bottom", **BD)
-    T(57, Y_SOUTH + 0.9, "the dam's river outlet passes just 16 cfs —\nsummer flow returns via Canyon Creek", va="bottom", **BD)
+    T(57, Y_SOUTH + 0.9, "the dam's river outlet passes just 16 cfs — spills\nreach the river via Dam No. 2's Jordan Ck channel", va="bottom", **BD)
     T(58.5, Y_MIDDLE - 3.4, "two-tunnel relay: about half of the\nMiddle Yuba's July flow ends up\nin New Bullards Bar", **BD)
     T(9.5, Y_NORTH - 2.6, "the least-diverted fork —\nfamous free-flowing whitewater", ha="left", **BD)
 
@@ -352,8 +352,8 @@ def main():
     TC(2.35, 58.4, "Flow runs east → west: headwaters at right, valley at left — matching the map view  ·  not to scale  ·  reservoir symbols scale with log capacity",
        fs=9.5, fw=400, col=style.INK_MUTE, ha="left", va="top")
 
-    # legend (bottom right, in the mirrored diagram's void)
-    lx, ly = 81.0, 0.4
+    # legend (center-left void of the mirrored diagram)
+    lx, ly = 7.0, 2.6
     ax.plot([lx, lx + 2.2], [ly + 12.4, ly + 12.4], color=style.RIVER, lw=2.4)
     TC(lx + 2.9, ly + 12.4, "river · width = relative flow", fs=9, fw=400,
        ha="left")
@@ -377,7 +377,7 @@ def main():
        fw=400, ha="left")
     TC(lx, ly + 14.3, "HOW TO READ", fs=11, fw=700, ha="left")
     # owner key (left margin below the title, above the mirrored descent)
-    ox, oy = 2.2, 55.6
+    ox, oy = 4.8, 55.6
     TC(ox, oy, "WHO MOVES THE WATER", fs=11, fw=700, ha="left")
     for i, (col, lab) in enumerate([
             (style.RIVER, "natural river"),
@@ -394,8 +394,8 @@ def main():
     ax.plot([2.2, 97.8], [0.1, 0.1], color=style.FRAME, lw=0.8, zorder=22)
     tiles = [
         ("2,359,000 af", "average year's unimpaired runoff — swings 369,000 (1977) to 5,604,000 (2017)"),
-        ("1.43M af", "total reservoir storage; two-thirds of it behind New Bullards Bar"),
-        ("~676 MW", "installed hydropower across three interlocked FERC projects"),
+        ("1.43M af", "storage in the reservoirs shown — two-thirds of it behind New Bullards Bar"),
+        ("~676 MW", "installed hydropower across the basin's four interlocked FERC projects"),
         ("200,000 af/yr", "leaves the basin for the Bear via Drum Canal — about 8% of runoff"),
     ]
     for i, (num, cap) in enumerate(tiles):
