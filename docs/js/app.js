@@ -397,7 +397,10 @@ async function renderFlow(id) {
     }
     const forecast = await forecastP;
     if (forecast) $("flow-note").textContent += " · dashed line: CNRFC 5-day forecast";
-    charts.ribbonChart(el, { recent, bands, unit: "cfs", seriesName: "daily mean flow", forecast });
+    charts.ribbonChart(el, {
+      recent, bands, unit: "cfs", forecast,
+      seriesName: st.source === "dreamflows" ? "observed flow" : "daily mean flow",
+    });
     ribbonTable($("flow-table"), recent, bands, "flow (cfs)");
   } catch (e) {
     console.warn(e);
