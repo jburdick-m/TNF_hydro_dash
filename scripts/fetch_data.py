@@ -164,6 +164,69 @@ def build_flow(stations):
     return out
 
 
+DREAMFLOWS_REALTIME = "https://www.dreamflows.com/realtime.csv.php"
+
+
+def build_dreamflows(stations, keep_days=180):
+    """Operator gages (PG&E / NID / PCWA / YCWA FERC points) via Dreamflows'
+    bulk realtime CSV — the only machine-readable source for these. One gentle
+    fetch per scheduled run; history accumulates across runs since the feed
+    only carries current values. Credit Dreamflows.com wherever displayed.
+    """
+    if not stations:
+        return {}
+    out_path = DATA_DIR / "dreamflows.json"
+    old = json.loads(out_path.read_text()) if out_path.exists() else {}
+
+    import csv as csv_mod
+    try:
+        r = SESSION.get(DREAMFLOWS_REALTIME, timeout=60)
+        r.raise_for_status()
+    except Exception as e:  # noqa: BLE001
+        print(f"  ! dreamflows fetch failed: {e}", file=sys.stderr)
+        return old
+
+    rows = {}
+    reader = csv_mod.reader(r.text.splitlines())
+    header = None
+    for row in reader:
+        if not row:
+            continue
+        if header is None:
+            if row[0].strip() == "RiverId":
+                header = {name: i for i, name in enumerate(row)}
+            continue
+        if len(row) < len(header):
+            continue
+        rows[row[header["RiverId"]].strip()] = row
+
+    cutoff = (datetime.now() - timedelta(days=keep_days)).strftime("%Y-%m-%d")
+    out = {}
+    for st in stations:
+        ent = old.get(st["id"], {"recent": {"dates": [], "values": []}, "latest": None})
+        row = rows.get(str(st["df_id"]))
+        if row is not None and header is not None:
+            try:
+                flow = float(row[header["RiverFlow"]])
+                ts = f"{row[header['Date']].strip()} {row[header['Time']].strip()}"
+                ent["confidence"] = row[header["Confidence"]].strip()
+                if ts not in ent["recent"]["dates"]:
+                    ent["recent"]["dates"].append(ts)
+                    ent["recent"]["values"].append(round(flow, 1))
+                ent["latest"] = {"t": ts, "v": round(flow, 1)}
+            except (ValueError, IndexError):
+                pass  # "n/a" or malformed reading; keep prior history
+        # trim accumulated history
+        keep = [i for i, t in enumerate(ent["recent"]["dates"]) if t >= cutoff]
+        ent["recent"] = {
+            "dates": [ent["recent"]["dates"][i] for i in keep],
+            "values": [ent["recent"]["values"][i] for i in keep],
+        }
+        out[st["id"]] = ent
+        print(f"dreamflows: {st['id']} ({st['name']}) -> {ent['latest']}")
+    return out
+
+
 def build_snow(stations):
     out = {}
     for st in stations:
@@ -276,6 +339,9 @@ def main():
 
     flow = build_flow([s for s in stations["stations"] if s["type"] == "flow" and s.get("source") == "cdec"])
     (DATA_DIR / "flow.json").write_text(json.dumps(flow, separators=(",", ":")))
+
+    df = build_dreamflows([s for s in stations["stations"] if s.get("source") == "dreamflows"])
+    (DATA_DIR / "dreamflows.json").write_text(json.dumps(df, separators=(",", ":")))
 
     snow = build_snow([s for s in stations["stations"] if s["type"] == "snow"])
     (DATA_DIR / "snow.json").write_text(json.dumps(snow, separators=(",", ":")))

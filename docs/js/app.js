@@ -11,9 +11,20 @@ const state = {
   forecastPoints: [],
   local: { flow: null, snow: null, soil: null, reservoirs: null, meta: null },
   usgsLatest: {},
-  usgsCache: new Map(), // site -> {recent, bands}
+  dvCache: new Map(),    // usgs site -> Promise<recent daily series>
+  bandsCache: new Map(), // usgs site -> Promise<bands|null>
   mapApi: null,
 };
+
+function getUsgsDaily(id) {
+  if (!state.dvCache.has(id)) state.dvCache.set(id, data.usgsDaily(id));
+  return state.dvCache.get(id);
+}
+
+function getUsgsBands(id) {
+  if (!state.bandsCache.has(id)) state.bandsCache.set(id, data.usgsBands(id).catch(() => null));
+  return state.bandsCache.get(id);
+}
 
 init().catch((e) => {
   console.error(e);
@@ -21,17 +32,18 @@ init().catch((e) => {
 });
 
 async function init() {
-  const [cfg, flow, snow, soil, reservoirs, meta] = await Promise.all([
+  const [cfg, flow, snow, soil, reservoirs, dreamflows, meta] = await Promise.all([
     fetch("data/stations.json").then((r) => r.json()),
     data.loadLocal("flow"),
     data.loadLocal("snow"),
     data.loadLocal("soil"),
     data.loadLocal("reservoirs"),
+    data.loadLocal("dreamflows"),
     data.loadLocal("meta"),
   ]);
   state.stations = cfg.stations;
   state.forecastPoints = cfg.forecast_points || [];
-  state.local = { flow, snow, soil, reservoirs, meta };
+  state.local = { flow, snow, soil, reservoirs, dreamflows, meta };
 
   if (meta?.generated) {
     const dt = new Date(meta.generated);
@@ -69,7 +81,8 @@ function annotateLatest() {
         st._latestNum = lv.v;
       }
     } else if (st.type === "flow") {
-      const lv = state.local.flow?.[st.id]?.latest;
+      const src = st.source === "dreamflows" ? state.local.dreamflows : state.local.flow;
+      const lv = src?.[st.id]?.latest;
       if (lv) { st._latest = `${charts.fmt(lv.v)} cfs`; st._asof = asOf(lv.t); st._latestNum = lv.v; }
     } else if (st.type === "snow") {
       const e = state.local.snow?.[st.id];
@@ -139,7 +152,9 @@ function showStationInfo(st) {
   const el = $("station-info");
   const link = st.source === "usgs"
     ? `https://waterdata.usgs.gov/monitoring-location/${st.id}/`
-    : `https://cdec.water.ca.gov/dynamicapp/staMeta?station_id=${st.id}`;
+    : st.source === "dreamflows"
+      ? `https://www.dreamflows.com/graphs/day.${st.df_id}.php`
+      : `https://cdec.water.ca.gov/dynamicapp/staMeta?station_id=${st.id}`;
   el.innerHTML = `
     <h3>${st.name}</h3>
     <div class="meta">${TYPE_LABELS[st.type] || st.type}
@@ -173,30 +188,83 @@ function buildLegend() {
 
 /* ---------- tiles ---------- */
 
-function buildTiles() {
+// Wetness classes for "how does now compare to the record" context. Colors are
+// the diverging dry/wet poles + palette ambers/blues; never shown without the
+// text label beside them.
+const WETNESS = {
+  muchBelow: { color: "#e66767", label: "much below normal" },
+  below: { color: "#c98500", label: "below normal" },
+  normal: { color: "#898781", label: "near normal" },
+  above: { color: "#6da7ec", label: "above normal" },
+  muchAbove: { color: "#3987e5", label: "much above normal" },
+};
+
+function todayDoyIdx() {
+  const now = new Date();
+  return data.dayOfYear(now.getMonth() + 1, now.getDate()) - 1;
+}
+
+// Classify a current value against that day-of-year's percentile bands.
+function wetness(v, bands) {
+  if (v == null || !bands) return null;
+  const i = todayDoyIdx();
+  const b = (k) => bands[k]?.[i];
+  const p50 = b("p50");
+  const pct = p50 > 0 ? Math.round((100 * v) / p50) : null;
+  let cls = "normal";
+  if (b("p10") != null && b("p90") != null) {
+    if (v < b("p10")) cls = "muchBelow";
+    else if (v < b("p25")) cls = "below";
+    else if (v <= b("p75")) cls = "normal";
+    else if (v <= b("p90")) cls = "above";
+    else cls = "muchAbove";
+  } else if (pct != null) {
+    cls = pctClass(pct);
+  } else {
+    return null;
+  }
+  return { pct, cls };
+}
+
+function pctClass(pct) {
+  if (pct < 50) return "muchBelow";
+  if (pct < 90) return "below";
+  if (pct <= 110) return "normal";
+  if (pct <= 150) return "above";
+  return "muchAbove";
+}
+
+async function buildTiles() {
   const tiles = [];
 
   // Snowpack: average % of median across pillows (winter), else avg SWE.
   const snowEntries = Object.entries(state.local.snow || {});
   const pcts = snowEntries.map(([, e]) => e.pct_median).filter((v) => v != null);
   if (pcts.length >= 3) {
-    tiles.push(tile("snow", "Snowpack", `${Math.round(avg(pcts))}<small>% of median</small>`,
-      `avg of ${pcts.length} snow pillows`));
+    const pct = Math.round(avg(pcts));
+    tiles.push(tile("snow", "Snowpack", `${pct}<small>% of median</small>`,
+      `avg of ${pcts.length} snow pillows`, { section: "snowpack", wet: { pct, cls: pctClass(pct) } }));
   } else if (snowEntries.length) {
     const swes = snowEntries.map(([, e]) => e.latest?.v).filter((v) => v != null);
     tiles.push(tile("snow", "Snowpack", `${avg(swes).toFixed(1)}<small> in SWE</small>`,
-      `avg of ${swes.length} pillows`));
+      `avg of ${swes.length} pillows`, { section: "snowpack" }));
   }
 
-  // Headline gages.
-  for (const id of ["11413000", "10346000"]) {
+  // Headline gages, with percent-of-median context from their percentile bands.
+  const usgsHeadline = ["11413000", "10346000"];
+  const bandsList = await Promise.all(usgsHeadline.map(getUsgsBands));
+  usgsHeadline.forEach((id, i) => {
     const st = state.stations.find((s) => s.id === id);
     const lv = state.usgsLatest[id];
-    if (st && lv) tiles.push(tile("flow", st.short || st.name, `${charts.fmt(lv.v)}<small> cfs</small>`, "live · USGS"));
-  }
-  const jbr = state.local.flow?.JBR?.latest;
-  if (jbr) {
-    tiles.push(tile("flow", "S Yuba at Jones Bar", `${charts.fmt(jbr.v)}<small> cfs</small>`, "CDEC"));
+    if (st && lv) {
+      tiles.push(tile("flow", st.short || st.name, `${charts.fmt(lv.v)}<small> cfs</small>`,
+        "live · USGS", { section: "streamflow", flow: id, wet: wetness(lv.v, bandsList[i]) }));
+    }
+  });
+  const jbrE = state.local.flow?.JBR;
+  if (jbrE?.latest) {
+    tiles.push(tile("flow", "S Yuba at Jones Bar", `${charts.fmt(jbrE.latest.v)}<small> cfs</small>`,
+      "CDEC", { section: "streamflow", flow: "JBR", wet: wetness(jbrE.latest.v, jbrE.bands) }));
   }
 
   // Reservoir storage.
@@ -208,7 +276,7 @@ function buildTiles() {
   }
   if (n) {
     tiles.push(tile("reservoir", "Reservoir storage", `${Math.round((100 * cur) / cap)}<small>% of capacity</small>`,
-      `${n} reservoirs · ${charts.fmt(cur)} af`));
+      `${n} reservoirs · ${charts.fmt(cur)} af`, { section: "reservoirs" }));
   }
 
   // Soil moisture: average of latest readings across stations/depths.
@@ -219,20 +287,40 @@ function buildTiles() {
   }
   if (soilVals.length) {
     tiles.push(tile("soil", "Soil moisture", `${avg(soilVals).toFixed(0)}<small>% vol</small>`,
-      `avg of ${soilVals.length} stations`));
+      `avg of ${soilVals.length} stations`, { section: "soil" }));
   }
 
   // Forecast precip (filled async once NWS loads).
-  tiles.push(tile("flow", "Precip next 72 h", `–`, "loading forecast…", "tile-fc"));
+  tiles.push(tile("flow", "Precip next 72 h", `–`, "loading forecast…", { id: "tile-fc", section: "forecast" }));
 
   $("tiles").innerHTML = tiles.join("");
+  for (const el of $("tiles").querySelectorAll(".tile[data-section]")) {
+    el.classList.add("clickable");
+    el.setAttribute("role", "button");
+    el.setAttribute("tabindex", "0");
+    const go = () => {
+      const flowId = el.dataset.flow;
+      if (flowId) {
+        $("flow-select").value = flowId;
+        renderFlow(flowId);
+      }
+      scrollTo(el.dataset.section);
+    };
+    el.addEventListener("click", go);
+    el.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); go(); } });
+  }
 }
 
-function tile(type, label, valueHTML, context, id) {
-  return `<div class="tile" ${id ? `id="${id}"` : ""}>
+function tile(type, label, valueHTML, context, opts = {}) {
+  const wet = opts.wet ? WETNESS[opts.wet.cls] : null;
+  return `<div class="tile" ${opts.id ? `id="${opts.id}"` : ""}
+      ${opts.section ? `data-section="${opts.section}"` : ""}
+      ${opts.flow ? `data-flow="${opts.flow}"` : ""}>
     <div class="label"><span class="dot" style="background:${charts.TYPE_COLORS[type]}"></span>${label}</div>
     <div class="value">${valueHTML}</div>
     <div class="context">${context}</div>
+    ${wet ? `<div class="wetness"><span class="dot" style="background:${wet.color}"></span>${
+      opts.wet.pct != null && opts.section === "streamflow" ? `${opts.wet.pct}% of median · ` : ""}${wet.label}</div>` : ""}
   </div>`;
 }
 
@@ -248,7 +336,8 @@ function buildSelectors() {
     const og = document.createElement("optgroup");
     og.label = `${b} basin`;
     for (const st of flows.filter((s) => s.basin === b)) {
-      og.appendChild(new Option(`${st.name}${st.source === "usgs" ? " (live)" : ""}`, st.id));
+      const tag = st.source === "usgs" ? " (live)" : st.source === "dreamflows" ? " (Dreamflows)" : "";
+      og.appendChild(new Option(`${st.name}${tag}`, st.id));
     }
     flowSel.appendChild(og);
   }
@@ -277,25 +366,35 @@ async function renderFlow(id) {
   charts.setLoading(el);
   $("flow-note").textContent = "";
   try {
-    let recent, bands;
+    let recent, bands, latest;
     const forecastP = st.nwps
       ? data.nwpsForecast(st.nwps).catch(() => null)
       : Promise.resolve(null);
     if (st.source === "usgs") {
-      if (!state.usgsCache.has(id)) {
-        const [r, b] = await Promise.all([data.usgsDaily(id), data.usgsBands(id)]);
-        state.usgsCache.set(id, { recent: r, bands: b });
-      }
-      ({ recent, bands } = state.usgsCache.get(id));
+      [recent, bands] = await Promise.all([getUsgsDaily(id), getUsgsBands(id)]);
+      latest = state.usgsLatest[id];
       $("flow-note").textContent = bands ? "percentiles from USGS daily statistics" : "no long-term statistics for this gage";
+    } else if (st.source === "dreamflows") {
+      const e = state.local.dreamflows?.[id];
+      if (!e) throw new Error("no Dreamflows data yet");
+      recent = e.recent;
+      bands = null;
+      latest = e.latest;
+      $("flow-note").textContent = `operator gage via Dreamflows.com${e.confidence && e.confidence !== "Gage" ? ` · reading is an ${e.confidence.toLowerCase()} estimate` : ""} — record builds as the dashboard collects it; no historical statistics`;
     } else {
       const e = state.local.flow?.[id];
       if (!e) throw new Error("no CDEC data yet");
       recent = e.recent;
       bands = e.bands || null;
+      latest = e.latest;
       $("flow-note").textContent = bands ? "percentiles from CDEC period of record" : "record too short for percentiles";
     }
     if (!recent.dates.length) throw new Error("empty series");
+    // Extend the observed line to "now" with the latest instantaneous reading,
+    // so it meets the forecast trace instead of ending at the last full day.
+    if (latest && new Date(latest.t.replace(" ", "T")) > new Date(recent.dates.at(-1))) {
+      recent = { dates: [...recent.dates, latest.t], values: [...recent.values, latest.v] };
+    }
     const forecast = await forecastP;
     if (forecast) $("flow-note").textContent += " · dashed line: CNRFC 5-day forecast";
     charts.ribbonChart(el, { recent, bands, unit: "cfs", seriesName: "daily mean flow", forecast });
@@ -428,7 +527,7 @@ function buildWebcams() {
   grid.innerHTML = cams.map((c) => `
     <figure class="cam" style="margin:0">
       <img loading="lazy" src="${c.img}" alt="Webcam: ${c.name}" data-src="${c.img}">
-      <figcaption class="cap">${c.name}</figcaption>
+      <figcaption class="cap">${c.name}${c.credit ? `<span class="credit">${c.credit}</span>` : ""}</figcaption>
     </figure>`).join("");
   // refresh every 2 minutes with a cache-busting param
   setInterval(() => {
@@ -444,7 +543,7 @@ function ribbonTable(container, recent, bands, label) {
   const rows = [];
   const n = recent.dates.length;
   for (let i = n - 1; i >= 0 && rows.length < 366; i--) {
-    const d = recent.dates[i];
+    const d = recent.dates[i].slice(0, 10);
     const [, m, day] = d.split("-").map(Number);
     const doy = data.dayOfYear(m, day) - 1;
     rows.push([d, round1(recent.values[i]), round1(bands?.p50?.[doy]), round1(bands?.p10?.[doy]), round1(bands?.p90?.[doy])]);
