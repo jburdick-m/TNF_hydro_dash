@@ -1,0 +1,759 @@
+{
+  "comment": "Station inventory for the TNF hydrology dashboard. Verified against live CDEC/USGS feeds 2026-07-01. type: flow|snow|soil|soil_mesh|reservoir|cam. source usgs = fetched live in the browser (CORS ok); source cdec = fetched by scripts/fetch_data.py on a schedule.",
+  "stations": [
+    {
+      "id": "11413000",
+      "type": "flow",
+      "source": "usgs",
+      "name": "North Yuba R below Goodyears Bar",
+      "short": "N Yuba bl Goodyears Bar",
+      "lat": 39.52487,
+      "lon": -120.93797,
+      "elev_ft": 2457,
+      "basin": "Yuba",
+      "default": true,
+      "nwps": "GYRC1"
+    },
+    {
+      "id": "NYS",
+      "type": "flow",
+      "source": "cdec",
+      "name": "North Yuba R above Slate Ck",
+      "lat": 39.5247,
+      "lon": -121.0906,
+      "elev_ft": 2000,
+      "basin": "Yuba",
+      "por_start": "1990-01-01"
+    },
+    {
+      "id": "ORH",
+      "type": "flow",
+      "source": "cdec",
+      "name": "Middle Yuba R below Our House Dam",
+      "lat": 39.412,
+      "lon": -120.997,
+      "elev_ft": 1958,
+      "basin": "Yuba",
+      "por_start": "1990-01-01",
+      "nwps": "OURC1"
+    },
+    {
+      "id": "OCC",
+      "type": "flow",
+      "source": "cdec",
+      "name": "Oregon Ck at Camptonville",
+      "lat": 39.4461,
+      "lon": -121.0453,
+      "elev_ft": 2191,
+      "basin": "Yuba",
+      "por_start": "1990-01-01"
+    },
+    {
+      "id": "JBR",
+      "type": "flow",
+      "source": "cdec",
+      "name": "South Yuba R at Jones Bar",
+      "lat": 39.292,
+      "lon": -121.104,
+      "elev_ft": 1060,
+      "basin": "Yuba",
+      "por_start": "1998-06-18",
+      "nwps": "JNSC1"
+    },
+    {
+      "id": "YNC",
+      "type": "flow",
+      "source": "cdec",
+      "name": "South Yuba R near Cisco",
+      "lat": 39.321,
+      "lon": -120.564,
+      "elev_ft": 5600,
+      "basin": "Yuba",
+      "por_start": "2026-01-01"
+    },
+    {
+      "id": "YRE",
+      "type": "flow",
+      "source": "cdec",
+      "name": "Yuba R below Englebright Dam",
+      "lat": 39.2352,
+      "lon": -121.2741,
+      "elev_ft": 279,
+      "basin": "Yuba",
+      "por_start": "1990-01-01"
+    },
+    {
+      "id": "11418500",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Deer Ck near Smartsville",
+      "lat": 39.22432,
+      "lon": -121.26853,
+      "elev_ft": 634,
+      "basin": "Yuba"
+    },
+    {
+      "id": "OXB",
+      "type": "flow",
+      "source": "cdec",
+      "name": "MF American R near Oxbow Powerhouse",
+      "lat": 39.006,
+      "lon": -120.76,
+      "elev_ft": 1070,
+      "basin": "American",
+      "por_start": "1990-01-01"
+    },
+    {
+      "id": "11427000",
+      "type": "flow",
+      "source": "usgs",
+      "name": "NF American R at North Fork Dam",
+      "lat": 38.93599,
+      "lon": -121.0238,
+      "elev_ft": 720,
+      "basin": "American",
+      "nwps": "NFDC1"
+    },
+    {
+      "id": "10337500",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Truckee R at Tahoe City",
+      "lat": 39.16627,
+      "lon": -120.14434,
+      "elev_ft": 6221,
+      "basin": "Truckee"
+    },
+    {
+      "id": "10338000",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Truckee R near Truckee",
+      "lat": 39.29627,
+      "lon": -120.20545,
+      "elev_ft": 5862,
+      "basin": "Truckee",
+      "nwps": "TRCC1"
+    },
+    {
+      "id": "10339410",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Truckee R below Martis Ck",
+      "lat": 39.35306,
+      "lon": -120.11944,
+      "elev_ft": 5634,
+      "basin": "Truckee"
+    },
+    {
+      "id": "10344505",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Truckee R at Boca Bridge",
+      "lat": 39.38516,
+      "lon": -120.08767,
+      "elev_ft": 5476,
+      "basin": "Truckee"
+    },
+    {
+      "id": "10346000",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Truckee R at Farad",
+      "short": "Truckee R at Farad",
+      "lat": 39.42794,
+      "lon": -120.03406,
+      "elev_ft": 5157,
+      "basin": "Truckee",
+      "nwps": "FARC1"
+    },
+    {
+      "id": "10338500",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Donner Ck at Donner Lake",
+      "lat": 39.32352,
+      "lon": -120.23437,
+      "elev_ft": 5929,
+      "basin": "Truckee"
+    },
+    {
+      "id": "10338700",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Donner Ck at Hwy 89",
+      "lat": 39.32099,
+      "lon": -120.20795,
+      "elev_ft": 5871,
+      "basin": "Truckee"
+    },
+    {
+      "id": "10340500",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Prosser Ck below Prosser Dam",
+      "lat": 39.37324,
+      "lon": -120.13159,
+      "elev_ft": 5620,
+      "basin": "Truckee"
+    },
+    {
+      "id": "10343500",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Sagehen Ck near Truckee",
+      "lat": 39.43155,
+      "lon": -120.23795,
+      "elev_ft": 6330,
+      "basin": "Truckee"
+    },
+    {
+      "id": "10343000",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Independence Ck near Truckee",
+      "lat": 39.45654,
+      "lon": -120.28712,
+      "elev_ft": 6925,
+      "basin": "Truckee"
+    },
+    {
+      "id": "10344400",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Little Truckee R above Boca Res",
+      "lat": 39.43571,
+      "lon": -120.08434,
+      "elev_ft": 5622,
+      "basin": "Truckee"
+    },
+    {
+      "id": "10344500",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Little Truckee R below Boca Dam",
+      "lat": 39.38683,
+      "lon": -120.09545,
+      "elev_ft": 5530,
+      "basin": "Truckee"
+    },
+    {
+      "id": "10336676",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Ward Ck at Hwy 89",
+      "lat": 39.13211,
+      "lon": -120.15767,
+      "elev_ft": 6240,
+      "basin": "Truckee"
+    },
+    {
+      "id": "10336660",
+      "type": "flow",
+      "source": "usgs",
+      "name": "Blackwood Ck near Tahoe City",
+      "lat": 39.10739,
+      "lon": -120.16211,
+      "elev_ft": 6228,
+      "basin": "Truckee"
+    },
+    {
+      "id": "CSL",
+      "type": "snow",
+      "name": "Central Sierra Snow Lab (Donner Summit)",
+      "lat": 39.325,
+      "lon": -120.367,
+      "elev_ft": 6900,
+      "basin": "Yuba",
+      "operator": "NRCS",
+      "por_start": "1950-01-01",
+      "default": true
+    },
+    {
+      "id": "RCC",
+      "type": "snow",
+      "name": "Robinson Cow Camp",
+      "lat": 39.6219,
+      "lon": -120.6799,
+      "elev_ft": 6480,
+      "basin": "Yuba",
+      "operator": "DWR",
+      "por_start": "1980-01-01"
+    },
+    {
+      "id": "SSM",
+      "type": "snow",
+      "name": "Sunnyside Meadow",
+      "lat": 39.6981,
+      "lon": -120.7822,
+      "elev_ft": 6300,
+      "basin": "Yuba",
+      "operator": "Yuba Water",
+      "por_start": "1980-01-01"
+    },
+    {
+      "id": "GOL",
+      "type": "snow",
+      "name": "Gold Lake (Lakes Basin)",
+      "lat": 39.6748,
+      "lon": -120.6172,
+      "elev_ft": 6750,
+      "basin": "Feather",
+      "operator": "DWR",
+      "por_start": "1980-01-01"
+    },
+    {
+      "id": "BLC",
+      "type": "snow",
+      "name": "Blue Canyon",
+      "lat": 39.2801,
+      "lon": -120.7087,
+      "elev_ft": 5280,
+      "basin": "American",
+      "operator": "USBR",
+      "por_start": "1980-01-01"
+    },
+    {
+      "id": "HYS",
+      "type": "snow",
+      "name": "Huysink",
+      "lat": 39.2814,
+      "lon": -120.5296,
+      "elev_ft": 6600,
+      "basin": "American",
+      "operator": "USBR",
+      "por_start": "1980-01-01"
+    },
+    {
+      "id": "GKS",
+      "type": "snow",
+      "name": "Greek Store",
+      "lat": 39.0747,
+      "lon": -120.5616,
+      "elev_ft": 5600,
+      "basin": "American",
+      "operator": "USBR",
+      "por_start": "1980-01-01"
+    },
+    {
+      "id": "IDP",
+      "type": "snow",
+      "name": "Independence Lake",
+      "lat": 39.435,
+      "lon": -120.322,
+      "elev_ft": 8450,
+      "basin": "Truckee",
+      "operator": "NRCS",
+      "por_start": "1978-01-01"
+    },
+    {
+      "id": "IDC",
+      "type": "snow",
+      "name": "Independence Camp",
+      "lat": 39.4526,
+      "lon": -120.2985,
+      "elev_ft": 7000,
+      "basin": "Truckee",
+      "operator": "NRCS",
+      "por_start": "1978-01-01"
+    },
+    {
+      "id": "INN",
+      "type": "snow",
+      "name": "Independence Creek",
+      "lat": 39.494,
+      "lon": -120.293,
+      "elev_ft": 6500,
+      "basin": "Truckee",
+      "operator": "NRCS",
+      "por_start": "1978-01-01"
+    },
+    {
+      "id": "TK2",
+      "type": "snow",
+      "name": "Truckee 2",
+      "lat": 39.3,
+      "lon": -120.194,
+      "elev_ft": 6400,
+      "basin": "Truckee",
+      "operator": "NRCS",
+      "por_start": "1980-01-01"
+    },
+    {
+      "id": "SQV",
+      "type": "snow",
+      "name": "Palisades Tahoe SNOTEL",
+      "lat": 39.194,
+      "lon": -120.276,
+      "elev_ft": 8200,
+      "basin": "Truckee",
+      "operator": "NRCS",
+      "por_start": "1980-01-01"
+    },
+    {
+      "id": "TCC",
+      "type": "snow",
+      "name": "Tahoe City Cross",
+      "lat": 39.1714,
+      "lon": -120.1547,
+      "elev_ft": 6750,
+      "basin": "Tahoe",
+      "operator": "NRCS",
+      "por_start": "1980-01-01"
+    },
+    {
+      "id": "RP2",
+      "type": "snow",
+      "name": "Rubicon Peak 2",
+      "lat": 39.001,
+      "lon": -120.14,
+      "elev_ft": 7500,
+      "basin": "Tahoe",
+      "operator": "NRCS",
+      "por_start": "1980-01-01"
+    },
+    {
+      "id": "DLA",
+      "type": "soil",
+      "name": "Downieville (CW3E)",
+      "lat": 39.5634,
+      "lon": -120.8242,
+      "elev_ft": 2956,
+      "basin": "Yuba",
+      "operator": "CW3E",
+      "dur": "E",
+      "soil_sensors": {
+        "5 cm": 282,
+        "10 cm": 283,
+        "15 cm": 284,
+        "20 cm": 285,
+        "50 cm": 286,
+        "100 cm": 287
+      }
+    },
+    {
+      "id": "LBH",
+      "type": "soil",
+      "name": "Lower Bath House (CW3E)",
+      "lat": 39.6241,
+      "lon": -120.5777,
+      "elev_ft": 5528,
+      "basin": "Yuba",
+      "operator": "CW3E",
+      "dur": "E",
+      "soil_sensors": {
+        "5 cm": 282,
+        "10 cm": 283,
+        "15 cm": 284,
+        "20 cm": 285,
+        "50 cm": 286,
+        "100 cm": 287
+      }
+    },
+    {
+      "id": "SKY",
+      "type": "soil",
+      "name": "Skyline Harvest (CW3E)",
+      "lat": 39.471,
+      "lon": -121.0917,
+      "elev_ft": 2733,
+      "basin": "Yuba",
+      "operator": "CW3E",
+      "dur": "E",
+      "soil_sensors": {
+        "5 cm": 282,
+        "10 cm": 283,
+        "15 cm": 284,
+        "20 cm": 285,
+        "50 cm": 286
+      }
+    },
+    {
+      "id": "GH2",
+      "type": "soil_mesh",
+      "name": "Greyhorse mesh (Duncan Canyon)",
+      "lat": 39.13,
+      "lon": -120.35,
+      "elev_ft": 6200,
+      "basin": "American",
+      "operator": "UC Davis",
+      "sensor": 197,
+      "dur": "E",
+      "depth_label": "shallow (~10 in)",
+      "nodes": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08",
+        "G09",
+        "G10"
+      ]
+    },
+    {
+      "id": "BUL",
+      "type": "reservoir",
+      "name": "New Bullards Bar",
+      "lat": 39.393,
+      "lon": -121.14,
+      "elev_ft": 1965,
+      "basin": "Yuba",
+      "capacity_af": 966000,
+      "operator": "Yuba Water"
+    },
+    {
+      "id": "ENG",
+      "type": "reservoir",
+      "name": "Englebright Lake",
+      "lat": 39.239,
+      "lon": -121.267,
+      "elev_ft": 551,
+      "basin": "Yuba",
+      "capacity_af": 70000,
+      "operator": "USACE"
+    },
+    {
+      "id": "SFL",
+      "type": "reservoir",
+      "name": "Scotts Flat",
+      "lat": 39.274,
+      "lon": -120.917,
+      "elev_ft": 3085,
+      "basin": "Yuba",
+      "capacity_af": 49000,
+      "operator": "NID"
+    },
+    {
+      "id": "BWN",
+      "type": "reservoir",
+      "name": "Bowman Lake",
+      "lat": 39.45,
+      "lon": -120.652,
+      "elev_ft": 5566,
+      "basin": "Yuba",
+      "capacity_af": 68510,
+      "operator": "NID"
+    },
+    {
+      "id": "FRL",
+      "type": "reservoir",
+      "name": "French Lake",
+      "lat": 39.44,
+      "lon": -120.544,
+      "elev_ft": 6664,
+      "basin": "Yuba",
+      "capacity_af": 13940,
+      "operator": "NID"
+    },
+    {
+      "id": "JCK",
+      "type": "reservoir",
+      "name": "Jackson Meadows",
+      "lat": 39.509,
+      "lon": -120.552,
+      "elev_ft": 6037,
+      "basin": "Yuba",
+      "capacity_af": 69205,
+      "operator": "NID"
+    },
+    {
+      "id": "SPG",
+      "type": "reservoir",
+      "name": "Lake Spaulding",
+      "lat": 39.329,
+      "lon": -120.641,
+      "elev_ft": 5013,
+      "basin": "Yuba",
+      "capacity_af": 74773,
+      "operator": "PG&E"
+    },
+    {
+      "id": "LKF",
+      "type": "reservoir",
+      "name": "Lake Fordyce",
+      "lat": 39.3789,
+      "lon": -120.4944,
+      "elev_ft": 6290,
+      "basin": "Yuba",
+      "operator": "PG&E"
+    },
+    {
+      "id": "RLL",
+      "type": "reservoir",
+      "name": "Rollins Reservoir",
+      "lat": 39.135,
+      "lon": -120.948,
+      "elev_ft": 2176,
+      "basin": "Bear",
+      "capacity_af": 66000,
+      "operator": "NID"
+    },
+    {
+      "id": "FMD",
+      "type": "reservoir",
+      "name": "French Meadows",
+      "lat": 39.112,
+      "lon": -120.468,
+      "elev_ft": 5263,
+      "basin": "American",
+      "capacity_af": 136400,
+      "operator": "PCWA"
+    },
+    {
+      "id": "HHL",
+      "type": "reservoir",
+      "name": "Hell Hole",
+      "lat": 39.058,
+      "lon": -120.407,
+      "elev_ft": 4630,
+      "basin": "American",
+      "capacity_af": 207600,
+      "operator": "PCWA"
+    },
+    {
+      "id": "LVY",
+      "type": "reservoir",
+      "name": "Lake Valley Reservoir",
+      "lat": 39.3,
+      "lon": -120.583,
+      "elev_ft": 5855,
+      "basin": "American",
+      "capacity_af": 8127,
+      "operator": "PG&E"
+    },
+    {
+      "id": "STP",
+      "type": "reservoir",
+      "name": "Stampede Reservoir",
+      "lat": 39.471,
+      "lon": -120.103,
+      "elev_ft": 5956,
+      "basin": "Truckee",
+      "capacity_af": 226500,
+      "operator": "USBR"
+    },
+    {
+      "id": "BOC",
+      "type": "reservoir",
+      "name": "Boca Reservoir",
+      "lat": 39.388,
+      "lon": -120.095,
+      "elev_ft": 5521,
+      "basin": "Truckee",
+      "capacity_af": 40870,
+      "operator": "USBR"
+    },
+    {
+      "id": "PRS",
+      "type": "reservoir",
+      "name": "Prosser Creek Reservoir",
+      "lat": 39.3794,
+      "lon": -120.1367,
+      "elev_ft": 5622,
+      "basin": "Truckee",
+      "capacity_af": 29800,
+      "operator": "USBR"
+    },
+    {
+      "id": "INP",
+      "type": "reservoir",
+      "name": "Independence Lake",
+      "lat": 39.452,
+      "lon": -120.29,
+      "elev_ft": 6921,
+      "basin": "Truckee",
+      "capacity_af": 17295
+    },
+    {
+      "id": "DNN",
+      "type": "reservoir",
+      "name": "Donner Lake",
+      "lat": 39.3228,
+      "lon": -120.2644,
+      "elev_ft": 5945,
+      "basin": "Truckee",
+      "capacity_af": 9700
+    },
+    {
+      "id": "MRT",
+      "type": "reservoir",
+      "name": "Martis Creek Reservoir",
+      "lat": 39.327,
+      "lon": -120.113,
+      "elev_ft": 5745,
+      "basin": "Truckee",
+      "capacity_af": 20400,
+      "operator": "USACE"
+    },
+    {
+      "id": "cam-donner",
+      "type": "cam",
+      "name": "I-80 at Donner Summit",
+      "lat": 39.339039,
+      "lon": -120.347722,
+      "img": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy80atdonnersummit/hwy80atdonnersummit.jpg"
+    },
+    {
+      "id": "cam-soda",
+      "type": "cam",
+      "name": "I-80 at Soda Springs",
+      "lat": 39.326506,
+      "lon": -120.389657,
+      "img": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy80atsodaspringseb/hwy80atsodaspringseb.jpg"
+    },
+    {
+      "id": "cam-kingvale",
+      "type": "cam",
+      "name": "I-80 at Kingvale",
+      "lat": 39.31582,
+      "lon": -120.439405,
+      "img": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy80atkingvalewb/hwy80atkingvalewb.jpg"
+    },
+    {
+      "id": "cam-hwy20",
+      "type": "cam",
+      "name": "Hwy 20 at Pleasant Valley Rd",
+      "lat": 39.205111,
+      "lon": -121.204833,
+      "img": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy20atpleasantvalleyrd/hwy20atpleasantvalleyrd.jpg"
+    },
+    {
+      "id": "cam-hwy49",
+      "type": "cam",
+      "name": "Hwy 49 at Dry Creek Rd",
+      "lat": 38.95686,
+      "lon": -121.101234,
+      "img": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy49atdrycreekrd/hwy49atdrycreekrd.jpg"
+    }
+  ],
+  "forecast_points": [
+    {
+      "name": "Donner Summit (~7,000 ft)",
+      "lat": 39.316,
+      "lon": -120.33
+    },
+    {
+      "name": "Truckee (~5,900 ft)",
+      "lat": 39.328,
+      "lon": -120.183
+    },
+    {
+      "name": "Downieville (~2,900 ft)",
+      "lat": 39.559,
+      "lon": -120.827
+    },
+    {
+      "name": "Nevada City (~2,500 ft)",
+      "lat": 39.2616,
+      "lon": -121.0161
+    },
+    {
+      "name": "French Meadows (~5,300 ft)",
+      "lat": 39.11,
+      "lon": -120.47
+    }
+  ]
+}
