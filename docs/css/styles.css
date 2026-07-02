@@ -161,6 +161,28 @@ section > .section-sub {
 #station-info .asof { font-size: 12px; color: var(--ink-muted); }
 #station-info a { color: var(--c-flow); text-decoration: none; }
 #station-info a:hover { text-decoration: underline; }
+.irows { margin-top: 10px; }
+.irow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 13px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--grid);
+}
+.irow:last-child { border-bottom: none; }
+.irow span { color: var(--ink-muted); }
+.irow b { color: var(--ink); font-weight: 600; text-align: right; }
+.irow .dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.info-spark { height: 84px; margin-top: 10px; }
+.info-cam { width: 100%; height: auto; display: block; border-radius: 8px; margin-top: 10px; }
+.info-links { margin-top: 12px; font-size: 12.5px; color: var(--ink-muted); }
 
 .legend-chips {
   display: flex;

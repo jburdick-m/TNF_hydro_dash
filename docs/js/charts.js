@@ -25,6 +25,10 @@ export const TYPE_COLORS = {
 // ordinal one-hue ramp for soil depths, shallow -> deep (validated --ordinal, dark)
 const DEPTH_RAMP = ["#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95"];
 
+// Desktop (mouse) gets drag-zoom + a minimal modebar; touch keeps charts
+// static so page scrolling isn't hijacked.
+const DESKTOP = window.matchMedia("(min-width: 920px) and (pointer: fine)").matches;
+
 const BASE_LAYOUT = {
   paper_bgcolor: "rgba(0,0,0,0)",
   plot_bgcolor: "rgba(0,0,0,0)",
@@ -32,7 +36,7 @@ const BASE_LAYOUT = {
   margin: { l: 52, r: 12, t: 8, b: 34 },
   hovermode: "x unified",
   hoverlabel: { bgcolor: "#222221", bordercolor: BASELINE, font: { color: "#ffffff", size: 12 } },
-  dragmode: false,
+  dragmode: DESKTOP ? "zoom" : false,
   xaxis: { gridcolor: GRID, linecolor: BASELINE, zeroline: false, tickfont: { color: INK_MUTED } },
   yaxis: { gridcolor: GRID, linecolor: BASELINE, zeroline: false, tickfont: { color: INK_MUTED }, rangemode: "tozero" },
   legend: {
@@ -42,7 +46,16 @@ const BASE_LAYOUT = {
   showlegend: true,
 };
 
-const CONFIG = { displayModeBar: false, responsive: true, scrollZoom: false };
+const CONFIG = DESKTOP
+  ? {
+      displayModeBar: true,
+      displaylogo: false,
+      responsive: true,
+      scrollZoom: false,
+      doubleClick: "reset",
+      modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d", "toImage"],
+    }
+  : { displayModeBar: false, responsive: true, scrollZoom: false };
 
 function deepMerge(a, b) {
   const out = { ...a };
@@ -249,6 +262,28 @@ export function precipChart(el, byDay, snowByDay) {
     showlegend: hasSnow,
     xaxis: { gridcolor: "rgba(0,0,0,0)", type: "date", tickformat: "%a %m/%d", dtick: 86400000 },
   });
+}
+
+/* ---------- station-panel sparkline ---------- */
+
+export function sparkline(el, { t, v, color = "#3987e5", unit = "" }) {
+  const rgb = `${parseInt(color.slice(1, 3), 16)}, ${parseInt(color.slice(3, 5), 16)}, ${parseInt(color.slice(5, 7), 16)}`;
+  Plotly.react(el, [{
+    x: t, y: v, mode: "lines",
+    line: { width: 1.5, color },
+    fill: "tozeroy", fillcolor: `rgba(${rgb}, 0.10)`,
+    hovertemplate: `%{y:,.1f} ${unit}<extra>%{x|%b %d}</extra>`,
+  }], {
+    paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)",
+    margin: { l: 2, r: 2, t: 2, b: 2 },
+    height: 84,
+    xaxis: { visible: false, fixedrange: true },
+    yaxis: { visible: false, fixedrange: true, rangemode: "tozero" },
+    showlegend: false,
+    hoverlabel: { bgcolor: "#222221", bordercolor: BASELINE, font: { color: "#ffffff", size: 11 } },
+    hovermode: "x",
+    dragmode: false,
+  }, { displayModeBar: false, responsive: true });
 }
 
 /* ---------- table view twin ---------- */

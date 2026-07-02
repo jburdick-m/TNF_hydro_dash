@@ -89,9 +89,11 @@ export function markerSVG(type, size = 18) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 18 18" aria-hidden="true">${shapes[type] || shapes.cam}</svg>`;
 }
 
-/* Adds one shaped marker per station. onSelect(station) fires from popup links.
+/* Adds one shaped marker per station. Clicking a marker fires onInfo(station)
+ * immediately (fills the side panel); the popup's "View chart" link fires
+ * onView(station) (navigates to the chart section).
  * Returns {markers: Map<id, marker>, setTypeVisible(type, visible)} */
-export function addStations(map, stations, onSelect) {
+export function addStations(map, stations, { onView, onInfo }) {
   const markers = new Map();
   const groups = {};
 
@@ -104,9 +106,10 @@ export function addStations(map, stations, onSelect) {
     });
     const m = L.marker([st.lat, st.lon], { icon, keyboard: true, title: st.name });
     m.bindPopup(popupHTML(st), { closeButton: true, maxWidth: 260 });
+    m.on("click", () => onInfo(st));
     m.on("popupopen", (e) => {
       const link = e.popup.getElement().querySelector(".plink");
-      if (link) link.addEventListener("click", () => onSelect(st));
+      if (link) link.addEventListener("click", () => onView(st));
     });
     if (!groups[st.type]) groups[st.type] = L.layerGroup().addTo(map);
     groups[st.type].addLayer(m);

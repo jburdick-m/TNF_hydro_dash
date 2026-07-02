@@ -310,13 +310,14 @@ def build_soil(stations, days=120):
                 latest[label] = lv
         if depths:
             out[sid] = {"depths": depths, "latest": latest}
-            # multi-year context at one representative depth (20 cm root zone)
-            ctx_label = st.get("context_depth", "20 cm")
-            ctx_sensor = st.get("soil_sensors", {}).get(ctx_label)
-            if ctx_sensor:
-                ctx = soil_context(sid, ctx_sensor, dur, ctx_label)
-                if ctx:
-                    out[sid]["context"] = ctx
+            # multi-year context for every depth (dailies keep the payload small)
+            ctx = {}
+            for label, sensor in st.get("soil_sensors", {}).items():
+                c = soil_context(sid, sensor, dur, label)
+                if c:
+                    ctx[label] = {"dates": c["dates"], "values": c["values"]}
+            if ctx:
+                out[sid]["context"] = ctx
     return out
 
 
@@ -354,9 +355,10 @@ def build_soil_mesh(stations, days=120):
         }
         if len(med_full) >= 200:
             out[st["id"]]["context"] = {
-                "depth": st.get("depth_label", "~10 in"),
-                "dates": [ts.strftime("%Y-%m-%d") for ts in med_full.index],
-                "values": [round(float(v), 1) for v in med_full.values],
+                st.get("depth_label", "~10 in"): {
+                    "dates": [ts.strftime("%Y-%m-%d") for ts in med_full.index],
+                    "values": [round(float(v), 1) for v in med_full.values],
+                }
             }
     return out
 
