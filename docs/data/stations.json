@@ -258,6 +258,174 @@
       "basin": "Truckee"
     },
     {
+      "id": "DF537",
+      "df_id": "537",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "Middle Yuba R below Milton Dam",
+      "lat": 39.52185,
+      "lon": -120.58355,
+      "elev_ft": 5670,
+      "basin": "Yuba",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF446",
+      "df_id": "446",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "Middle Yuba R below Jackson Meadows",
+      "lat": 39.51601,
+      "lon": -120.56216,
+      "elev_ft": 5730,
+      "basin": "Yuba",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF062",
+      "df_id": "062",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "Middle Yuba R above Our House Dam",
+      "lat": 39.4117,
+      "lon": -120.9963,
+      "elev_ft": 2030,
+      "basin": "Yuba",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF536",
+      "df_id": "536",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "Canyon Ck below Bowman Lake",
+      "lat": 39.43962,
+      "lon": -120.66133,
+      "elev_ft": 5100,
+      "basin": "Yuba",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF063",
+      "df_id": "063",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "Fordyce Ck below Fordyce Dam",
+      "lat": 39.3799,
+      "lon": -120.49937,
+      "elev_ft": 6260,
+      "basin": "Yuba",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF064",
+      "df_id": "064",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "South Yuba R at Lang Crossing",
+      "lat": 39.31851,
+      "lon": -120.65771,
+      "elev_ft": 4470,
+      "basin": "Yuba",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF609",
+      "df_id": "609",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "Slate Ck below Diversion Dam",
+      "lat": 39.61434,
+      "lon": -121.05218,
+      "elev_ft": 3490,
+      "basin": "Yuba",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF556",
+      "df_id": "556",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "Bear R at Hwy 20 Bridge",
+      "lat": 39.30629,
+      "lon": -120.6791,
+      "elev_ft": 4560,
+      "basin": "Bear",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF555",
+      "df_id": "555",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "Bear R below Drum Afterbay",
+      "lat": 39.25434,
+      "lon": -120.77494,
+      "elev_ft": 3330,
+      "basin": "Bear",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF535",
+      "df_id": "535",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "Bear R below Dutch Flat Afterbay",
+      "lat": 39.21351,
+      "lon": -120.84522,
+      "elev_ft": 2600,
+      "basin": "Bear",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF067",
+      "df_id": "067",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "Bear R at Hwy 174 Bridge (below Rollins)",
+      "lat": 39.13115,
+      "lon": -120.95924,
+      "elev_ft": 1930,
+      "basin": "Bear",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF793",
+      "df_id": "793",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "MF American R below French Meadows",
+      "lat": 39.10963,
+      "lon": -120.48131,
+      "elev_ft": 4920,
+      "basin": "American",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF099",
+      "df_id": "099",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "MF American R below Interbay Dam",
+      "lat": 39.02629,
+      "lon": -120.60354,
+      "elev_ft": 2470,
+      "basin": "American",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
+      "id": "DF796",
+      "df_id": "796",
+      "type": "flow",
+      "source": "dreamflows",
+      "name": "NF American R above Auburn Pump Station",
+      "lat": 38.8851,
+      "lon": -121.05985,
+      "elev_ft": 577,
+      "basin": "American",
+      "operator": "operator gage via Dreamflows"
+    },
+    {
       "id": "CSL",
       "type": "snow",
       "name": "Central Sierra Snow Lab (Donner Summit)",
@@ -697,36 +865,69 @@
       "img": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy80atdonnersummit/hwy80atdonnersummit.jpg"
     },
     {
-      "id": "cam-soda",
+      "id": "cam-sierrabuttes",
       "type": "cam",
-      "name": "I-80 at Soda Springs",
-      "lat": 39.326506,
-      "lon": -120.389657,
-      "img": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy80atsodaspringseb/hwy80atsodaspringseb.jpg"
+      "name": "Sierra Buttes Lookout",
+      "lat": 39.59,
+      "lon": -120.65,
+      "img": "https://cameras.alertcalifornia.org/public-camera-data/Axis-SierraButtes1/latest-frame.jpg",
+      "credit": "ALERTCalifornia | UC San Diego"
     },
     {
-      "id": "cam-kingvale",
+      "id": "cam-martis",
       "type": "cam",
-      "name": "I-80 at Kingvale",
-      "lat": 39.31582,
-      "lon": -120.439405,
-      "img": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy80atkingvalewb/hwy80atkingvalewb.jpg"
+      "name": "Martis Peak Lookout",
+      "lat": 39.29,
+      "lon": -120.03,
+      "img": "https://cameras.alertcalifornia.org/public-camera-data/Axis-MartisPeak1/latest-frame.jpg",
+      "credit": "ALERTCalifornia | UC San Diego"
     },
     {
-      "id": "cam-hwy20",
+      "id": "cam-signal",
       "type": "cam",
-      "name": "Hwy 20 at Pleasant Valley Rd",
-      "lat": 39.205111,
-      "lon": -121.204833,
-      "img": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy20atpleasantvalleyrd/hwy20atpleasantvalleyrd.jpg"
+      "name": "Signal Peak (Nevada Co.)",
+      "lat": 39.34,
+      "lon": -120.54,
+      "img": "https://cameras.alertcalifornia.org/public-camera-data/Axis-SignalPeakNV1/latest-frame.jpg",
+      "credit": "ALERTCalifornia | UC San Diego"
     },
     {
-      "id": "cam-hwy49",
+      "id": "cam-duncan",
       "type": "cam",
-      "name": "Hwy 49 at Dry Creek Rd",
-      "lat": 38.95686,
-      "lon": -121.101234,
-      "img": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy49atdrycreekrd/hwy49atdrycreekrd.jpg"
+      "name": "Duncan Peak Lookout",
+      "lat": 39.14,
+      "lon": -120.51,
+      "img": "https://cameras.alertcalifornia.org/public-camera-data/Axis-DuncanPeakLookout1/latest-frame.jpg",
+      "credit": "ALERTCalifornia | UC San Diego"
+    },
+    {
+      "id": "cam-banner",
+      "type": "cam",
+      "name": "Banner Mountain",
+      "lat": 39.25,
+      "lon": -120.97,
+      "img": "https://cameras.alertcalifornia.org/public-camera-data/Axis-BannerMtn1/latest-frame.jpg",
+      "credit": "ALERTCalifornia | UC San Diego"
+    },
+    {
+      "id": "cam-oregonpk",
+      "type": "cam",
+      "name": "Oregon Peak (Bullards Bar)",
+      "lat": 39.39,
+      "lon": -121.18,
+      "img": "https://cameras.alertcalifornia.org/public-camera-data/Axis-OregonPeak1/latest-frame.jpg",
+      "credit": "ALERTCalifornia | UC San Diego"
+    },
+    {
+      "id": "FOL",
+      "type": "reservoir",
+      "name": "Folsom Lake",
+      "lat": 38.683,
+      "lon": -121.183,
+      "elev_ft": 466,
+      "basin": "American",
+      "capacity_af": 977000,
+      "operator": "USBR"
     }
   ],
   "forecast_points": [

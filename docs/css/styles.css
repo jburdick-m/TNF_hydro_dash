@@ -100,6 +100,16 @@ header.site .sub {
 }
 .tile .value small { font-size: 14px; font-weight: 500; color: var(--ink-2); }
 .tile .context { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+.tile .wetness {
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tile.clickable { cursor: pointer; }
+.tile.clickable:hover, .tile.clickable:focus-visible { background: var(--surface-2); }
 
 /* ---------- sections ---------- */
 section { margin: 26px 0; }
@@ -297,8 +307,10 @@ section > .section-sub {
   border-radius: var(--radius);
   overflow: hidden;
 }
-.cam img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: var(--surface-2); }
+/* no crop: ALERTCalifornia's license requires the frame's info bar stay visible */
+.cam img { width: 100%; height: auto; display: block; background: var(--surface-2); min-height: 120px; }
 .cam .cap { padding: 7px 11px; font-size: 12.5px; color: var(--ink-2); }
+.cam .cap .credit { display: block; font-size: 11px; color: var(--ink-muted); }
 
 /* ---------- table view (accessibility twin) ---------- */
 details.table-view { margin-top: 6px; }

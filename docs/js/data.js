@@ -133,9 +133,12 @@ function smoothInPlace(arr, window) {
 export async function nwpsForecast(gaugeId) {
   const j = await fetchJSON(`https://api.water.noaa.gov/nwps/v1/gauges/${gaugeId}/stageflow/forecast`);
   const scale = j.secondaryUnits === "kcfs" ? 1000 : 1;
+  const now = Date.now();
   const t = [], v = [];
   for (const p of j.data || []) {
     if (p.secondary == null || p.secondary < 0) continue;
+    // forecast series can begin a few hours in the past; keep future points only
+    if (new Date(p.validTime).getTime() <= now) continue;
     t.push(p.validTime);
     v.push(p.secondary * scale);
   }

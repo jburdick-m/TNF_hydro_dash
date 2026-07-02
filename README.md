@@ -14,7 +14,9 @@ It is a **fully static site** — no server, no build step, no framework. Open
 | **USGS NWIS** | real-time streamflow (Truckee basin + N Yuba, Deer Ck, NF American) and period-of-record daily statistics for percentile ribbons | fetched **live in the browser** (NWIS sends CORS headers) |
 | **NOAA NWS** | 7-day point forecasts (precip, snow, temps) | fetched **live in the browser** |
 | **CA DWR CDEC** | snow pillows, **soil moisture** (CW3E + UC Davis stations), reservoir storage, and FERC/operator stream gages that USGS doesn't carry (Jones Bar, Our House Dam, Oregon Ck, N Yuba abv Slate Ck, S Yuba nr Cisco, Englebright release, MF American at Oxbow) | CDEC has **no CORS**, so `scripts/fetch_data.py` runs on a GitHub Actions schedule (every 3 h) and commits compact JSON to `docs/data/` |
-| **Caltrans** | road webcams (I-80, Hwy 20, Hwy 49) | hotlinked JPEGs, auto-refresh |
+| **Dreamflows** | operator FERC gages with no other public feed (Milton Dam, Canyon Ck below Bowman, Fordyce, Lang Crossing, the Bear River canyon reach, PCWA MF American points) | bulk realtime CSV fetched by the scheduled script; history accumulates run-over-run since the feed carries current values only. Credit Dreamflows.com; readings marked "Est/Rough" are estimates |
+| **ALERTCalifornia (UCSD)** | fire-lookout cameras (Sierra Buttes, Martis Peak, Signal Peak, Duncan Peak, Banner Mtn, Oregon Peak) | hotlinked latest frames, CC BY-NC-ND 4.0 — credit shown, frames displayed uncropped |
+| **Caltrans** | I-80 Donner Summit road webcam | hotlinked JPEG, auto-refresh |
 | **USFS EDW** | forest administrative boundary | static GeoJSON in `docs/geo/` |
 
 The station inventory (IDs, coordinates, sensors, reservoir capacities) lives in
@@ -80,6 +82,10 @@ Every chart has a "view as table" twin.
   header). USGS flow, NWS forecast, and webcams are live at page load.
 - Some percentile bands are suppressed where the record is under ~5 years
   (e.g. S Yuba nr Cisco, online 2026).
-- Possible future sources: NRCS SNOTEL/AWDB, USBR RISE (Truckee reservoirs),
-  CNRFC forecast flows, Dreamflows (operator gages; check their republication
-  policy before scraping).
+- Dreamflows' bulk CSVs are intended for machine loading but the site publishes
+  no republication policy — a courtesy permission email to chris@dreamflows.com
+  is the polite prerequisite for keeping those gages public. The dashboard polls
+  once per scheduled run (every 3 h) and credits Dreamflows.com.
+- Evaluated and skipped: NRCS SNOTEL and USBR RISE (nothing beyond the existing
+  CDEC/USGS coverage here). CNRFC forecast flows are integrated via the NOAA
+  NWPS API.
