@@ -266,6 +266,24 @@ def build_snow(stations):
     return out
 
 
+def soil_context(sid, sensor, dur, label, por_start="2018-01-01"):
+    """Full-record daily series for one depth — powers the water-year overlay.
+    Records here are only 3-6 years old, so the frontend shows year-vs-year
+    traces rather than percentile bands."""
+    df = cdec_fetch(sid, sensor, dur, por_start)
+    if df.empty:
+        return None
+    df = df[(df["value"] >= 0) & (df["value"] <= 100)]
+    s = df.set_index("datetime")["value"].resample("D").mean().dropna()
+    if len(s) < 200:
+        return None
+    return {
+        "depth": label,
+        "dates": [ts.strftime("%Y-%m-%d") for ts in s.index],
+        "values": [round(float(v), 1) for v in s.values],
+    }
+
+
 def build_soil(stations, days=120):
     out = {}
     start = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
@@ -292,26 +310,35 @@ def build_soil(stations, days=120):
                 latest[label] = lv
         if depths:
             out[sid] = {"depths": depths, "latest": latest}
+            # multi-year context at one representative depth (20 cm root zone)
+            ctx_label = st.get("context_depth", "20 cm")
+            ctx_sensor = st.get("soil_sensors", {}).get(ctx_label)
+            if ctx_sensor:
+                ctx = soil_context(sid, ctx_sensor, dur, ctx_label)
+                if ctx:
+                    out[sid]["context"] = ctx
     return out
 
 
 def build_soil_mesh(stations, days=120):
     """UC Davis sensor-mesh clusters: many single-depth nodes reporting ~daily.
-    Collapse each cluster to a daily median across nodes."""
+    Collapse each cluster to a daily median across nodes. The full record is
+    fetched (it's ~daily cadence anyway) so the multi-year context comes free."""
     out = {}
-    start = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+    cutoff = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
     for st in stations:
         print(f"soil mesh: {st['id']} ({st['name']})")
         frames = []
         for node in st["nodes"]:
-            df = cdec_fetch(node, st.get("sensor", 197), st.get("dur", "E"), start)
+            df = cdec_fetch(node, st.get("sensor", 197), st.get("dur", "E"), st.get("por_start", "2018-01-01"))
             df = df[(df["value"] >= 0) & (df["value"] <= 100)]
             if not df.empty:
                 frames.append(df.set_index("datetime")["value"].resample("D").mean().rename(node))
         if not frames:
             continue
         merged = pd.concat(frames, axis=1)
-        med = merged.median(axis=1).dropna()
+        med_full = merged.median(axis=1).dropna()
+        med = med_full[med_full.index >= cutoff]
         n_nodes = merged.notna().sum(axis=1)
         out[st["id"]] = {
             "depths": {st.get("depth_label", "~10 in"): {
@@ -325,6 +352,12 @@ def build_soil_mesh(stations, days=120):
             "nodes_reporting": int(n_nodes.iloc[-1]) if len(n_nodes) else 0,
             "nodes_total": len(st["nodes"]),
         }
+        if len(med_full) >= 200:
+            out[st["id"]]["context"] = {
+                "depth": st.get("depth_label", "~10 in"),
+                "dates": [ts.strftime("%Y-%m-%d") for ts in med_full.index],
+                "values": [round(float(v), 1) for v in med_full.values],
+            }
     return out
 
 

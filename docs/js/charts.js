@@ -153,6 +153,43 @@ function rampColor(i, n) {
   return DEPTH_RAMP[Math.round(t * (DEPTH_RAMP.length - 1))];
 }
 
+/* ---------- water-year overlay (soil moisture context) ----------
+ * Records are only a few years old — too short for percentile bands — so each
+ * water year (Oct 1 – Sep 30) is drawn as its own trace: prior years in the
+ * ordinal blue ramp (oldest lightest), the current year in primary ink. */
+
+export function waterYearChart(el, { dates, values }) {
+  const byWY = new Map();
+  for (let i = 0; i < dates.length; i++) {
+    if (values[i] == null) continue;
+    const [y, m, d] = dates[i].split("-").map(Number);
+    const wy = m >= 10 ? y + 1 : y;
+    // shared x-axis: remap every point into reference WY2024 (has a Feb 29)
+    const x = `${m >= 10 ? 2023 : 2024}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    if (!byWY.has(wy)) byWY.set(wy, { x: [], y: [] });
+    byWY.get(wy).x.push(x);
+    byWY.get(wy).y.push(values[i]);
+  }
+  const years = [...byWY.keys()].sort();
+  const current = years.at(-1);
+  const prior = years.slice(0, -1);
+  const traces = years.map((wy) => ({
+    x: byWY.get(wy).x,
+    y: byWY.get(wy).y,
+    name: `WY ${wy}`,
+    mode: "lines",
+    line: wy === current
+      ? { width: 2.5, color: "#ffffff" }
+      : { width: 1.75, color: rampColor(prior.indexOf(wy), Math.max(prior.length, 2)) },
+    hovertemplate: `%{y:.1f}%<extra>WY ${wy}</extra>`,
+  }));
+  draw(el, traces, {
+    yaxis: { title: { text: "volumetric soil moisture (%)", font: { size: 12, color: INK_MUTED } }, rangemode: "tozero" },
+    xaxis: { tickformat: "%b", dtick: "M1", gridcolor: GRID },
+    hovermode: "x unified",
+  });
+}
+
 /* ---------- reservoir storage ---------- */
 
 export function reservoirChart(el, { recent, capacity, name }) {
