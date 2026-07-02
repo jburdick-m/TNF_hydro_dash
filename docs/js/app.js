@@ -119,7 +119,10 @@ function asOf(t) {
 function buildMap() {
   const map = initMap($("map"));
   addBoundary(map);
-  state.mapApi = addStations(map, state.stations, onStationSelect);
+  state.mapApi = addStations(map, state.stations, {
+    onView: onStationSelect,
+    onInfo: showStationInfo, // marker click fills the side panel immediately
+  });
 }
 
 function onStationSelect(st) {
@@ -148,21 +151,126 @@ function scrollTo(id) {
   $(id).scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function showStationInfo(st) {
+let infoToken = 0;
+
+function stationPageLink(st) {
+  if (st.source === "usgs") return `https://waterdata.usgs.gov/monitoring-location/${st.id}/`;
+  if (st.source === "dreamflows") return `https://www.dreamflows.com/graphs/day.${st.df_id}.php`;
+  return `https://cdec.water.ca.gov/dynamicapp/staMeta?station_id=${st.id}`;
+}
+
+/* Rich station card for the panel beside the map. */
+async function showStationInfo(st) {
+  const token = ++infoToken;
   const el = $("station-info");
-  const link = st.source === "usgs"
-    ? `https://waterdata.usgs.gov/monitoring-location/${st.id}/`
-    : st.source === "dreamflows"
-      ? `https://www.dreamflows.com/graphs/day.${st.df_id}.php`
-      : `https://cdec.water.ca.gov/dynamicapp/staMeta?station_id=${st.id}`;
+  const metaLine = [
+    TYPE_LABELS[st.type] || st.type,
+    st.basin ? `${st.basin} basin` : null,
+    st.elev_ft ? `${st.elev_ft.toLocaleString()} ft` : null,
+    st.operator,
+  ].filter(Boolean).join(" · ");
+
+  if (st.type === "cam") {
+    el.innerHTML = `
+      <h3>${st.name}</h3>
+      <div class="meta">${TYPE_LABELS.cam}${st.credit ? ` · ${st.credit}` : ""}</div>
+      <a href="${st.img}" target="_blank" rel="noopener">
+        <img class="info-cam" src="${st.img.split("?")[0]}?t=${Date.now()}" alt="Webcam: ${st.name}"></a>
+      <div class="info-links"><a href="#webcams">All webcams ↓</a></div>`;
+    return;
+  }
+
+  let bigHTML = "", asof = "", spark = null, meterHTML = "";
+  const rows = [];
+
+  if (st.type === "flow") {
+    const isUsgs = st.source === "usgs";
+    const local = st.source === "dreamflows" ? state.local.dreamflows?.[st.id] : state.local.flow?.[st.id];
+    const lv = isUsgs ? state.usgsLatest[st.id] : local?.latest;
+    let bands = null, recent = null;
+    if (isUsgs) {
+      [bands, recent] = await Promise.all([getUsgsBands(st.id), getUsgsDaily(st.id).catch(() => null)]);
+    } else {
+      bands = local?.bands || null;
+      recent = local?.recent || null;
+    }
+    if (lv) { bigHTML = `${charts.fmt(lv.v)} <small>cfs</small>`; asof = asOf(lv.t); }
+    const w = lv ? wetness(lv.v, bands) : null;
+    if (w) rows.push(["Vs. median for today", `${w.pct != null ? `${w.pct}% · ` : ""}${WETNESS[w.cls].label}`, WETNESS[w.cls].color]);
+    const med = bands?.p50?.[todayDoyIdx()];
+    if (med != null) rows.push(["Median for today", `${charts.fmt(med)} cfs`]);
+    if (recent?.values?.length > 5) {
+      const yr = recent.values.filter((x) => x != null);
+      rows.push(["12-month range", `${charts.fmt(Math.min(...yr))} – ${charts.fmt(Math.max(...yr))} cfs`]);
+      spark = { t: recent.dates.slice(-90), v: recent.values.slice(-90), color: charts.TYPE_COLORS.flow, unit: "cfs" };
+    }
+    rows.push(["Source", isUsgs ? "USGS (live)"
+      : st.source === "dreamflows" ? `Dreamflows${local?.confidence && local.confidence !== "Gage" ? ` (${local.confidence.toLowerCase()} estimate)` : ""}`
+      : "CDEC"]);
+  } else if (st.type === "snow") {
+    const e = state.local.snow?.[st.id];
+    if (e?.latest) { bigHTML = `${e.latest.v.toFixed(1)} <small>in SWE</small>`; asof = asOf(e.latest.t); }
+    if (e?.pct_median != null) {
+      rows.push(["Vs. median for today", `${e.pct_median}% · ${WETNESS[pctClass(e.pct_median)].label}`, WETNESS[pctClass(e.pct_median)].color]);
+    }
+    if (e?.recent?.values?.length) {
+      let peak = 0, peakDate = null;
+      for (let i = 0; i < e.recent.values.length; i++) {
+        if (e.recent.values[i] > peak) { peak = e.recent.values[i]; peakDate = e.recent.dates[i]; }
+      }
+      if (peakDate) rows.push(["Peak (last 12 mo)", `${peak.toFixed(1)} in · ${peakDate}`]);
+      spark = { t: e.recent.dates.slice(-180), v: e.recent.values.slice(-180), color: charts.TYPE_COLORS.snow, unit: "in SWE" };
+    }
+  } else if (st.type === "soil" || st.type === "soil_mesh") {
+    const e = state.local.soil?.[st.id];
+    const entries = Object.entries(e?.latest || {});
+    for (const [depth, lv] of entries) {
+      rows.push([`Moisture at ${depth}`, `${lv.v.toFixed(1)} %`]);
+      if (!asof) asof = asOf(lv.t);
+    }
+    if (e?.nodes_total) rows.push(["Mesh nodes reporting", `${e.nodes_reporting}/${e.nodes_total}`]);
+    const sparkDepth = e?.depths?.["20 cm"] ? "20 cm" : Object.keys(e?.depths || {})[0];
+    if (sparkDepth) {
+      const s = e.depths[sparkDepth];
+      spark = { t: s.t, v: s.v, color: charts.TYPE_COLORS.soil, unit: `% at ${sparkDepth}` };
+      rows.push(["Trend below", `${sparkDepth}, last 4 months`]);
+    }
+  } else if (st.type === "reservoir") {
+    const e = state.local.reservoirs?.[st.id];
+    if (e?.latest) { bigHTML = `${charts.fmt(e.latest.v)} <small>acre-feet</small>`; asof = asOf(e.latest.t); }
+    if (st.capacity_af) {
+      rows.push(["Capacity", `${charts.fmt(st.capacity_af)} af`]);
+      if (e?.pct_capacity != null) {
+        meterHTML = `<div class="irow"><span>Percent full</span><b>${e.pct_capacity}%</b></div>
+          <div class="meter" style="margin:6px 0 2px"><div class="fill" style="width:${Math.min(e.pct_capacity, 100)}%"></div></div>`;
+      }
+    }
+    const vals = e?.recent?.values || [];
+    if (vals.length > 31) {
+      const d30 = vals.at(-1) - vals.at(-31);
+      rows.push(["30-day change", `${d30 >= 0 ? "+" : "−"}${charts.fmt(Math.abs(d30))} af`]);
+    }
+    if (vals.length > 5) {
+      spark = { t: e.recent.dates.slice(-120), v: vals.slice(-120), color: charts.TYPE_COLORS.reservoir, unit: "af" };
+    }
+  }
+
+  const links = [`<a href="${stationPageLink(st)}" target="_blank" rel="noopener">Station page ↗</a>`];
+  if (st.nwps) links.push(`<a href="https://water.noaa.gov/gauges/${st.nwps}" target="_blank" rel="noopener">CNRFC forecast ↗</a>`);
+  links.push(`<a href="https://maps.google.com/?q=${st.lat},${st.lon}" target="_blank" rel="noopener">${st.lat.toFixed(4)}, ${st.lon.toFixed(4)} ↗</a>`);
+
+  if (token !== infoToken) return; // a newer selection superseded this one
   el.innerHTML = `
     <h3>${st.name}</h3>
-    <div class="meta">${TYPE_LABELS[st.type] || st.type}
-      ${st.basin ? ` · ${st.basin} basin` : ""}${st.elev_ft ? ` · ${st.elev_ft.toLocaleString()} ft` : ""}
-      ${st.operator ? ` · ${st.operator}` : ""}</div>
-    ${st._latest ? `<div class="now">${st._latest.replace(/ (cfs|in SWE|af.*|%.*)$/, ' <small>$1</small>')}</div>
-    <div class="asof">${st._asof || ""}</div>` : `<div class="meta" style="margin-top:8px">No recent data.</div>`}
-    <div style="margin-top:10px"><a href="${link}" target="_blank" rel="noopener">Station page ↗</a></div>`;
+    <div class="meta">${metaLine}</div>
+    ${bigHTML ? `<div class="now">${bigHTML}</div><div class="asof">${asof}</div>` : ""}
+    ${rows.length ? `<div class="irows">${rows.map(([k, v, c]) =>
+      `<div class="irow"><span>${k}</span><b>${c ? `<span class="dot" style="background:${c}"></span>` : ""}${v}</b></div>`).join("")}</div>` : ""}
+    ${meterHTML}
+    ${spark ? `<div id="info-spark" class="info-spark"></div>` : ""}
+    ${!bigHTML && !rows.length ? `<div class="meta" style="margin-top:8px">No recent data.</div>` : ""}
+    <div class="info-links">${links.join(" · ")}</div>`;
+  if (spark) charts.sparkline($("info-spark"), spark);
 }
 
 function buildLegend() {
@@ -357,6 +465,7 @@ function buildSelectors() {
   }
   soilSel.addEventListener("change", () => renderSoil(soilSel.value));
   $("soil-view").addEventListener("change", () => renderSoil(soilSel.value));
+  $("soil-depth").addEventListener("change", () => renderSoil(soilSel.value));
 }
 
 /* ---------- streamflow ---------- */
@@ -441,19 +550,31 @@ function renderSoil(id) {
     ? `median of ${e.nodes_reporting}/${e.nodes_total} mesh nodes`
     : "";
   const view = $("soil-view").value;
+  const depthSel = $("soil-depth");
   if (view === "context") {
-    if (!e.context) {
+    const labels = Object.keys(e.context || {});
+    if (!labels.length) {
+      depthSel.hidden = true;
       charts.showMessage(el, `No multi-year record yet for ${st?.name || id}.`);
       $("soil-note").textContent = meshNote;
       return;
     }
-    const firstYear = e.context.dates[0]?.slice(0, 4);
+    // rebuild depth options for this station, preserving the choice when possible
+    const prev = depthSel.value;
+    depthSel.innerHTML = "";
+    for (const l of labels) depthSel.appendChild(new Option(l, l));
+    depthSel.value = labels.includes(prev) ? prev : (labels.includes("20 cm") ? "20 cm" : labels[0]);
+    depthSel.hidden = labels.length < 2;
+    const depth = depthSel.value;
+    const ctx = e.context[depth];
+    const firstYear = ctx.dates[0]?.slice(0, 4);
     $("soil-note").textContent =
-      `${e.context.depth} depth · each line is one water year (Oct–Sep) · record since ${firstYear}${meshNote ? " · " + meshNote : ""}`;
-    charts.waterYearChart(el, e.context);
-    charts.fillTable($("soil-table"), ["date", `${e.context.depth} (%)`],
-      e.context.dates.map((d, i) => [d, e.context.values[i]]).reverse());
+      `${depth} depth · each line is one water year (Oct–Sep) · record since ${firstYear}${meshNote ? " · " + meshNote : ""}`;
+    charts.waterYearChart(el, ctx);
+    charts.fillTable($("soil-table"), ["date", `${depth} (%)`],
+      ctx.dates.map((d, i) => [d, ctx.values[i]]).reverse());
   } else {
+    depthSel.hidden = true;
     $("soil-note").textContent = meshNote;
     charts.soilChart(el, e.depths);
     soilTable($("soil-table"), e.depths);
