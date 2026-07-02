@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tahoe National Forest — Hydrology Dashboard</title>
+  <meta name="description" content="Live streamflow, snowpack, soil moisture, reservoir storage, and forecasts across the Tahoe National Forest.">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💧</text></svg>">
+
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="site">
+      <h1>Tahoe National Forest · Hydrology</h1>
+      <span class="sub">Streamflow · snowpack · soil moisture · reservoirs · forecast</span>
+      <span class="sub" id="updated"></span>
+    </header>
+
+    <div class="tiles" id="tiles" aria-label="Current conditions"></div>
+
+    <section id="map-section">
+      <h2>Station map</h2>
+      <p class="section-sub">Tap a station for its latest reading, then “View chart” for context against the historical record.</p>
+      <div class="legend-chips" id="legend-chips" style="margin-bottom:10px"></div>
+      <div class="map-grid">
+        <div id="map" role="application" aria-label="Station map"></div>
+        <div class="map-side">
+          <div class="card" id="station-info">
+            <h3>Select a station</h3>
+            <div class="meta">Markers are colored by data type. The boundary shown is the Tahoe National Forest administrative boundary (USFS).</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="streamflow">
+      <h2>Streamflow</h2>
+      <p class="section-sub">Last 12 months of daily flow against the full period-of-record percentile bands for that day of year.</p>
+      <div class="card">
+        <div class="panel-head">
+          <select id="flow-select" aria-label="Choose stream gage"></select>
+          <span class="note" id="flow-note"></span>
+        </div>
+        <div id="flow-chart" class="chart"></div>
+        <details class="table-view">
+          <summary>View as table</summary>
+          <div id="flow-table"></div>
+        </details>
+      </div>
+    </section>
+
+    <section id="snowpack">
+      <h2>Snowpack</h2>
+      <p class="section-sub">Snow water equivalent at CDEC snow pillows, with historical percentile bands.</p>
+      <div class="card">
+        <div class="panel-head">
+          <select id="snow-select" aria-label="Choose snow pillow"></select>
+          <span class="note" id="snow-note"></span>
+        </div>
+        <div id="snow-chart" class="chart"></div>
+        <details class="table-view">
+          <summary>View as table</summary>
+          <div id="snow-table"></div>
+        </details>
+      </div>
+    </section>
+
+    <section id="soil">
+      <h2>Soil moisture</h2>
+      <p class="section-sub">Volumetric soil moisture by depth (CDEC / CW3E &amp; UC Davis research stations), last ~4 months.</p>
+      <div class="card">
+        <div class="panel-head">
+          <select id="soil-select" aria-label="Choose soil moisture station"></select>
+          <span class="note" id="soil-note"></span>
+        </div>
+        <div id="soil-chart" class="chart"></div>
+        <details class="table-view">
+          <summary>View as table</summary>
+          <div id="soil-table"></div>
+        </details>
+      </div>
+    </section>
+
+    <section id="reservoirs">
+      <h2>Reservoirs</h2>
+      <p class="section-sub">Current storage as a share of capacity. Tap a reservoir for the last year of storage.</p>
+      <div class="res-grid" id="res-grid"></div>
+      <div class="card" style="margin-top:10px">
+        <div class="panel-head"><span class="note" id="res-note"></span></div>
+        <div id="res-chart" class="chart chart-sm"></div>
+      </div>
+    </section>
+
+    <section id="forecast">
+      <h2>Forecast</h2>
+      <p class="section-sub">NWS point forecast — precipitation for the next 7 days.</p>
+      <div class="panel-head">
+        <select id="fc-select" aria-label="Choose forecast location"></select>
+        <span class="note" id="fc-note"></span>
+      </div>
+      <div class="fc-grid">
+        <div class="card"><div id="fc-chart" class="chart chart-sm"></div></div>
+        <div class="card fc-periods" id="fc-periods"></div>
+      </div>
+    </section>
+
+    <section id="webcams">
+      <h2>Webcams</h2>
+      <p class="section-sub">Caltrans road cameras in and around the forest. Images refresh about every minute.</p>
+      <div class="cam-grid" id="cam-grid"></div>
+    </section>
+
+    <footer>
+      <p>
+        Data: <a href="https://cdec.water.ca.gov/">CA DWR CDEC</a> ·
+        <a href="https://waterdata.usgs.gov/">USGS NWIS</a> ·
+        <a href="https://www.weather.gov/">NOAA NWS</a> ·
+        <a href="https://cwwp2.dot.ca.gov/vm/iframemap.htm">Caltrans</a> ·
+        boundary from <a href="https://data.fs.usda.gov/geodata/">USFS EDW</a>.
+        Streamflow and forecasts load live; CDEC-sourced data (snow, soil moisture, reservoirs, some gages)
+        refreshes on a schedule — see the timestamp above.
+      </p>
+      <p>Provisional data, subject to revision. Not for navigation, flood, or safety decisions.</p>
+    </footer>
+  </div>
+
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <script src="vendor/plotly-basic.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

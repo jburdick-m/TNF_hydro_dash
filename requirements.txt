@@ -1,8 +1,4 @@
-dash
-pandas
-plotly
-scipy
-beautifulsoup4
-lxml
-requests
-Pillow
+# For scripts/fetch_data.py (the dashboard itself is a static site — no Python needed to serve it)
+pandas>=2.0
+numpy>=1.24
+requests>=2.28

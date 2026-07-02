@@ -1,0 +1,353 @@
+/* Tahoe NF Hydrology Dashboard — dark theme */
+
+:root {
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --surface-2: #222221;
+  --ink: #ffffff;
+  --ink-2: #c3c2b7;
+  --ink-muted: #898781;
+  --grid: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255, 255, 255, 0.10);
+
+  /* categorical (dark-mode steps, fixed order) */
+  --c-flow: #3987e5;      /* blue    — streamflow */
+  --c-res: #199e70;       /* aqua    — reservoirs */
+  --c-soil: #d95926;      /* orange  — soil moisture */
+  --c-snow: #9085e9;      /* violet  — snow */
+
+  /* diverging ribbon poles (dry warm <-> wet cool) */
+  --dry: #e66767;
+  --wet: #3987e5;
+
+  --radius: 10px;
+  --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink-2);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+/* ---------- header ---------- */
+header.site {
+  padding: 26px 0 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 16px;
+}
+header.site h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 650;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+header.site .sub {
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+#updated { white-space: nowrap; }
+
+/* ---------- stat tiles ---------- */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: 10px;
+  margin: 14px 0 22px;
+}
+.tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  min-width: 0;
+}
+.tile .label {
+  font-size: 12px;
+  color: var(--ink-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tile .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  flex: none;
+}
+.tile .value {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 2px;
+  line-height: 1.15;
+}
+.tile .value small { font-size: 14px; font-weight: 500; color: var(--ink-2); }
+.tile .context { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+
+/* ---------- sections ---------- */
+section { margin: 26px 0; }
+section > h2 {
+  font-size: 17px;
+  font-weight: 650;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+section > .section-sub {
+  font-size: 13px;
+  color: var(--ink-muted);
+  margin: 0 0 12px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+
+/* ---------- map ---------- */
+.map-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 12px;
+  align-items: stretch;
+}
+#map {
+  height: 520px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.map-side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+#station-info { flex: 1; overflow: auto; }
+#station-info h3 { margin: 0 0 2px; font-size: 15px; color: var(--ink); }
+#station-info .meta { font-size: 12px; color: var(--ink-muted); }
+#station-info .now {
+  font-size: 30px; font-weight: 600; color: var(--ink); margin: 8px 0 0;
+}
+#station-info .now small { font-size: 14px; font-weight: 500; color: var(--ink-2); }
+#station-info .asof { font-size: 12px; color: var(--ink-muted); }
+#station-info a { color: var(--c-flow); text-decoration: none; }
+#station-info a:hover { text-decoration: underline; }
+
+.legend-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 11px;
+  cursor: pointer;
+  user-select: none;
+}
+.chip .dot { width: 9px; height: 9px; border-radius: 50%; }
+.chip.off { opacity: 0.38; }
+
+.station-marker { background: none; border: none; }
+.station-marker svg { display: block; }
+
+/* leaflet dark chrome */
+.leaflet-container { background: #111110; font-family: var(--font); }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: var(--surface-2);
+  color: var(--ink-2);
+  border: 1px solid var(--border);
+}
+.leaflet-popup-content { margin: 10px 14px; font-size: 13px; }
+.leaflet-popup-content b { color: var(--ink); }
+.leaflet-popup-content .plink { color: var(--c-flow); cursor: pointer; }
+.leaflet-bar a {
+  background: var(--surface-2); color: var(--ink-2); border-bottom-color: var(--border);
+}
+.leaflet-bar a:hover { background: var(--baseline); }
+.leaflet-control-attribution {
+  background: rgba(13, 13, 13, 0.7) !important;
+  color: var(--ink-muted) !important;
+  font-size: 10px !important;
+}
+.leaflet-control-attribution a { color: var(--ink-muted) !important; }
+.leaflet-control-layers {
+  background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--border);
+}
+
+/* ---------- chart panels ---------- */
+.panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+}
+.panel-head select {
+  background: var(--surface-2);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 14px;
+  font-family: var(--font);
+  max-width: 100%;
+}
+.panel-head .note { font-size: 12px; color: var(--ink-muted); }
+
+.chart {
+  width: 100%;
+  min-height: 320px;
+}
+.chart-sm { min-height: 260px; }
+
+.status-msg {
+  color: var(--ink-muted);
+  font-size: 13px;
+  padding: 24px 0;
+  text-align: center;
+}
+
+/* refetch: hold previous render dimmed, no skeleton flash */
+.chart.loading { opacity: 0.45; transition: opacity 0.2s; }
+
+/* ---------- reservoirs ---------- */
+.res-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+}
+.res-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 11px 13px;
+  cursor: pointer;
+}
+.res-row:hover { background: var(--surface-2); }
+.res-row.sel { outline: 2px solid var(--c-res); outline-offset: -1px; }
+.res-row .name { font-size: 13.5px; color: var(--ink); font-weight: 600; }
+.res-row .nums { font-size: 12px; color: var(--ink-muted); margin: 2px 0 7px; }
+.meter {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(25, 158, 112, 0.18); /* lighter step of same ramp as track */
+  overflow: hidden;
+}
+.meter .fill {
+  height: 100%;
+  background: var(--c-res);
+  border-radius: 4px;
+}
+
+/* ---------- forecast ---------- */
+.fc-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 12px;
+}
+.fc-periods { display: flex; flex-direction: column; gap: 8px; overflow: auto; }
+.fc-period {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--grid);
+  padding-bottom: 8px;
+  font-size: 13px;
+}
+.fc-period:last-child { border-bottom: none; padding-bottom: 0; }
+.fc-period .when { color: var(--ink); font-weight: 600; flex: none; width: 96px; }
+.fc-period .temp { color: var(--ink-2); flex: none; width: 44px; }
+.fc-period .short { color: var(--ink-muted); }
+
+/* ---------- webcams ---------- */
+.cam-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+}
+.cam {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.cam img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: var(--surface-2); }
+.cam .cap { padding: 7px 11px; font-size: 12.5px; color: var(--ink-2); }
+
+/* ---------- table view (accessibility twin) ---------- */
+details.table-view { margin-top: 6px; }
+details.table-view summary {
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--ink-muted);
+}
+details.table-view table {
+  border-collapse: collapse;
+  font-size: 12.5px;
+  margin-top: 8px;
+  width: 100%;
+  max-height: 300px;
+}
+details.table-view .tbl-scroll { max-height: 280px; overflow: auto; }
+details.table-view th, details.table-view td {
+  text-align: right;
+  padding: 3px 10px;
+  border-bottom: 1px solid var(--grid);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+details.table-view th { color: var(--ink-muted); font-weight: 600; position: sticky; top: 0; background: var(--surface); }
+details.table-view td:first-child, details.table-view th:first-child { text-align: left; }
+
+/* ---------- footer ---------- */
+footer {
+  margin-top: 40px;
+  border-top: 1px solid var(--grid);
+  padding-top: 16px;
+  font-size: 12.5px;
+  color: var(--ink-muted);
+}
+footer a { color: var(--ink-2); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 920px) {
+  .map-grid, .fc-grid { grid-template-columns: 1fr; }
+  #map { height: 55vh; min-height: 340px; }
+  .tiles {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(160px, 1fr);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding-bottom: 4px;
+  }
+  .tile { scroll-snap-align: start; }
+  header.site h1 { font-size: 20px; }
+  .chart { min-height: 300px; }
+}

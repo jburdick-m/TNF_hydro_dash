@@ -1,0 +1,45 @@
+name: Update CDEC data
+
+on:
+  schedule:
+    # Every 3 hours (UTC). CDEC snow/soil/reservoir feeds update hourly-to-daily,
+    # so this keeps the static JSON comfortably fresh. Streamflow (USGS) and
+    # forecasts (NWS) are fetched live by the browser and don't depend on this.
+    - cron: "20 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Fetch CDEC data
+        run: python scripts/fetch_data.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data
+          if git diff --staged --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "data: scheduled CDEC refresh"
+            git push
+          fi
