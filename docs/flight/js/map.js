@@ -11,7 +11,7 @@
   const BASEMAPS = ['relief', 'topo', 'sat', 'chart'];
   const BIG_RIVERS = ['Mississippi', 'Missouri', 'Platte', 'North Platte', 'South Platte', 'Loup', 'Elkhorn', 'Des Moines', 'Iowa', 'Cedar', 'Rock', 'Fox', 'Laramie', 'Green', 'Bear', 'Weber', 'Jordan', 'Humboldt', 'Truckee', 'Yuba', 'Feather', 'American', 'Sacramento'];
   const BIG_RIVER_NAMES = BIG_RIVERS.map((n) => n + ' River');
-  const M = (WA.map = { showBillboards: false, reliefStyle: WA.store.get('reliefStyle', 'classic'), mode: WA.store.get('cam', 'window'), follow: true, basemap: WA.store.get('basemap', 'relief'), relief3: WA.store.get('relief3', false), ready: false });
+  const M = (WA.map = { showBillboards: false, reliefStyle: WA.store.get('reliefStyle2', 'classic'), mode: WA.store.get('cam', 'window'), follow: true, basemap: WA.store.get('basemap', 'relief'), relief3: WA.store.get('relief3', false), ready: false });
   if (['window', 'chase', 'map'].indexOf(M.mode) < 0) M.mode = 'window';
   try { const q = new URLSearchParams(location.search).get('relief'); if (q) M.reliefStyle = q; } catch (e) { /* */ }
 
@@ -51,8 +51,6 @@
       { id: 'cone-edge', type: 'line', source: 'cone', paint: { 'line-color': p.magenta, 'line-width': 0.8, 'line-opacity': 0.5, 'line-dasharray': [2, 3] } },
       { id: 'perims', type: 'fill', source: 'perims', paint: { 'fill-color': p.fire, 'fill-opacity': 0.22 } },
       { id: 'perims-edge', type: 'line', source: 'perims', paint: { 'line-color': p.fire, 'line-width': 1, 'line-opacity': 0.8 } },
-      { id: 'poi-ranges', type: 'line', source: 'poilines', filter: ['==', ['get', 'kind'], 'range'], layout: { 'line-cap': 'butt', 'line-join': 'round' }, paint: { 'line-color': p.relief, 'line-width': 6, 'line-opacity': ['case', ['get', 'mine'], 0.75, 0.45], 'line-dasharray': [0.18, 0.4] } },
-      { id: 'poi-lines', type: 'line', source: 'poilines', filter: ['!=', ['get', 'kind'], 'range'], layout: { 'line-cap': 'butt', 'line-join': 'round' }, paint: { 'line-color': ['match', ['get', 'kind'], ['river', 'crossing', 'lake', 'reservoir'], p.water, 'history', p.ink2, p.relief], 'line-width': 1.8, 'line-opacity': ['case', ['get', 'mine'], 0.85, 0.5], 'line-dasharray': [3, 2] } },
       { id: 'route-ahead', type: 'line', source: 'route-ahead', layout: { 'line-cap': 'round' }, paint: { 'line-color': p.magenta, 'line-width': 2.2, 'line-opacity': 0.85, 'line-dasharray': [2, 2] } },
       { id: 'route-behind', type: 'line', source: 'route-behind', layout: { 'line-cap': 'round' }, paint: { 'line-color': p.magenta, 'line-width': 2.6, 'line-opacity': 0.9 } },
       { id: 'flown', type: 'line', source: 'flown', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': p.ink, 'line-width': 1.2, 'line-opacity': 0.75 } },
@@ -216,7 +214,7 @@
     if (R) { try { R.add(map, pal(), { beforeId: 'water', DEM, G }); R._on = true; } catch (e) { console.warn('relief add', e); } }
     M.showBasemap();
   };
-  M.setReliefStyle = function (name) { M.reliefStyle = name; WA.store.set('reliefStyle', name); M.applyRelief(); };
+  M.setReliefStyle = function (name) { M.reliefStyle = name; WA.store.set('reliefStyle2', name); M.applyRelief(); };
   // Basemap: 'relief' (Esri hillshade, sharp to z16), 'topo' (USGS), 'sat' (Esri imagery), 'chart' (hillshade computed from the DEM)
   M.showBasemap = function () {
     const map = M.map; if (!map || !M.ready) return;
@@ -227,7 +225,7 @@
     if (M.reliefStyle === 'classic') {
       // Relief basemap: blend in the DEM hillshade at cruise zooms (the pre-rendered relief is faint there), fading out by z11 where it is crisp.
       vis('hillshade', b === 'chart' || b === 'relief');
-      if (b === 'relief') try { map.setPaintProperty('hillshade', 'hillshade-exaggeration', ['interpolate', ['linear'], ['zoom'], 4, night ? 0.5 : 0.65, 8, night ? 0.4 : 0.5, 10, 0.2, 11.5, 0]); } catch (e) { /* */ }
+      if (b === 'relief') try { map.setPaintProperty('hillshade', 'hillshade-exaggeration', ['interpolate', ['linear'], ['zoom'], 4, night ? 0.7 : 0.85, 8, night ? 0.6 : 0.75, 10, 0.4, 12, 0.15]); } catch (e) { /* */ }
     }
   };
   // Pictorial sprites from js/map-illustrations.js stay hidden (no illustrations on the map); water lining and the compass rose remain.

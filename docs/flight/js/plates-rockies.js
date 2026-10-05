@@ -197,24 +197,24 @@
     o += t.clip([[61, 0], [69, 0], [69.5, 30.4], [61.5, 30.4]], t.line(far, 0.45, 0.6) + t.hatch(t.below(farP, 30.4), { angle: 0, gap: 0.75, op: 0.4 }) + t.hatch(t.below(farP, 30.4), { angle: 95, gap: 1.8, op: 0.25 }));
     // buttresses and ravines on both walls: spurs run from the rim down to the water, alternate facets in shadow; benches where the hard beds crop out
     const facets = (rim, wl, x0, x1, xw0, xw1, n, dir) => {
-      const P2 = (f, g) => { const xr = x0 + (x1 - x0) * f, xw = xw0 + (xw1 - xw0) * f; const a = [xr, yAt(rim, xr)], b = [xw, yAt(wl, xw)]; return [a[0] + (b[0] - a[0]) * g + dir * M.sin(PI * g) * 1.6 * (1 - f * 0.7), a[1] + (b[1] - a[1]) * g]; };
+      const P2 = (f, g) => { const xr = x0 + (x1 - x0) * f, xw = xw0 + (xw1 - xw0) * f + dir * 6 * (1 - f); const a = [xr, yAt(rim, xr)], b = [xw, yAt(wl, M.max(M.min(xw, 120), 0))]; return [a[0] + (b[0] - a[0]) * g + dir * M.sin(PI * g) * 2.6 * (1 - f * 0.7), a[1] + (b[1] - a[1]) * g]; };
       let sp = '', dk = '', bn = '';
       for (let i = 0; i < n; i++) {
         const f0 = (i + R(0.1, 0.3)) / n, f1 = (i + R(0.55, 0.75)) / n, sl = [], rv = [];
         for (let g = 0; g <= 1.001; g += 0.2) { sl.push(P2(f0, g)); rv.push(P2(f1, g * 0.98)); }
-        sp += cr(sl); dk += t.hatch(sl.concat(rv.slice().reverse()), { angle: dir > 0 ? 70 : 110, gap: 0.55, op: 0.5 });
+        sp += cr(sl); dk += t.hatch(sl.concat(rv.slice().reverse()), { angle: dir > 0 ? 66 : 114, gap: 0.5, op: 0.55 });
       }
-      [0.34, 0.6].forEach((g) => { const pts = []; for (let f = 0; f <= 1.001; f += 0.04) pts.push(P2(f, g + R(-0.02, 0.02))); bn += 'M' + P(pts); });
-      return dk + t.s(sp, 0.4, 0.75) + t.s(bn, 0.45, 0.65);
+      [0.3, 0.58].forEach((g) => { const pts = []; for (let f = 0; f <= 1.001; f += 0.04) pts.push(P2(f, g + R(-0.02, 0.02))); bn += 'M' + P(pts); });
+      return dk + t.s(sp, 0.4, 0.6) + t.s(bn, 0.6, 0.8);
     };
     // left wall faces east, away from the light: dense fluting crossed by the steeply tilted red beds
-    o += t.hatch(wallL, { angle: 84, gap: 0.78, w: 0.3, op: 0.55, jitter: 0.3 }) + t.hatch(wallL, { angle: 150, gap: 1.8, w: 0.42, op: 0.62, jitter: 0.7 }) + t.hatch(wallL, { angle: 18, gap: 2.6, w: 0.24, op: 0.3 });
+    o += t.hatch(wallL, { angle: 84, gap: 1.0, w: 0.28, op: 0.45, jitter: 0.5 }) + t.hatch(wallL, { angle: 150, gap: 1.7, w: 0.42, op: 0.62, jitter: 0.7 }) + t.hatch(wallL, { angle: 18, gap: 2.6, w: 0.24, op: 0.3 });
     o += t.clip(wallL, t.line(off(rimL, 0, 2.6), 0.45, 0.6) + t.line(off(rimL, 0, 3.5), 0.3, 0.45));
-    o += t.clip(wallL, facets(rimL, wlL, 0, 61, 0, 61.5, 7, 1));
+    o += t.clip(wallL, facets(rimL, wlL, 0, 61, 0, 61.5, 5, 1));
     // right wall catches the light: the bright tilted strata read as bands
     o += t.hatch(wallR, { angle: 30, gap: 1.6, w: 0.4, op: 0.55, jitter: 0.6 }) + t.hatch(wallR, { angle: 96, gap: 2.8, w: 0.26, op: 0.35, jitter: 0.5 });
     o += t.clip(wallR, t.line(off(rimR, 0, 2.4), 0.45, 0.55) + t.stip(t.band(off(wlR, 0, -3.6), wlR), { n: 90, r: 0.22, op: 0.5 }));
-    o += t.clip(wallR, facets(rimR, wlR, 120, 69, 120, 69.5, 7, -1));
+    o += t.clip(wallR, facets(rimR, wlR, 120, 69, 120, 69.5, 5, -1));
     // water: long reservoir winding away, ruling tighter with distance
     const water = wlL.concat(wlR, [[120, 72.5], [38, 72.5], [32, 68.5], [22, 64.5], [10, 61], [0, 60]]);
     o += t.clip(water, t.rule(-1, 121, 30.6, 38, { gap: 0.68, op: 0.5, breaks: 0.3 }) + t.rule(-1, 121, 38.6, 52, { gap: 1.0, op: 0.5, breaks: 0.3 }) + t.rule(-1, 121, 53, 72, { gap: 1.42, op: 0.5, breaks: 0.35 }) +
@@ -312,26 +312,34 @@
     const back = K.ridge(t.rng, [[0, 45], [14, 41.6], [28, 43], [44, 40.8], [60, 42.6], [76, 40.4], [96, 42], [110, 40], [120, 41.2]], 0.5, 1.2);
     // massifs of jointed granite: tiers of rounded loaves narrowing upward into a tower; lower tiers sit in front
     const all = [];
+    const rot = (pts, cx, cy, th) => pts.map(([x, y]) => [cx + (x - cx) * M.cos(th) - (y - cy) * M.sin(th), cy + (x - cx) * M.sin(th) + (y - cy) * M.cos(th)]);
     const massif = (cx, yb, hw, tiers, zb, w, op) => {
       let y = yb, half = hw;
       for (let k = 0; k < tiers; k++) {
-        const ry = R(2.7, 4.3) * (1 - k * 0.05), yc = y - ry;
-        for (let x = cx - half + R(-1, 1); x < cx + half - 1;) {
-          const rx = M.max(2, M.min(R(3, 7) * (1 - k * 0.06), (cx + half - x) / 2 + 1)), bcx = x + rx, bcy = yc + R(-0.7, 0.7), bry = ry * R(0.88, 1.08);
-          all.push({ cx: bcx, cy: bcy, rx: rx * 1.04, ry: bry, z: zb * 1000 + bcy * 10 + R(0, 3), w, op, poly: sup(bcx, bcy, rx * 1.04, bry, R(2.2, 2.9), 36) });
-          x += rx * 2 * R(0.9, 0.98);
+        const top = k === tiers - 1;
+        for (let x = cx - half + R(-1.5, 1); x < cx + half - 1;) {
+          const fin = top || (k > 1 && t.rng() < 0.25);
+          const rx = fin ? R(2.2, 3.4) : M.max(2.4, M.min(R(3.4, 8) * (1 - k * 0.05), (cx + half - x) / 2 + 1.5));
+          const ry = fin ? R(4, 6) : R(2.4, 5) * (1 - k * 0.04), bcx = x + rx, bcy = y - ry * R(0.85, 1);
+          if (t.rng() > 0.12 || k === 0) {
+            const th = R(-0.22, 0.22);
+            all.push({ cx: bcx, cy: bcy, rx: rx * 1.1, ry: ry * 1.1, z: zb * 1000 + bcy * 10 + R(0, 4), w, op, th, poly: rot(sup(bcx, bcy, rx, ry, R(2.1, 2.8), 28), bcx, bcy, th) });
+          }
+          x += rx * 2 * R(0.82, 1.02);
         }
-        y = yc - ry * 0.68; half *= R(0.6, 0.76); cx += R(-2.2, 2.2);
+        y -= R(4.2, 6.4) * (1 - k * 0.05); half *= R(0.55, 0.78); cx += R(-3, 3);
       }
     };
     massif(8, 56.5, 10, 3, 1, 0.38, 0.55);
     massif(113, 55, 8, 3, 1, 0.38, 0.55);
     massif(36, 58.4, 25, 7, 2, 0.58, 1);
     // whaleback dome with exfoliation sheets, a few boulders perched on its crown
-    const dc = 87, db = 58.4, drx = 20, dry = 26, dome = [];
-    for (let k = 0; k <= 32; k++) { const a = (PI * k) / 32, c = M.cos(a); dome.push([dc - drx * M.sign(c) * M.pow(M.abs(c), 0.8), db - dry * M.pow(M.sin(a), 0.8)]); }
+    const dc = 87, db = 58.4, drx = 20, dry = 24, dome = [];
+    // asymmetric whaleback: long rounded back on the left, steeper broken face on the right
+    const dxy = (a, f) => { const c = M.cos(a), sk = c < 0 ? 1 : 0.8; return [dc - drx * f * M.sign(c) * M.pow(M.abs(c), c < 0 ? 0.9 : 0.6) * sk, db - dry * f * M.pow(M.sin(a), c < 0 ? 0.75 : 1.1) * (1 + 0.12 * c)]; };
+    for (let k = 0; k <= 32; k++) dome.push(dxy((PI * k) / 32, 1));
     all.push({ dome: true, cx: dc, cy: db - dry / 2, rx: drx, ry: dry / 2, z: 2000 + 20, w: 0.6, op: 1, poly: dome });
-    [[82.4, 30.6, 4.2, 2.4], [90, 31.2, 3.2, 2.1], [86, 26.6, 2.8, 1.9]].forEach(([x, y, rx, ry], i) => all.push({ cx: x, cy: y, rx, ry, z: 2000 + 30 + i, w: 0.55, op: 1, poly: sup(x, y, rx, ry, 2.4, 32) }));
+    [[83.4, 33, 4.6, 2.6], [91, 34.4, 3.2, 2.2], [86.4, 28.4, 2.8, 2.4]].forEach(([x, y, rx, ry], i) => all.push({ cx: x, cy: y, rx, ry, z: 2000 + 30 + i, w: 0.55, op: 1, poly: rot(sup(x, y, rx, ry, 2.4, 32), x, y, [0.12, -0.15, 0.08][i]) }));
     const polys = all.map((b) => b.poly);
     let o = t.hide(polys, t.sky(back, { gap: 1.2, op: 0.42 }) +
       t.line(back, 0.45, 0.55) + t.clip(t.below(back, 58), t.hatch(t.below(back, 58), { angle: 78, gap: 1.1, op: 0.35 }) + t.trees(t.below(back, 52), 60, 1.2, 2.4, 0.24, 0.3, 0.55)));
@@ -340,7 +348,7 @@
       let s;
       if (b.dome) {
         let sh = '';
-        [0.84, 0.68, 0.5].forEach((f) => { const pts = []; for (let k = 5; k <= 27; k++) { const a = (PI * k) / 32, c = M.cos(a); pts.push([dc - drx * f * M.sign(c) * M.pow(M.abs(c), 0.8), db - dry * f * M.pow(M.sin(a), 0.8)]); } sh += cr(pts); });
+        [0.9, 0.8].forEach((f, j) => { const pts = []; for (let k = 4 + j * 3; k <= 22 - j * 2; k++) pts.push(dxy((PI * k) / 32, f)); sh += cr(pts); });
         const right = [[dc + 2, db - dry - 1], [dc + drx + 1, db - dry - 1], [dc + drx + 1, db + 1], [dc + 6, db + 1]];
         s = t.line(dome, 0.6) + t.clip(dome, t.s(sh, 0.3, 0.55) + t.hatch(right, { angle: 70, gap: 0.62, op: 0.6 }) + t.hatch([[dc + 10, db - dry], [dc + drx + 1, db - dry], [dc + drx + 1, db + 1], [dc + 14, db + 1]], { angle: 120, gap: 0.9, op: 0.45 }) +
           t.s('M' + r2(dc - 6) + ' ' + r2(db - dry * 0.82) + 'l-1.2 18M' + r2(dc + 7) + ' ' + r2(db - dry * 0.86) + 'l1.6 20', 0.3, 0.6));
@@ -576,15 +584,15 @@
       o += s;
     });
     // the river: one broad S-bend widening toward the viewer
-    const C = crPts([[57, 31.3], [50.6, 33.4], [46.6, 36.4], [49, 39.8], [60, 43], [74, 46.4], [84, 51], [84, 57.6], [74, 63.4], [62, 68], [56, 74]], 5);
+    const C = crPts([[57, 31.3], [52.6, 33.6], [51.6, 36.8], [55, 40.4], [62, 44], [70.4, 48.6], [77, 54.4], [81.6, 61.4], [84, 68], [85, 74.4]], 5);
     const L = [], Rr = [];
     C.forEach((p, i) => {
       const a = C[M.max(0, i - 1)], b = C[M.min(C.length - 1, i + 1)], tx = b[0] - a[0], ty = b[1] - a[1], ln = M.hypot(tx, ty) || 1;
-      const w = 1.2 + 13.5 * M.pow(i / (C.length - 1), 1.5);
+      const w = 1.2 + 12 * M.pow(i / (C.length - 1), 1.45);
       L.push([p[0] - (ty / ln) * w, p[1] + (tx / ln) * w]); Rr.push([p[0] + (ty / ln) * w, p[1] - (tx / ln) * w]);
     });
     const river = L.concat(Rr.slice().reverse());
-    const bar1 = sup(54, 38.2, 3.4, 0.6, 1.5, 24), bar2 = sup(79, 54.4, 2.4, 4.2, 1.5, 24);
+    const bar1 = sup(54.6, 38.4, 2.2, 0.6, 1.5, 24), bar2 = sup(72.6, 55.6, 2.2, 3.6, 1.5, 24);
     // Carter Lake: the cut-off oxbow on the Nebraska floodplain
     const ox = [];
     for (let a = 70; a <= 290; a += 10) { const r = (a * PI) / 180; ox.push([24 + 11 * M.cos(r), 46 + 3.6 * M.sin(r)]); }
@@ -604,9 +612,9 @@
     // I-480 girder bridge upstream
     o += t.s('M43 34.2L60.4 33.4M43 34.8L60.4 34', 0.35, 0.8) + t.s('M47 34.6v1.3M50.4 34.4v1.4M53.8 34.3v1.4M57.2 34.1v1.3', 0.3, 0.7);
     // Bob Kerrey pedestrian bridge: S-curved deck, two pylons, cable fans
-    const deck = crPts([[38, 47.6], [50, 47], [58, 45.6], [66, 44.6], [76, 44.2], [90, 43.4]], 5);
+    const deck = crPts([[44, 49.2], [54, 48.6], [62, 47.2], [70, 46.4], [80, 46.2], [94, 45.4]], 5);
     let cab = '', pyl = '';
-    [[54, 34.6], [72, 33.4]].forEach(([px, ptop]) => {
+    [[59, 36.4], [75.5, 35.4]].forEach(([px, ptop]) => {
       const db = yAt(deck, px);
       pyl += 'M' + r2(px) + ' ' + r2(db + 1.2) + 'L' + r2(px) + ' ' + r2(ptop);
       for (let k = 1; k <= 6; k++) for (const sgn of [-1, 1]) { const dx = px + sgn * k * 1.6; cab += 'M' + r2(px) + ' ' + r2(ptop + 0.4 + k * 0.45) + 'L' + r2(dx) + ' ' + r2(yAt(deck, dx) - 0.1); }

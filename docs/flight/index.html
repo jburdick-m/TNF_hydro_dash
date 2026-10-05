@@ -4,6 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AA2735 Window Atlas</title>
+<script>
+// raw.githack caches branch URLs per file for several minutes, which can mix old and new files.
+// On a branch URL, jump to the exact newest commit's build instead (falls through if GitHub is unreachable).
+(function () {
+  var m = location.hostname === 'raw.githack.com' && location.pathname.match(/^\/jburdick-m\/TNF_hydro_dash\/([^\/]+)\/docs\/flight\//);
+  if (!m || /^[0-9a-f]{40}$/.test(m[1])) return;
+  document.documentElement.style.visibility = 'hidden';
+  var show = function () { document.documentElement.style.visibility = ''; };
+  var t = setTimeout(show, 5000);
+  fetch('https://api.github.com/repos/jburdick-m/TNF_hydro_dash/commits/' + m[1], { headers: { Accept: 'application/vnd.github.sha' }, cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.text() : ''; })
+    .then(function (sha) {
+      sha = (sha || '').trim();
+      if (!/^[0-9a-f]{40}$/.test(sha)) { clearTimeout(t); show(); return; }
+      location.replace(location.href.replace('/' + m[1] + '/docs/flight/', '/' + sha + '/docs/flight/'));
+    })
+    .catch(function () { clearTimeout(t); show(); });
+})();
+</script>
 <meta name="description" content="A window-seat atlas for American Airlines AA2735, Chicago to Sacramento along the 40th parallel.">
 <meta name="theme-color" content="#E8EBE4">
 <meta name="apple-mobile-web-app-capable" content="yes">
