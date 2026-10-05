@@ -67,7 +67,7 @@
     const hex = (h, def) => { h = String(h || '').replace('#', ''); if (h.length === 3) h = h.replace(/./g, '$&$&'); return /^[0-9a-f]{6}$/i.test(h) ? [0, 2, 4].map((i) => parseInt(h.substr(i, 2), 16)) : def; };
     const hash = (i, j, z) => { let h = (Math.imul(i, 374761393) + Math.imul(j, 668265263) + Math.imul(z + 11, 1442695041)) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16; return (h >>> 0) / 4294967296; };
     const tileLat = (z, y) => { const n = Math.PI - (2 * Math.PI * (y + 0.5)) / Math.pow(2, z); return Math.atan(Math.sinh(n)); };
-    const gainFor = (z) => Math.max(1, Math.min(2.2, 1 + 0.2 * (11 - z))); // lift apparent slope at small scales
+    const gainFor = (z) => Math.max(1, Math.min(2.8, 1 + 0.3 * (11 - z))); // lift apparent slope at small scales
 
     // ---- sectional-chart stepped tints ----
     const EDGES = [1000, 2000, 3000, 5000, 7000, 9000, 11000];
@@ -130,8 +130,8 @@
           dx /= t0; dy /= t0; // unit uphill direction
           const e0 = elev(sx, sy), band = Math.floor(e0 / DH), half = SP * (0.38 + 0.55 * Math.sqrt(k));
           let a = 0, b = 0; // march uphill (a) and downhill (b) until the row's contour or the stroke half-length
-          for (let s = 0.75; s <= half; s += 0.75) { if (Math.floor(elev(sx + dx * s, sy + dy * s) / DH) !== band) break; a = s; }
-          for (let s = 0.75; s <= half; s += 0.75) { if (Math.floor(elev(sx - dx * s, sy - dy * s) / DH) !== band) break; b = s; }
+          for (let s = 1; s <= half; s += 1) { if (Math.floor(elev(sx + dx * s, sy + dy * s) / DH) !== band) break; a = s; }
+          for (let s = 1; s <= half; s += 1) { if (Math.floor(elev(sx - dx * s, sy - dy * s) / DH) !== band) break; b = s; }
           if (a + b < 1.4) continue;
           // light from the NW: slopes facing SE (downhill dir toward +x,+y) are in shadow
           const shade = Math.max(0, Math.min(1, (1 + (-dx - dy) * Math.SQRT1_2) / 2));
@@ -298,7 +298,7 @@
   };
   WA.reliefEngraved = { makeEngine, makeJob, S, tile }; // exposed for profiling
   // hachures carry the relief: the soft base hillshade is reduced to a faint tone
-  WA.reliefStyles.hachures = mk('hachures', 'Hachures', (map, p) => setHS(map, { 'hillshade-exaggeration': p.night ? 0.12 : 0.16, 'hillshade-shadow-color': p.relief, 'hillshade-highlight-color': p.paper, 'hillshade-accent-color': p.relief }, 'visible'));
+  WA.reliefStyles.hachures = mk('hachures', 'Hachures', (map, p) => setHS(map, { 'hillshade-exaggeration': p.night ? 0.16 : 0.22, 'hillshade-shadow-color': p.relief, 'hillshade-highlight-color': p.paper, 'hillshade-accent-color': p.relief }, 'visible'));
   // tints bake their own crisp 512-px hillshade, so the soft base layer is hidden
   WA.reliefStyles.tints = mk('tints', 'Chart tints', (map) => setHS(map, {}, 'none'));
 })();
