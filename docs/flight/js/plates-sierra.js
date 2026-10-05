@@ -398,56 +398,64 @@
     return finish(K, R, o);
   };
 
-  /* ---------------- Humboldt River: the green meander ribbon across the sagebrush basin ---------------- */
+  /* ---------------- Humboldt River: a willow-lined meander through a gap in the ranges, rails alongside ---------------- */
   B['humboldt-river'] = (K) => {
-    const R = K.rng('humboldt-river'), HZ = 21, VX = 60;
-    const fl = K.ridge(R, [[-1, 19.4], [8, 14], [16, 11.6], [26, 13.8], [36, 17.6], [44, HZ]], 0.5, 1);
-    const fr = K.ridge(R, [[70, HZ], [80, 16.6], [90, 13.4], [99, 11.4], [108, 13.8], [121, 15.6]], 0.5, 1);
-    const fm = K.ridge(R, [[30, HZ], [44, 18.6], [56, 19.2], [70, 18.2], [84, HZ]], 0.3, 1.2);
+    const R = K.rng('humboldt-river'), HZ = 25, VX = 60;
+    // ranges either side of the water gap the river has cut
+    const rl = K.ridge(R, [[-1, 14], [9, 10.4], [19, 12.6], [29, 11], [38, 15.4], [46, 19.4], [52, 22.8], [57, HZ]], 0.7, 0.8);
+    const rr = K.ridge(R, [[63, HZ], [68, 21.6], [75, 17], [84, 13.6], [94, 15.4], [104, 11.6], [113, 13.4], [121, 12]], 0.7, 0.8);
+    const fm = K.ridge(R, [[50, HZ], [56, 20.6], [61, 19.8], [66, 21], [72, HZ]], 0.3, 1);
     let o = '';
-    o += skyRule(K, R, [[-2, fl[0][1]]].concat(fl.slice(0, -1), fm.filter((p) => p[0] > 44 && p[0] < 70), fr.slice(1)), { gap: 1.8 });
-    o += P(K.d(fm), 0.35, 0.45) + K.flank(fm, { gap: 1.6, len: 1.6, base: HZ, w: 0.25, op: 0.35, rng: R });
-    [fl, fr].forEach((s) => { o += K.flank(s, { gap: 0.9, len: 6, base: HZ, w: 0.28, op: 0.55, rng: R }) + shade(K, R, s, { depth: 8, base: HZ, op: 0.4, gap: 1 }) + P(K.d(s), 0.6, 0.75); });
-    o += P(M(-2, HZ) + L(122, HZ), 0.45, 0.6);
+    o += skyRule(K, R, rl.slice(0, -1).concat(fm.filter((p) => p[0] > 52 && p[0] < 68), rr.slice(1)), { gap: 1.8 });
+    o += behind(K, [under(rl, HZ), under(rr, HZ)], P(K.d(fm), 0.35, 0.45) + K.flank(fm, { gap: 1.4, len: 2, base: HZ, w: 0.25, op: 0.35, rng: R }));
+    [rl, rr].forEach((s) => {
+      o += K.flank(s, { gap: 0.75, len: 8, base: HZ, w: 0.28, op: 0.6, rng: R }) + shade(K, R, s, { depth: 10, base: HZ, op: 0.45, gap: 0.85, cross: -30 }) + hatch(K, R, under(s, HZ), 22, 1.8, 0.22) + P(K.d(s), 0.8);
+    });
     // world-to-plate perspective: lateral X (world) at depth z
-    const scr = (X, z) => [VX + (X * 2) / z, HZ + 51 / z];
-    const N = 170, Z = (t) => 1 + 13 * Math.pow(t, 1.25);
-    const mX = (t) => 13 * Math.sin(2 * PI * 3.1 * t + 0.4) + 5 * Math.sin(2 * PI * 7.3 * t + 1.1) - 4 + 6 * t;
-    const bandW = (t) => 9 + 3 * Math.sin(2 * PI * 2.1 * t);
-    const lb = [], rb = [], ml = [], mr = [], cl = [];
+    const scr = (X, z) => [VX + (X * 2.2) / z, HZ + 47 / z];
+    const N = 180, Z = (t) => 1 + 15 * Math.pow(t, 1.3);
+    const axis = (t) => -6 + 7 * t + 4 * Math.sin(2 * PI * 1.1 * t);
+    const mX = (t) => axis(t) + 7.5 * Math.sin(2 * PI * 4.6 * t + 0.4) + 2.6 * Math.sin(2 * PI * 9.7 * t + 1.1);
+    const lb = [], rb = [], ml = [], mr = [];
     for (let i = 0; i <= N; i++) {
-      const t = i / N, z = Z(t), X = mX(t);
-      lb.push(scr(X - 0.9, z)); rb.push(scr(X + 0.9, z)); cl.push(scr(X, z));
-      ml.push(scr(-4 + 6 * t - bandW(t) - 6, z)); mr.push(scr(-4 + 6 * t + bandW(t) + 6, z));
+      const t = i / N, z = Z(t), X = mX(t), a = axis(t);
+      lb.push(scr(X - 0.85, z)); rb.push(scr(X + 0.85, z));
+      ml.push(scr(Math.min(a - 11 - 2.5 * Math.sin(2 * PI * 3.3 * t), X - 3), z)); mr.push(scr(Math.max(a + 11 + 2.5 * Math.sin(2 * PI * 2.7 * t + 1), X + 3), z));
     }
-    // meadow ribbon: hay meadows and willow bottoms, ruled and stippled darker than the sage
+    // floodplain: hay meadows (short ruled strokes) fringed with willow along an irregular edge
     const meadow = ml.concat(mr.slice().reverse()), mLite = meadow.filter((p, i) => i % 3 === 0);
-    o += K.hatch(meadow, { angle: 0, gap: 0.62, w: 0.26, op: 0.42, jitter: 0.15, rng: R }) + P(K.d(ml) + K.d(mr), 0.35, 0.55);
-    o += K.stipple(mLite, { n: 140, r: 0.3, op: 0.5, rng: R });
-    // field fences in the near meadow
+    o += F(poly(mLite), 0.05);
+    o += clip(K, mLite, water(R, -2, 122, HZ + 0.4, 73, { g0: 0.5, grow: 1.075, breaks: 0.85, gapw: 3.5, op: 0.35, w: 0.26 }));
+    let fringe = '';
+    [ml, mr].forEach((e) => { for (let i = 1; i < N; i += 2) { const [x, y] = e[i], r = 0.18 + (y - HZ) * 0.012; fringe += M(x - r, y) + 'a' + r2(r) + ' ' + r2(r * 0.8) + ' 0 1 1 ' + r2(2 * r) + ' 0'; } });
+    o += P(fringe, 0.3, 0.6);
     let fen = '';
-    for (let i = 3; i < 46; i += 6) fen += M(ml[i][0], ml[i][1]) + L(mr[i][0], mr[i][1]);
-    o += P(fen, 0.25, 0.4, ' stroke-dasharray="0.6 0.6"');
-    // the river: two banks, open water between, willow clumps along the bends
+    for (let i = 3; i < 60; i += 7) fen += M(ml[i][0], ml[i][1]) + L(lb[i][0], lb[i][1]) + M(rb[i + 2][0], rb[i + 2][1]) + L(mr[i + 2][0], mr[i + 2][1]);
+    o += P(fen, 0.25, 0.45, ' stroke-dasharray="0.6 0.7"');
+    // the river: firm banks, still water, willow clumps on the outside of the bends
     const riv = lb.concat(rb.slice().reverse());
-    o += F(poly(riv), 0.06) + P(K.d(lb) + K.d(rb), 0.5, 0.95) + clip(K, riv, K.hatch(riv, { angle: 0, gap: 0.5, w: 0.25, op: 0.35, breaks: 0.6, rng: R }));
+    o += F(poly(riv), 0.08) + clip(K, riv, K.hatch(riv, { angle: 0, gap: 0.45, w: 0.25, op: 0.4, breaks: 0.6, rng: R }));
     let wil = '';
-    for (let i = 2; i < N; i += 5 + Math.floor(R() * 5)) {
-      const t = i / N, z = Z(t), side = R() < 0.5 ? -1 : 1, [x, y] = scr(mX(t) + side * (1.8 + R()), z), r = 0.25 + 1.3 / z;
+    for (let i = 2; i < N; i += 3 + Math.floor(R() * 4)) {
+      const t = i / N, z = Z(t), side = mX(t) > axis(t) ? 1 : -1, [x, y] = scr(mX(t) + side * (1.6 + R() * 0.8), z), r = 0.22 + 1.6 / z;
       wil += 'M' + r2(x - r) + ' ' + r2(y) + 'a' + r2(r) + ' ' + r2(r * 0.8) + ' 0 1 1 ' + r2(2 * r) + ' 0';
     }
-    o += P(wil, 0.35, 0.85) + '<path d="' + wil + 'Z" fill="currentColor" fill-opacity="0.18" stroke="none"/>';
-    // an oxbow left behind by the river
-    const ox = []; for (let a = 0; a <= 2 * PI; a += 0.2) ox.push(scr(14 + 4 * Math.cos(a), 1.3 + 0.18 * Math.sin(a)));
-    const oxi = []; for (let a = 0; a <= 2 * PI; a += 0.2) oxi.push(scr(14 + 2.4 * Math.cos(a), 1.3 + 0.1 * Math.sin(a)));
-    o += P(K.d(ox, true) + K.d(oxi, true), 0.4, 0.8);
-    // railroad: rails and ties running straight to the horizon; I-80 on the far side
-    const rl = [scr(30, 1), scr(30, 30)], rr = [scr(32, 1), scr(32, 30)];
-    let ties = ''; for (let z = 1; z < 14; z *= 1.09) { const a = scr(29.4, z), b = scr(32.6, z); ties += M(a[0], a[1]) + L(b[0], b[1]); }
-    o += P(line(rl) + line(rr), 0.45, 0.9) + P(ties, 0.3, 0.7);
-    o += P(line([scr(-36, 1), scr(-36, 30)]) + line([scr(-40, 1), scr(-40, 30)]), 0.4, 0.75) + P(line([scr(-38, 1), scr(-38, 30)]), 0.25, 0.6, ' stroke-dasharray="1 1.4"');
+    o += '<path d="' + wil + '" fill="currentColor" fill-opacity="0.22" stroke-width="0.32" stroke-opacity="0.85"/>';
+    o += P(K.d(lb) + K.d(rb), 0.6, 0.95);
+    // an oxbow left behind on the floodplain
+    const ox = [], oxi = [];
+    for (let a = -0.6; a <= PI + 0.6; a += 0.15) { ox.push(scr(-10 + 3.4 * Math.cos(a), 1.55 - 0.16 * Math.sin(a))); oxi.push(scr(-10 + 2.2 * Math.cos(a), 1.55 - 0.1 * Math.sin(a))); }
+    const oxPg = ox.concat(oxi.slice().reverse());
+    o += F(poly(oxPg), 0.12) + P(K.d(oxPg, true), 0.4, 0.8);
+    // railroad and I-80 together along the right edge of the valley, bending into the gap
+    const route = (X0) => { const pts = []; for (let i = 0; i <= 60; i++) { const t = i / 60, z = 1 + 15 * Math.pow(t, 1.3); pts.push(scr(X0 - 18 * t + 3 * Math.sin(2 * PI * 0.8 * t), z)); } return pts; };
+    const r1 = route(24), r2_ = route(25.6);
+    let ties = '';
+    for (let i = 0; i < 60; i += 1) { const [x1, y1] = r1[i], [x2, y2] = r2_[i]; ties += M(x1 - (x2 - x1) * 0.25, y1) + L(x2 + (x2 - x1) * 0.25, y2); }
+    o += P(K.d(r1) + K.d(r2_), 0.42, 0.9) + P(ties, 0.28, 0.65) + P(K.d(route(33)) + K.d(route(38.5)), 0.38, 0.75) + P(K.d(route(35.75)), 0.25, 0.55, ' stroke-dasharray="1 1.4"');
     // sagebrush basin: tufts thinning with distance
-    o += scatter(R, [[-2, 24], [122, 24], [122, 73], [-2, 73]], 300, (x, y) => (inside(mLite, x, y) ? '' : P(tuft(x, y, Math.max(0.3, (y - HZ) * 0.03)), 0.25, 0.55)));
+    o += scatter(R, [[-2, HZ + 1], [122, HZ + 1], [122, 73], [-2, 73]], 260, (x, y) => (inside(mLite, x, y) ? '' : P(tuft(x, y, Math.max(0.3, (y - HZ) * 0.034)), 0.26, 0.55)));
+    o += P(M(-2, HZ) + L(122, HZ), 0.4, 0.5);
     return finish(K, R, o);
   };
 
@@ -465,11 +473,11 @@
     const dump = (x0, x1, top, base, lifts, s) => {
       let out = '', pts = [[x0 - (base - top) * s, base], [x0, top], [x1, top], [x1 + (base - top) * s, base]];
       const pg = pts.concat([]);
-      out += hatch(K, R, [pts[0], pts[1], [x0 + 3, top], [x0 + 3, base]], 60, 1.4, 0.3);
+      out += hatch(K, R, [pts[0], pts[1], [x0 + 3, top], [x0 + 3, base]], 60, 1.1, 0.4);
       out += hatch(K, R, [[x1 - 1, top], pts[2], pts[3], [x1 - 1, base]], 66, 0.6, 0.7);
       out += hatch(K, R, pg, 0, 2.4, 0.18);
       for (let k = 1; k <= lifts; k++) { const y = top + ((base - top) * k) / (lifts + 1), dx = (y - top) * s; out += P(M(x0 - dx, y) + L(x1 + dx, y), 0.35, 0.75); }
-      return out + P(K.d(pts), 0.75);
+      return out + K.stipple([[x0 + 1, top + 0.3], [x1 - 1, top + 0.3], [x1 + 1, top + 2.6], [x0 - 1, top + 2.6]], { n: 30, r: 0.25, op: 0.5, rng: R }) + P(K.d(pts), 0.6, 0.9);
     };
     o += dump(10, 34, 26, 37, 2, 0.95) + dump(84, 110, 27, 38.5, 2, 0.9);
     // leach pad: graded cells in perspective with a solution pond
