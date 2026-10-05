@@ -295,7 +295,7 @@
     for (const k in paint) try { map.setPaintProperty('hillshade', k, paint[k]); } catch (e) { /* */ }
     try { map.setLayoutProperty('hillshade', 'visibility', vis); } catch (e) { /* */ }
   };
-  WA.reliefEngraved = { makeEngine, makeJob }; // exposed for profiling
+  WA.reliefEngraved = { makeEngine, makeJob, S, tile }; // exposed for profiling
   // hachures carry the relief: the soft base hillshade is reduced to a faint tone
   WA.reliefStyles.hachures = mk('hachures', 'Hachures', (map, p) => setHS(map, { 'hillshade-exaggeration': p.night ? 0.12 : 0.16, 'hillshade-shadow-color': p.relief, 'hillshade-highlight-color': p.paper, 'hillshade-accent-color': p.relief }, 'visible'));
   // tints bake their own crisp 512-px hillshade, so the soft base layer is hidden

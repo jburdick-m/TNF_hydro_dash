@@ -43,7 +43,7 @@
   // Burin weights. Tone comes from line density, not weight: hairlines for hatching (f, h),
   // a firmer line for secondary outlines (m) and the one crisp silhouette per plate (b).
   // Each weight is a CSS var so small renderings (billboards, strip map) can thicken them.
-  var SW = { f: '.26', h: '.36', m: '.5', b: '.78', x: '1.1', w: '1.3' };
+  var SW = { f: '.26px', h: '.36px', m: '.5px', b: '.78px', x: '1.1px', w: '1.3px' };
   var HD = .74; // global hatch density (spacing multiplier)
   function begin(seed, w, h, vig) {
     rnd = mul((seed * 2654435761) >>> 0);
