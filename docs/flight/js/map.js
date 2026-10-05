@@ -6,8 +6,9 @@
   const SAT = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
   const BIG_RIVERS = ['Mississippi', 'Missouri', 'Platte', 'North Platte', 'South Platte', 'Loup', 'Elkhorn', 'Des Moines', 'Iowa', 'Cedar', 'Rock', 'Fox', 'Laramie', 'Green', 'Bear', 'Weber', 'Jordan', 'Humboldt', 'Truckee', 'Yuba', 'Feather', 'American', 'Sacramento'];
   const BIG_RIVER_NAMES = BIG_RIVERS.map((n) => n + ' River');
-  const M = (WA.map = { mode: WA.store.get('cam', 'window'), follow: true, sat: WA.store.get('sat', false), relief3: WA.store.get('relief3', false), ready: false });
+  const M = (WA.map = { reliefStyle: WA.store.get('reliefStyle', 'classic'), mode: WA.store.get('cam', 'window'), follow: true, sat: WA.store.get('sat', false), relief3: WA.store.get('relief3', false), ready: false });
   if (['window', 'chase', 'map'].indexOf(M.mode) < 0) M.mode = 'window';
+  try { const q = new URLSearchParams(location.search).get('relief'); if (q) M.reliefStyle = q; } catch (e) { /* */ }
 
   function pal() {
     const cs = getComputedStyle(document.documentElement);
@@ -80,7 +81,7 @@
       glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',
       sources: {
         omt: { type: 'vector', url: OFM, attribution: '<a href="https://openfreemap.org">OpenFreeMap</a> © <a href="https://openmaptiles.org">OpenMapTiles</a> © <a href="https://www.openstreetmap.org/copyright">OSM contributors</a>' },
-        hs: { type: 'raster-dem', tiles: [DEM], encoding: 'terrarium', tileSize: 256, maxzoom: 12, attribution: 'Terrain Tiles: AWS / Mapzen' },
+        hs: { type: 'raster-dem', tiles: [DEM], encoding: 'terrarium', tileSize: 256, maxzoom: 15, attribution: 'Terrain Tiles: AWS / Mapzen' },
         dem: { type: 'raster-dem', tiles: [DEM], encoding: 'terrarium', tileSize: 256, maxzoom: 12 },
         sat: { type: 'raster', tiles: [SAT], tileSize: 256, maxzoom: 18, attribution: 'Esri, Maxar, Earthstar Geographics' },
         cone: { type: 'geojson', data: EMPTY }, 'route-ahead': { type: 'geojson', data: EMPTY }, 'route-behind': { type: 'geojson', data: EMPTY },
@@ -144,6 +145,7 @@
       addGlyphs(pal());
       try { map.setTerrain({ source: 'dem', exaggeration: M.relief3 ? 4 : 2 }); } catch (e) { /* no terrain */ }
       setSky();
+      M.applyRelief();
       map.on('click', 'poi-dot', (e) => { if (WA.S.syncPending) return; const f = e.features && e.features[0]; if (f) WA.ui.openDetail(f.properties.id); });
       map.on('click', 'fires', (e) => { if (WA.S.syncPending) return; const f = e.features && e.features[0]; if (f) WA.ui.openDetail(f.properties.id); });
       ['poi-dot', 'fires'].forEach((l) => { map.on('mouseenter', l, () => (map.getCanvas().style.cursor = 'pointer')); map.on('mouseleave', l, () => (map.getCanvas().style.cursor = '')); });
@@ -180,7 +182,25 @@
       for (const k in L.paint || {}) { try { M.map.setPaintProperty(L.id, k, L.paint[k]); } catch (e) { /* skip */ } }
     }
     addGlyphs(p); setSky();
+    const R = (WA.reliefStyles || {})[M.reliefStyle];
+    if (R && R.recolor) try { R.recolor(M.map, p); } catch (e) { console.warn('relief recolor', e); }
   };
+  // ---- relief styles: pluggable terrain symbology (js/relief-*.js register into WA.reliefStyles) ----
+  // Each style: { label, add(map, pal, ctx), remove(map), recolor?(map, pal) }. ctx.beforeId is the layer to insert under
+  // (relief sits above the base hillshade and below water). 'classic' is the plain hillshade defined above.
+  M.reliefStyles = function () { return [['classic', 'Shaded']].concat(Object.keys(WA.reliefStyles || {}).map((k) => [k, WA.reliefStyles[k].label || k])); };
+  M.applyRelief = function () {
+    const map = M.map; if (!map || !M.ready) return;
+    const all = WA.reliefStyles || {};
+    Object.keys(all).forEach((k) => { if (k !== M.reliefStyle && all[k]._on) { try { all[k].remove(map); } catch (e) { /* */ } all[k]._on = false; } });
+    // restore the classic hillshade paint, then let the active style restyle it
+    const hs = layers(pal()).find((l) => l.id === 'hillshade');
+    for (const k in hs.paint) try { map.setPaintProperty('hillshade', k, hs.paint[k]); } catch (e) { /* */ }
+    map.setLayoutProperty('hillshade', 'visibility', 'visible');
+    const R = all[M.reliefStyle];
+    if (R && !R._on) { try { R.add(map, pal(), { beforeId: 'water', DEM, G }); R._on = true; } catch (e) { console.warn('relief add', e); } }
+  };
+  M.setReliefStyle = function (name) { M.reliefStyle = name; WA.store.set('reliefStyle', name); M.applyRelief(); };
   M.setSat = function (on) { M.sat = on; WA.store.set('sat', on); if (M.map && M.ready) { M.map.setLayoutProperty('sat', 'visibility', on ? 'visible' : 'none'); M.recolor(); } };
   M.setRelief3 = function (on) { M.relief3 = on; WA.store.set('relief3', on); if (M.map && M.ready) try { M.map.setTerrain({ source: 'dem', exaggeration: on ? 4 : 2 }); } catch (e) { /* */ } };
 

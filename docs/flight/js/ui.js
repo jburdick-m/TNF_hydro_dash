@@ -309,6 +309,7 @@
       '<h3 class="sc">Window</h3>' + seg('side', [['left', 'Left'], ['right', 'Right']], S.side) +
       '<h3 class="sc">Theme</h3>' + seg('theme', [['auto', 'Auto'], ['day', 'Day'], ['night', 'Night']], WA.themeMode) +
       '<h3 class="sc">Chart</h3>' + seg('sat', [['0', 'Chart'], ['1', 'Satellite']], WA.map.sat ? '1' : '0') + ' ' + seg('relief', [['2', 'Relief ×2'], ['4', 'Relief ×4']], WA.map.relief3 ? '4' : '2') +
+      '<h3 class="sc">Terrain style</h3>' + seg('reliefstyle', WA.map.reliefStyles(), WA.map.reliefStyle) +
       '<h3 class="sc">Position</h3><p class="quiet small" id="set-src"></p>' +
       '<div class="btnrow"><button class="btn" id="b-gps">' + (S.gpsOn ? 'Stop GPS' : 'Use GPS') + '</button><button class="btn" id="b-sync">Sync position</button></div>' +
       '<div class="btnrow"><button class="btn" data-nudge="-5">−5 min</button><button class="btn" data-nudge="5">+5 min</button><button class="btn" data-nudge="0">Reset offset</button></div>' +
@@ -467,6 +468,7 @@
     if (k === 'theme') WA.setTheme(v);
     if (k === 'sat') WA.map.setSat(v === '1');
     if (k === 'relief') WA.map.setRelief3(v === '4');
+    if (k === 'reliefstyle') WA.map.setReliefStyle(v);
     renderSettings(); U.renderHud();
   }
 })();
