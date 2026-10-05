@@ -63,11 +63,14 @@
       { id: 'state-labels', type: 'symbol', source: 'omt', 'source-layer': 'place', filter: ['==', ['get', 'class'], 'state'], maxzoom: 7.5,
         layout: { 'text-field': ['upcase', nameExpr], 'text-font': ['Noto Sans Regular'], 'text-size': 10, 'text-letter-spacing': 0.45 }, paint: { 'text-color': p.ink2, 'text-opacity': 0.55, 'text-halo-color': halo, 'text-halo-width': 1.2 } },
       { id: 'water-names', type: 'symbol', source: 'omt', 'source-layer': 'water_name', layout: { 'text-field': nameExpr, 'text-font': ['Noto Sans Italic'], 'text-size': 11, 'text-letter-spacing': 0.08, 'text-max-width': 7 }, paint: { 'text-color': p.water, 'text-halo-color': halo, 'text-halo-width': 1.4 } },
-      { id: 'river-names', type: 'symbol', source: 'omt', 'source-layer': 'waterway', filter: ['all', ['==', ['get', 'class'], 'river'], ['in', nameExpr, ['literal', BIG_RIVER_NAMES]]],
+      { id: 'river-names', type: 'symbol', source: 'omt', 'source-layer': 'waterway', minzoom: 9.5, filter: ['all', ['==', ['get', 'class'], 'river'], ['in', nameExpr, ['literal', BIG_RIVER_NAMES]]],
         layout: { 'symbol-placement': 'line', 'text-field': nameExpr, 'text-font': ['Noto Sans Italic'], 'text-size': ['interpolate', ['linear'], ['zoom'], 5, 10, 10, 13], 'text-letter-spacing': 0.18, 'symbol-spacing': 280, 'text-offset': [0, -0.9], 'text-max-angle': 35, 'text-pitch-alignment': 'viewport' }, paint: { 'text-color': p.water, 'text-halo-color': halo, 'text-halo-width': 2 } },
-      { id: 'big-river-names', type: 'symbol', source: 'rivers', filter: ['==', ['geometry-type'], 'Point'],
-        layout: { 'text-field': ['get', 'name'], 'text-font': ['Noto Sans Italic'], 'text-size': ['case', ['==', ['get', 'x'], 1], 15, 12.5],
-          'text-letter-spacing': 0.12, 'text-pitch-alignment': 'viewport', 'text-padding': 6, 'symbol-sort-key': ['-', 1, ['get', 'x']], 'text-anchor': 'bottom', 'text-offset': [0, -0.3] },
+      { id: 'big-river-names', type: 'symbol', source: 'rivers', minzoom: 9.5, filter: ['all', ['==', ['geometry-type'], 'Point'], ['==', ['get', 'x'], 0]],
+        layout: { 'text-field': ['get', 'name'], 'text-font': ['Noto Sans Italic'], 'text-size': 12.5, 'text-letter-spacing': 0.12, 'text-pitch-alignment': 'viewport', 'text-padding': 8, 'text-anchor': 'bottom', 'text-offset': [0, -0.3] },
+        paint: { 'text-color': p.water, 'text-halo-color': halo, 'text-halo-width': 2.2, 'text-halo-blur': 0.4 } },
+      // one label where this flight crosses each river, at every zoom
+      { id: 'river-crossings', type: 'symbol', source: 'rivers', filter: ['all', ['==', ['geometry-type'], 'Point'], ['==', ['get', 'x'], 1], ['==', ['get', 'leg'], (WA.leg && WA.leg.id) || 'ORD-SMF']],
+        layout: { 'text-field': ['get', 'name'], 'text-font': ['Noto Sans Italic'], 'text-size': ['interpolate', ['linear'], ['zoom'], 4, 12, 8, 15], 'text-letter-spacing': 0.12, 'text-pitch-alignment': 'viewport', 'text-padding': 2, 'text-anchor': 'bottom', 'text-offset': [0, -0.4], 'symbol-sort-key': 0 },
         paint: { 'text-color': p.water, 'text-halo-color': halo, 'text-halo-width': 2.4, 'text-halo-blur': 0.4 } },
       { id: 'peaks', type: 'symbol', source: 'omt', 'source-layer': 'mountain_peak', minzoom: 7, filter: ['<=', ['coalesce', ['get', 'rank'], 9], 3],
         layout: { 'text-field': ['case', ['has', 'ele_ft'], ['concat', nameExpr, '\n', ['to-string', ['get', 'ele_ft']], ' ft'], nameExpr], 'text-font': ['Noto Sans Italic'], 'text-size': 10, 'text-max-width': 9, 'text-padding': 8 }, paint: { 'text-color': p.relief, 'text-halo-color': halo, 'text-halo-width': 1.5 } },
@@ -231,6 +234,7 @@
   const SPRITE_LAYERS = ['illus-flat', 'illus-mounts', 'illus-vg'];
   M.hideSprites = function () { const map = M.map; if (!map || !M.ready) return; SPRITE_LAYERS.forEach((id) => { if (map.getLayer(id) && map.getLayoutProperty(id, 'visibility') !== 'none') map.setLayoutProperty(id, 'visibility', 'none'); }); };
   WA.on('tick', M.hideSprites);
+  WA.on('leg', () => { const map = M.map; if (!map || !M.ready || !map.getLayer('river-crossings')) return; const L = layers(pal()).find((l) => l.id === 'river-crossings'); try { map.setFilter('river-crossings', L.filter); } catch (e) { /* */ } });
   M.setBasemap = function (b) { if (BASEMAPS.indexOf(b) < 0) b = 'relief'; M.basemap = b; WA.store.set('basemap', b); if (M.map && M.ready) { M.recolor(); M.applyRelief(); } };
   M.setSat = function (on) { M.setBasemap(on ? 'sat' : 'relief'); };
   M.setRelief3 = function (on) { M.relief3 = on; WA.store.set('relief3', on); if (M.map && M.ready) try { M.map.setTerrain({ source: 'dem', exaggeration: on ? 4 : 2 }); } catch (e) { /* */ } };

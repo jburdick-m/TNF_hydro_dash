@@ -296,31 +296,52 @@
   B['laramie-range-vedauwoo'] = (K) => {
     const t = T(K, 'laramie-range-vedauwoo'), R = t.R;
     const back = K.ridge(t.rng, [[0, 45], [14, 41.6], [28, 43], [44, 40.8], [60, 42.6], [76, 40.4], [96, 42], [110, 40], [120, 41.2]], 0.5, 1.2);
-    // blocks [cx, cy, rx, ry]; lower blocks sit in front of the ones they carry
-    const piles = [
-      { z: 1, w: 0.38, op: 0.55, b: [[8.5, 50.4, 9, 4.6], [5, 44.6, 5, 3.2], [11.6, 42.2, 3.4, 2.4]] },
-      { z: 1, w: 0.38, op: 0.55, b: [[106, 49, 7, 3.4], [114, 46.8, 5, 3], [109.4, 43.4, 3.6, 2.4], [112, 40.2, 2.2, 1.6]] },
-      { z: 2, w: 0.6, op: 1, b: [[33, 51.6, 9.5, 5], [47.6, 50.6, 6.5, 6], [38.6, 42.6, 7, 4.2], [47.2, 41.8, 4.2, 3.8], [40.6, 35, 6, 3.6], [42.6, 28.7, 5, 3.2], [40.6, 23.1, 3.8, 2.6], [42.2, 18.9, 2.4, 1.9]] },
-      { z: 2, w: 0.6, op: 1, b: [[72, 52.6, 9, 4.5], [86, 51.6, 7.5, 5.4], [78.6, 44.7, 7, 3.9], [88.4, 44.6, 3.8, 3.2], [80.6, 38.5, 5.4, 3.3], [77.6, 32.8, 3.8, 2.6], [81.2, 28.8, 2.8, 2.1]] },
-    ];
+    // massifs of jointed granite: tiers of rounded loaves narrowing upward into a tower; lower tiers sit in front
     const all = [];
-    piles.forEach((p) => p.b.forEach(([cx, cy, rx, ry]) => all.push({ cx, cy, rx, ry, z: p.z * 100 + cy, w: p.w, op: p.op, poly: sup(cx, cy, rx, ry, 2.5, 36) })));
+    const massif = (cx, yb, hw, tiers, zb, w, op) => {
+      let y = yb, half = hw;
+      for (let k = 0; k < tiers; k++) {
+        const ry = R(2.7, 4.3) * (1 - k * 0.05), yc = y - ry;
+        for (let x = cx - half + R(-1, 1); x < cx + half - 1;) {
+          const rx = M.max(2, M.min(R(3, 7) * (1 - k * 0.06), (cx + half - x) / 2 + 1)), bcx = x + rx, bcy = yc + R(-0.7, 0.7), bry = ry * R(0.88, 1.08);
+          all.push({ cx: bcx, cy: bcy, rx: rx * 1.04, ry: bry, z: zb * 1000 + bcy * 10 + R(0, 3), w, op, poly: sup(bcx, bcy, rx * 1.04, bry, R(2.2, 2.9), 36) });
+          x += rx * 2 * R(0.9, 0.98);
+        }
+        y = yc - ry * 0.68; half *= R(0.6, 0.76); cx += R(-2.2, 2.2);
+      }
+    };
+    massif(8, 56.5, 10, 3, 1, 0.38, 0.55);
+    massif(113, 55, 8, 3, 1, 0.38, 0.55);
+    massif(36, 58.4, 25, 7, 2, 0.58, 1);
+    // whaleback dome with exfoliation sheets, a few boulders perched on its crown
+    const dc = 87, db = 58.4, drx = 20, dry = 26, dome = [];
+    for (let k = 0; k <= 32; k++) { const a = (PI * k) / 32, c = M.cos(a); dome.push([dc - drx * M.sign(c) * M.pow(M.abs(c), 0.8), db - dry * M.pow(M.sin(a), 0.8)]); }
+    all.push({ dome: true, cx: dc, cy: db - dry / 2, rx: drx, ry: dry / 2, z: 2000 + 20, w: 0.6, op: 1, poly: dome });
+    [[82.4, 30.6, 4.2, 2.4], [90, 31.2, 3.2, 2.1], [86, 26.6, 2.8, 1.9]].forEach(([x, y, rx, ry], i) => all.push({ cx: x, cy: y, rx, ry, z: 2000 + 30 + i, w: 0.55, op: 1, poly: sup(x, y, rx, ry, 2.4, 32) }));
     const polys = all.map((b) => b.poly);
     let o = t.hide(polys, t.sky(back, { gap: 1.2, op: 0.42 }) +
-      t.line(back, 0.45, 0.55) + t.clip(t.below(back, 57), t.hatch(t.below(back, 57), { angle: 78, gap: 1.1, op: 0.35 }) + t.trees(t.below(back, 50), 60, 1.2, 2.4, 0.24, 0.3, 0.55)));
+      t.line(back, 0.45, 0.55) + t.clip(t.below(back, 58), t.hatch(t.below(back, 58), { angle: 78, gap: 1.1, op: 0.35 }) + t.trees(t.below(back, 52), 60, 1.2, 2.4, 0.24, 0.3, 0.55)));
     all.forEach((b) => {
       const front = all.filter((c) => c.z > b.z && M.abs(c.cx - b.cx) < c.rx + b.rx && M.abs(c.cy - b.cy) < c.ry + b.ry).map((c) => c.poly);
-      let s = t.line(b.poly, b.w, b.op, true) + t.shade(b.poly, b.cx, b.cy, b.rx, b.ry, { op: 0.7 * b.op, gap: b.z > 200 ? 0.6 : 0.8 });
-      // sheeting joints and a vertical crack on the bigger blocks
-      if (b.rx > 4.5) s += t.clip(b.poly, t.curve([[b.cx - b.rx, b.cy + b.ry * 0.25], [b.cx, b.cy + b.ry * 0.38], [b.cx + b.rx, b.cy + b.ry * 0.2]], 0.28, 0.5 * b.op) + t.s('M' + r2(b.cx + R(-b.rx, b.rx) * 0.4) + ' ' + r2(b.cy - b.ry) + 'l' + r2(R(-0.6, 0.6)) + ' ' + r2(b.ry * 1.4), 0.28, 0.5 * b.op));
+      let s;
+      if (b.dome) {
+        let sh = '';
+        [0.84, 0.68, 0.5].forEach((f) => { const pts = []; for (let k = 5; k <= 27; k++) { const a = (PI * k) / 32, c = M.cos(a); pts.push([dc - drx * f * M.sign(c) * M.pow(M.abs(c), 0.8), db - dry * f * M.pow(M.sin(a), 0.8)]); } sh += cr(pts); });
+        const right = [[dc + 2, db - dry - 1], [dc + drx + 1, db - dry - 1], [dc + drx + 1, db + 1], [dc + 6, db + 1]];
+        s = t.line(dome, 0.6) + t.clip(dome, t.s(sh, 0.3, 0.55) + t.hatch(right, { angle: 70, gap: 0.62, op: 0.6 }) + t.hatch([[dc + 10, db - dry], [dc + drx + 1, db - dry], [dc + drx + 1, db + 1], [dc + 14, db + 1]], { angle: 120, gap: 0.9, op: 0.45 }) +
+          t.s('M' + r2(dc - 6) + ' ' + r2(db - dry * 0.82) + 'l-1.2 18M' + r2(dc + 7) + ' ' + r2(db - dry * 0.86) + 'l1.6 20', 0.3, 0.6));
+      } else {
+        s = t.line(b.poly, b.w, b.op, true) + t.shade(b.poly, b.cx, b.cy, b.rx, b.ry, { op: 0.72 * b.op, gap: b.z > 2000 ? 0.55 : 0.8 });
+        if (b.rx > 4.2) s += t.clip(b.poly, t.curve([[b.cx - b.rx, b.cy + b.ry * 0.3], [b.cx, b.cy + b.ry * 0.42], [b.cx + b.rx, b.cy + b.ry * 0.24]], 0.26, 0.45 * b.op));
+      }
       o += front.length ? t.hide(front, s) : s;
     });
-    // pine and the meadow at the foot of the towers, a beaver pond
-    o += t.s([[58.5, 58, 13], [62.5, 57.6, 8.5], [24, 60, 9.5], [95, 59, 11], [100, 58.4, 7.5], [18.5, 58.6, 6], [66, 57.2, 5.5]].map(([x, y, h]) => t.pine(x, y, h, h * 0.2)).join(''), 0.42);
-    const pond = crPts([[30, 62.2], [60, 61.4], [90, 61.8], [94, 64], [86, 66.6], [60, 67.2], [38, 66.8], [28, 64.4], [30, 62.2]], 4);
-    o += t.clip(pond, t.rule(-1, 121, 62, 67.4, { gap: 0.7, op: 0.55, breaks: 0.4 }) + t.hatch([[30, 61], [92, 61], [92, 63.6], [30, 63.6]], { angle: 90, gap: 1.3, op: 0.3 })) + t.line(pond, 0.45, 0.8);
-    o += t.tufts([[-1, 57], [121, 57], [121, 61], [-1, 61]], 30, 1.1, 0.3, 0.6) + t.tufts([[-1, 68], [121, 67], [121, 73], [-1, 73]], 30, 1.6, 0.3, 0.7);
-    o += t.stip([[-1, 56], [121, 56], [121, 61], [-1, 61]], { n: 90, r: 0.22, op: 0.45 });
+    // ponderosa at the foot of the rocks, a beaver pond in the meadow
+    o += t.s([[62, 60, 13.5], [65.8, 59.6, 8.5], [57.4, 60.2, 6], [14, 60.6, 9], [19, 60, 6], [108, 60.4, 10], [112.6, 60.2, 6.5]].map(([x, y, h]) => t.pine(x, y, h, h * 0.2)).join(''), 0.42);
+    const pond = crPts([[26, 63.6], [40, 62.4], [58, 62.8], [74, 62.2], [88, 63.2], [92, 65], [84, 66.4], [70, 66], [56, 67.4], [38, 66.8], [27, 65.4], [26, 63.6]], 4);
+    o += t.clip(pond, t.rule(-1, 121, 62.4, 67.6, { gap: 0.62, op: 0.55, breaks: 0.4 }) + t.hatch([[24, 62], [60, 62], [60, 64.4], [24, 64.4]], { angle: 90, gap: 0.9, op: 0.35 })) + t.line(pond, 0.45, 0.8);
+    o += t.tufts([[-1, 59], [121, 59], [121, 62], [-1, 62]], 30, 1.1, 0.3, 0.6) + t.tufts([[-1, 68.4], [121, 67.6], [121, 73], [-1, 73]], 30, 1.6, 0.3, 0.7);
+    o += t.stip([[-1, 58.4], [121, 58.4], [121, 62], [-1, 62]], { n: 90, r: 0.22, op: 0.45 });
     return plate(K, o);
   };
 
@@ -467,39 +488,50 @@
     const t = T(K, 'platte-river'), R = t.R;
     const trees = K.ridge(t.rng, [[0, 30], [6, 27.8], [12, 29.4], [20, 27], [30, 28.8], [38, 26.4], [48, 28.4], [56, 30.2], [64, 28.8], [74, 27.4], [84, 29.4], [94, 27.8], [104, 29.4], [112, 27.6], [120, 28.8]], 1.3, 0.8);
     const bank = [[-1, 33.4], [121, 33]];
-    // cranes in flight: long necks forward, legs trailing, wings beating
+    // cranes in flight: long straight neck forward, legs trailing, long wings swept in a deep stroke
     const fly = (x, y, s, up) => {
-      const wy = up ? -1 : 1;
-      return 'M' + r2(x) + ' ' + r2(y) + 'L' + r2(x - 2.8 * s) + ' ' + r2(y - 0.3 * s) + 'L' + r2(x - 3.4 * s) + ' ' + r2(y - 0.18 * s) +
-        'M' + r2(x) + ' ' + r2(y) + 'L' + r2(x + 2.4 * s) + ' ' + r2(y + 0.15 * s) + 'L' + r2(x + 5 * s) + ' ' + r2(y + 0.5 * s) +
-        'M' + r2(x + 0.6 * s) + ' ' + r2(y) + 'Q' + r2(x + 0.3 * s) + ' ' + r2(y + 2.4 * s * wy) + ' ' + r2(x - 0.9 * s) + ' ' + r2(y + 3.6 * s * wy) +
-        'M' + r2(x + 1.5 * s) + ' ' + r2(y + 0.05 * s) + 'Q' + r2(x + 1.7 * s) + ' ' + r2(y + 2.2 * s * wy) + ' ' + r2(x + 0.7 * s) + ' ' + r2(y + 3.3 * s * wy);
+      const X = (u) => r2(x + u * s), Y = (v) => r2(y + v * s);
+      const tipY = up ? -3.8 : 2.6, tipX = up ? 1.6 : 2.2;
+      return {
+        line: 'M' + X(-3.6) + ' ' + Y(-0.35) + 'L' + X(-1) + ' ' + Y(-0.05) + 'M' + X(2.2) + ' ' + Y(0.15) + 'L' + X(5.2) + ' ' + Y(0.45),
+        body: 'M' + X(-1.1) + ' ' + Y(-0.05) + 'Q' + X(0.6) + ' ' + Y(-0.55) + ' ' + X(2.3) + ' ' + Y(0.12) + 'Q' + X(0.6) + ' ' + Y(0.5) + ' ' + X(-1.1) + ' ' + Y(-0.05) + 'Z' +
+          'M' + X(-0.1) + ' ' + Y(0) + 'Q' + X(0.2) + ' ' + Y(tipY * 0.55) + ' ' + X(tipX) + ' ' + Y(tipY) + 'Q' + X(0.9) + ' ' + Y(tipY * 0.45) + ' ' + X(1.3) + ' ' + Y(0.05) + 'Z',
+      };
     };
-    const skein = [[16, 10.5, 1, 1], [25, 12.8, 0.92, 0], [33, 15.4, 0.86, 1], [41.5, 13.6, 0.8, 0], [49, 17.4, 0.74, 1], [56.5, 16, 0.7, 0], [63, 19.6, 0.64, 1], [92, 9.6, 0.6, 0], [99, 11.4, 0.56, 1]];
+    const skein = [[14, 10, 1, 1], [23, 12.6, 0.94, 0], [31, 15.2, 0.88, 1], [39.4, 13.2, 0.82, 0], [47, 17, 0.76, 1], [54.4, 15.6, 0.72, 0], [61, 19.2, 0.66, 1], [67, 17.4, 0.6, 0], [90, 9, 0.56, 1], [96, 10.8, 0.52, 0], [101.6, 12.4, 0.48, 1]];
     let cf = '', cb = '';
-    skein.forEach(([x, y, s, u]) => { cf += fly(x, y, s, u); cb += 'M' + r2(x - 0.2 * s) + ' ' + r2(y + 0.02) + 'L' + r2(x + 2.2 * s) + ' ' + r2(y + 0.15 * s); });
-    const birdBox = skein.map(([x, y, s]) => [[x - 4 * s, y - 4.2 * s], [x + 5.5 * s, y - 4.2 * s], [x + 5.5 * s, y + 4.2 * s], [x - 4 * s, y + 4.2 * s]]);
-    let o = t.hide(birdBox, t.sky(trees, { gap: 1.3, op: 0.36 })) + t.s(cf, 0.4, 0.9) + t.s(cb, 0.9, 0.9);
+    skein.forEach(([x, y, s, u]) => { const c = fly(x, y, s, u); cf += c.line; cb += c.body; });
+    const birdBox = skein.map(([x, y, s]) => [[x - 4 * s, y - 4.3 * s], [x + 5.6 * s, y - 4.3 * s], [x + 5.6 * s, y + 3 * s], [x - 4 * s, y + 3 * s]]);
+    let o = t.hide(birdBox, t.sky(trees, { gap: 1.3, op: 0.36 })) + t.s(cf, 0.4, 0.95) + t.fillPath(cb, 0.75, 0.3, 0.9);
     // cottonwood gallery on the far bank
     const tb = t.band(trees, bank);
     o += t.hatch(tb, { angle: 84, gap: 0.62, op: 0.55, jitter: 0.3 }) + t.clip(tb, t.flank(trees, { gap: 0.6, len: 4, op: 0.7 })) + t.line(trees, 0.8);
     // braided channels around sandbars
-    const bars = [[16, 35.3, 13, 0.7], [50, 36, 9, 0.6], [92, 35.1, 17, 0.8], [30, 40.2, 17, 1.2], [78, 41, 13, 1.1], [111, 39.6, 8, 0.9], [10, 47.4, 13, 1.7], [56, 47.3, 19, 2.1], [101, 48, 15, 1.9], [40, 57.3, 27, 3.3]].map(([x, y, rx, ry]) => ({ x, y, rx, ry, p: sup(x, y, rx, ry, 1.5, 44) }));
+    const bars = [[16, 35.3, 13, 0.7], [50, 36, 9, 0.6], [92, 35.1, 17, 0.8], [30, 40.2, 17, 1.2], [78, 41, 13, 1.1], [111, 39.6, 8, 0.9], [10, 47.4, 13, 1.7], [56, 47.3, 19, 2.1], [101, 48, 15, 1.9], [40, 57.3, 27, 3.3]].map(([x, y, rx, ry]) => { const p = []; for (let k = 0; k < 44; k++) { const a = (k / 44) * 2 * PI, sn = M.sin(a); p.push([x + rx * M.sign(M.cos(a)) * M.pow(M.abs(M.cos(a)), 0.8), y + ry * sn * (sn < 0 ? 0.55 : 1) * (0.85 + t.rng() * 0.3)]); } return { x, y, rx, ry, p }; });
     const river = [[-1, 33.4], [121, 33], [121, 63], [-1, 63.6]];
     o += t.hide(bars.map((b) => b.p), t.clip(river, t.rule(-1, 121, 33.8, 42, { gap: 0.62, op: 0.55, breaks: 0.3 }) + t.rule(-1, 121, 42.6, 53, { gap: 0.95, op: 0.55, breaks: 0.35 }) + t.rule(-1, 121, 53.6, 63.6, { gap: 1.35, op: 0.55, breaks: 0.35 })));
-    bars.forEach((b) => { o += t.line(b.p, b.ry > 1.5 ? 0.45 : 0.35, 0.8, true) + t.stip(b.p, { n: M.round(b.rx * b.ry * 2.2), r: 0.2, op: 0.55 }); });
+    bars.forEach((b) => {
+      const lo = b.p.filter((q) => q[1] >= b.y);
+      o += t.line(b.p, 0.3, 0.55, true) + t.line(lo, b.ry > 1.5 ? 0.55 : 0.4, 0.8) + t.stip(b.p, { n: M.round(b.rx * b.ry * 1.2), r: 0.18, op: 0.45 }) + t.clip(b.p, t.rule(b.x - b.rx, b.x + b.rx, b.y - b.ry, b.y + b.ry, { gap: 1.1, w: 0.22, op: 0.25, breaks: 0.6 }));
+    });
     o += t.s(t.pine(98, 47.4, 3, 1.2) + t.pine(101, 47.8, 2.4, 1) + t.pine(30, 39.8, 1.8, 0.8), 0.3, 0.7);
-    // standing cranes on the near bar (tall, gray, bustled), smaller ones on the middle bar
+    // standing cranes: tall, slim, gray, with the drooping tail bustle; a crowd on the near bar, smaller beyond
     const stand = (x, y, s, f) => {
       const X = (u) => r2(x + u * s * f), Y = (v) => r2(y - v * s);
       return {
-        body: 'M' + X(-1.5) + ' ' + Y(4.1) + 'Q' + X(0) + ' ' + Y(5.3) + ' ' + X(1.9) + ' ' + Y(4.3) + 'Q' + X(2.5) + ' ' + Y(3.3) + ' ' + X(1.3) + ' ' + Y(3.2) + 'Q' + X(0) + ' ' + Y(3.1) + ' ' + X(-1.5) + ' ' + Y(4.1) + 'Z',
-        line: 'M' + X(-0.2) + ' ' + Y(0) + 'L' + X(-0.1) + ' ' + Y(3.3) + 'M' + X(0.3) + ' ' + Y(0) + 'L' + X(0.25) + ' ' + Y(3.3) + 'M' + X(-1.3) + ' ' + Y(4.3) + 'Q' + X(-1.9) + ' ' + Y(6.2) + ' ' + X(-1.7) + ' ' + Y(7.6) + 'L' + X(-2.7) + ' ' + Y(7.3),
+        body: 'M' + X(-1.3) + ' ' + Y(4.7) + 'Q' + X(0.2) + ' ' + Y(5.5) + ' ' + X(1.8) + ' ' + Y(4.5) + 'Q' + X(2.7) + ' ' + Y(3.6) + ' ' + X(2.1) + ' ' + Y(3.1) +
+          'Q' + X(1.4) + ' ' + Y(3.6) + ' ' + X(0.9) + ' ' + Y(3.5) + 'Q' + X(-0.4) + ' ' + Y(3.5) + ' ' + X(-1.3) + ' ' + Y(4.7) + 'Z',
+        line: 'M' + X(0) + ' ' + Y(0) + 'L' + X(0.15) + ' ' + Y(3.6) + 'M' + X(0.6) + ' ' + Y(0) + 'L' + X(0.45) + ' ' + Y(3.6) +
+          'M' + X(-1.1) + ' ' + Y(4.8) + 'Q' + X(-1.7) + ' ' + Y(6.4) + ' ' + X(-1.35) + ' ' + Y(7.9) + 'L' + X(-2.6) + ' ' + Y(7.55),
       };
     };
-    let cbody = '', cl = '';
-    [[21, 59, 1, 1], [26.5, 58.3, 0.95, -1], [31, 59.6, 1.05, 1], [36, 57.7, 0.9, 1], [44, 58.8, 1, 1], [49.5, 57.9, 0.92, -1], [55, 59.1, 0.98, 1], [60, 57.5, 0.85, 1], [50, 47.8, 0.5, 1], [55, 47.2, 0.46, 1], [60, 48, 0.5, -1], [66, 47.4, 0.45, 1]].forEach(([x, y, s, f]) => { const c = stand(x, y, s, f); cbody += c.body; cl += c.line; });
-    o += t.fillPath(cbody, 0.5, 0.35) + t.s(cl, 0.42);
+    let cbody = '', cl = '', tiny = '';
+    const crowd = [];
+    for (let i = 0; i < 16; i++) crowd.push([R(16, 64), R(56.6, 60.2), 0, 0]);
+    for (let i = 0; i < 11; i++) crowd.push([R(40, 72), R(46.6, 48.6), 0, 1]);
+    crowd.sort((a, b) => a[1] - b[1]).forEach(([x, y, _, far]) => { const c = stand(x, y, far ? 0.48 : 0.82 + (y - 56.6) * 0.07, t.rng() < 0.7 ? 1 : -1); cbody += c.body; cl += c.line; });
+    for (let i = 0; i < 18; i++) { const bb = [[30, 40.2, 15], [78, 41, 11]][i % 2], x = bb[0] + R(-bb[2], bb[2]) * 0.8, y = bb[1] + R(-0.3, 0.5); tiny += 'M' + r2(x) + ' ' + r2(y) + 'v-1.3l-.5 .15'; }
+    o += t.fillPath(cbody, 0.55, 0.3) + t.s(cl, 0.36) + t.s(tiny, 0.35, 0.8);
     // near bank
     const nb = [[-1, 63.6], [121, 63], [121, 73], [-1, 73]];
     o += t.line([[-1, 63.6], [121, 63]], 0.65) + t.tufts(nb, 46, 2, 0.32, 0.8);
@@ -532,15 +564,15 @@
       o += s;
     });
     // the river: one broad S-bend widening toward the viewer
-    const C = crPts([[56, 31.4], [51.4, 33.4], [49.6, 35.8], [52.4, 38.6], [60, 41.4], [69, 44.6], [75, 48.8], [75, 54.2], [68, 59.8], [58, 64.8], [52, 73]], 5);
+    const C = crPts([[57, 31.3], [50.6, 33.4], [46.6, 36.4], [49, 39.8], [60, 43], [74, 46.4], [84, 51], [84, 57.6], [74, 63.4], [62, 68], [56, 74]], 5);
     const L = [], Rr = [];
     C.forEach((p, i) => {
       const a = C[M.max(0, i - 1)], b = C[M.min(C.length - 1, i + 1)], tx = b[0] - a[0], ty = b[1] - a[1], ln = M.hypot(tx, ty) || 1;
-      const w = 1.3 + 11 * M.pow(i / (C.length - 1), 1.6);
+      const w = 1.2 + 13.5 * M.pow(i / (C.length - 1), 1.5);
       L.push([p[0] - (ty / ln) * w, p[1] + (tx / ln) * w]); Rr.push([p[0] + (ty / ln) * w, p[1] - (tx / ln) * w]);
     });
     const river = L.concat(Rr.slice().reverse());
-    const bar1 = sup(58.6, 39.4, 4, 0.7, 1.5, 24), bar2 = sup(71.6, 50.6, 1.6, 4, 1.5, 24);
+    const bar1 = sup(54, 38.2, 3.4, 0.6, 1.5, 24), bar2 = sup(79, 54.4, 2.4, 4.2, 1.5, 24);
     // Carter Lake: the cut-off oxbow on the Nebraska floodplain
     const ox = [];
     for (let a = 70; a <= 290; a += 10) { const r = (a * PI) / 180; ox.push([24 + 11 * M.cos(r), 46 + 3.6 * M.sin(r)]); }
@@ -552,20 +584,20 @@
       const dist = M.min.apply(null, L.concat(Rr).map((q) => M.hypot(q[0] - x, (q[1] - y) * 1.6)));
       if (dist < 4.5 && !pip(river, x, y)) { const r = 0.35 + (y - 30) * 0.025; crowns += 'M' + r2(x - r) + ' ' + r2(y) + 'a' + r2(r) + ' ' + r2(r * 0.8) + ' 0 1 1 ' + r2(2 * r) + ' 0'; }
     });
-    o += t.hide([river, ox], t.plain(31.6, 72.5, 16, 0.3) + t.clip(fp, t.hatch([[-1, 52], [121, 52], [121, 73], [-1, 73]], { angle: 18, gap: 2.4, op: 0.2 })) + t.s(crowns, 0.3, 0.7));
+    o += t.hide([river, ox], t.plain(31.6, 72.5, 16, 0.3) + t.stip(fp, { n: 120, r: 0.2, op: 0.35 }) + t.s(crowns, 0.3, 0.7));
     o += t.clip(ox, t.rule(10, 40, 41, 51, { gap: 0.62, op: 0.6, breaks: 0.4 })) + t.line(ox, 0.42, 0.85, true);
-    o += t.hide([bar1, bar2], t.clip(river, t.rule(-1, 121, 31, 44, { gap: 0.55, op: 0.62, breaks: 0.25 }) + t.rule(-1, 121, 44.5, 73, { gap: 0.8, op: 0.62, breaks: 0.3 }) + t.hatch(river, { angle: 8, gap: 2.8, op: 0.2 })));
+    o += t.hide([bar1, bar2], t.clip(river, t.rule(-1, 121, 31, 44, { gap: 0.5, op: 0.7, breaks: 0.2 }) + t.rule(-1, 121, 44.4, 73, { gap: 0.66, op: 0.7, breaks: 0.25 }) + t.hatch(river, { angle: 4, gap: 1.9, op: 0.3, jitter: 0.6 })));
     o += t.line(bar1, 0.3, 0.7, true) + t.line(bar2, 0.3, 0.7, true) + t.stip(bar1, { n: 12, r: 0.18 }) + t.stip(bar2, { n: 12, r: 0.18 });
-    o += t.line(L, 0.6) + t.line(Rr, 0.6);
+    o += t.line(L, 0.5, 0.85) + t.line(Rr, 0.5, 0.85);
     // I-480 girder bridge upstream
     o += t.s('M43 34.2L60.4 33.4M43 34.8L60.4 34', 0.35, 0.8) + t.s('M47 34.6v1.3M50.4 34.4v1.4M53.8 34.3v1.4M57.2 34.1v1.3', 0.3, 0.7);
     // Bob Kerrey pedestrian bridge: S-curved deck, two pylons, cable fans
-    const deck = crPts([[34, 42.6], [46, 42.2], [54, 41.2], [62, 40.6], [72, 40.2], [86, 39.6]], 5);
+    const deck = crPts([[38, 47.6], [50, 47], [58, 45.6], [66, 44.6], [76, 44.2], [90, 43.4]], 5);
     let cab = '', pyl = '';
-    [[50.5, 30.2], [66.5, 29.6]].forEach(([px, ptop]) => {
+    [[54, 34.6], [72, 33.4]].forEach(([px, ptop]) => {
       const db = yAt(deck, px);
       pyl += 'M' + r2(px) + ' ' + r2(db + 1.2) + 'L' + r2(px) + ' ' + r2(ptop);
-      for (let k = 1; k <= 5; k++) for (const sgn of [-1, 1]) { const dx = px + sgn * k * 1.7; cab += 'M' + r2(px) + ' ' + r2(ptop + 0.6 + k * 0.5) + 'L' + r2(dx) + ' ' + r2(yAt(deck, dx) - 0.1); }
+      for (let k = 1; k <= 6; k++) for (const sgn of [-1, 1]) { const dx = px + sgn * k * 1.6; cab += 'M' + r2(px) + ' ' + r2(ptop + 0.4 + k * 0.45) + 'L' + r2(dx) + ' ' + r2(yAt(deck, dx) - 0.1); }
     });
     o += t.line(deck, 0.75) + t.line(off(deck, 0, 0.6), 0.32, 0.8) + t.s(cab, 0.25, 0.85) + t.s(pyl, 0.65);
     o += t.line(bluffL, 0.6);
