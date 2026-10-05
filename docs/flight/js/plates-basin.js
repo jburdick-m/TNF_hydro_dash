@@ -94,17 +94,19 @@
     for (const p of pts) { const hh = (p[2] || h) * (0.75 + R() * 0.5), x = p[0], y = p[1]; d += 'M' + pt([x, y - hh]) + 'L' + pt([x - hh * 0.24, y]) + 'L' + pt([x + hh * 0.24, y]) + 'Z'; }
     return S(d, 0.25, 0.85, ' fill="currentColor" fill-opacity="' + (fop || 0.45) + '"');
   }
-  // boulders: domed outlines with shade strokes on the right
+  // boulders: faceted, rounded outlines with the shaded facet hatched (light from the upper left)
   function rocks(R, list, o) {
     o = o || {};
+    const K = window.ENGRAVE;
     let d = '', sh = '';
     for (const [x, y, s] of list) {
       const p = [];
-      for (let i = 0; i <= 6; i++) { const a = Math.PI + (i / 6) * Math.PI, rr = s * (0.78 + R() * 0.3); p.push([x + Math.cos(a) * rr * 1.25, y + Math.sin(a) * rr * 0.8]); }
-      d += pd(p, true);
-      for (let k = 0; k < 3; k++) { const xx = x + s * (0.2 + k * 0.32); sh += 'M' + pt([xx, y - s * 0.62 * (1 - k * 0.28)]) + 'L' + pt([xx + 0.15, y - 0.1]); }
+      for (let i = 0; i <= 9; i++) { const a = Math.PI + (i / 9) * Math.PI, rr = s * (0.72 + R() * 0.34); p.push([x + Math.cos(a) * rr * 1.3, y + Math.sin(a) * rr * (0.75 + R() * 0.2)]); }
+      const ti = 4 + Math.floor(R() * 2), fx = [x + s * (0.15 + R() * 0.35), y];
+      d += pd(p, true) + pd([p[ti], fx]);
+      sh += K.hatch(p.slice(ti).concat([fx]), { angle: 70, gap: 0.55, w: 0.25, op: 0.7, rng: R });
     }
-    return S(d, o.w || 0.45, o.op) + S(sh, 0.3, (o.op || 1) * 0.85);
+    return S(d, o.w || 0.45, o.op) + sh;
   }
   // salt-crust polygons in perspective
   function crust(R, y0, y1, hz, op) {
@@ -133,57 +135,75 @@
   /* ---------------- Lamoille Canyon: the glacial U looking up-canyon ---------------- */
   B['lamoille-canyon'] = (K) => {
     const R = K.rng('lamoille-canyon');
-    const head = K.ridge(R, [[30, 28], [37, 23], [43, 24], [48, 17], [52, 19], [57, 12], [61, 15], [65, 13], [70, 19], [75, 17], [81, 23], [90, 28]], 0.8, 0.9);
-    const lr = K.ridge(R, [[-2, 9], [4, 5], [9, 7], [13, 6], [15, 11.5], [18.5, 13.5], [22, 11.5], [24, 6.5], [29, 8.5], [34, 13], [40, 20], [46, 26], [52, 31]], 0.6, 0.9);
-    const rr = K.ridge(R, [[68, 31], [74, 26], [80, 20], [86, 14], [92, 10], [95, 9], [97, 14], [100.5, 15.5], [104, 14], [106, 8.5], [111, 6], [116, 7.5], [122, 6.5]], 0.6, 0.9);
-    const fl = cr([[8, 75], [20, 64], [32, 56.5], [44, 50.5], [53, 47], [58, 46]]);
-    const fr = cr([[62, 46], [67, 47], [76, 50.5], [88, 56.5], [100, 64], [112, 75]]);
-    const lw = lr.concat([[58, 46]], fl.slice().reverse(), [[-2, 75]]);
-    const rw = [[62, 46]].concat(rr, [[122, 75]], fr.slice().reverse());
-    const hp = head.concat([[90, 48], [30, 48]]);
-    let s = knock(sky(K, R, 32), [lw, rw, hp]);
-    // canyon head: cirque peaks with snow chutes
-    let h = K.flank(head, { gap: 0.75, len: 15, w: 0.3, op: 0.55, rng: R }) + K.flank(head, { gap: 1.4, len: 9, w: 0.3, op: 0.4, rng: R, shadowOnly: true });
-    h += line(cr([[46, 31], [52, 26], [60, 24.5], [68, 26], [74, 31]]), 0.35, 0.55);
-    h = knock(h, [cr([[57, 13.5], [56, 18], [57.5, 24], [56, 30]]), cr([[65, 14.5], [66.5, 20], [65, 27]]), cr([[48.5, 18.5], [49, 24], [47.5, 30]])].map((c) => ({ d: pd(c), w: 1.1 })));
-    h += K.path(head, { w: 0.6, op: 0.8 });
-    h += K.hatch([[44, 36], [76, 36], [70, 46], [50, 46]], { angle: 0, gap: 1.1, w: 0.25, op: 0.3, rng: R });
+    const head = K.ridge(R, [[30, 27], [36, 21], [42, 22.5], [47, 15.5], [51, 18], [56, 11], [60, 14.5], [64, 12], [69, 18.5], [74, 15.5], [80, 21.5], [90, 27]], 0.8, 0.9);
+    // near rims: jagged granite crests, each notched by a hanging valley; then the walls' U-shaped inner profiles
+    const lr = K.ridge(R, [[-2, 3.5], [3, 6.5], [7, 4.5], [10, 7.5], [12, 12], [15, 13.6], [18, 12], [20, 6.5], [24, 9], [27, 7.5], [30.5, 12.5]], 0.6, 0.8);
+    const rr = K.ridge(R, [[89.5, 12.5], [93, 8], [97, 9.5], [100, 7], [102, 12.2], [105.5, 13.8], [109, 12], [111, 6], [115, 4.5], [118, 6.4], [122, 5]], 0.6, 0.8);
+    const ls = cr([[30.5, 12.5], [33.4, 22], [36.8, 31], [41.4, 38.4], [48, 43.6], [56, 46]]);
+    const rs = cr([[64, 46], [72, 43.6], [78.6, 38.4], [83.2, 31], [86.6, 22], [89.5, 12.5]]);
+    const fl = cr([[56, 46], [46, 51.5], [36, 59], [27, 67.5], [20, 75]]);
+    const fr = cr([[64, 46], [74, 51.5], [84, 59], [93, 67.5], [100, 75]]);
+    const flr = fl.slice().reverse(), frr = fr.slice().reverse(), rrr = rr.slice().reverse();
+    const lw = lr.concat(ls.slice(1), fl.slice(1), [[-2, 75]]);
+    const rw = rs.concat(rr.slice(1), [[122, 75]], frr);
+    const hp = head.concat([[90, 47], [30, 47]]);
+    const q = (a, f, fr2) => { const c = [a[0] + (f[0] - a[0]) * 0.1, a[1] + (f[1] - a[1]) * 0.86], o = []; for (let k = 0; k <= 10; k++) { const t = (k / 10) * fr2, u = 1 - t; o.push([u * u * a[0] + 2 * u * t * c[0] + t * t * f[0], u * u * a[1] + 2 * u * t * c[1] + t * t * f[1]]); } return o; };
+    let s = knock(sky(K, R, 30), [lw, rw, hp]);
+    // canyon head: cirque peaks with snow chutes, forest and moraines on the far floor
+    let h = K.flank(head, { gap: 0.75, len: 14, w: 0.3, op: 0.5, rng: R }) + K.flank(head, { gap: 1.3, len: 9, w: 0.3, op: 0.38, rng: R, shadowOnly: true });
+    h += line(cr([[48, 29.6], [54, 26.6], [60, 25.8], [66, 26.6], [72, 29.6]]), 0.3, 0.4);
+    h = knock(h, [cr([[56, 12.5], [55.2, 18], [56.6, 24]]), cr([[64.4, 13.4], [65.8, 19], [64.6, 24.6]]), cr([[47.6, 17], [48.2, 22], [47, 27]])].map((c) => ({ d: pd(c), w: 1.1 })));
+    h += K.hatch([[36, 33], [84, 33], [84, 47], [36, 47]], { angle: 0, gap: 1.0, w: 0.22, op: 0.28, rng: R });
+    const ff = [];
+    for (let i = 0; i < 26; i++) { const x = 40 + R() * 40, y = 37 + R() * 8.5; ff.push([x, y, 0.9 + (y - 36) * 0.06]); }
+    h += firs(R, ff, 1, 0.5) + K.path(head, { w: 0.6, op: 0.8 });
     s += knock(h, [lw, rw]);
-    // left wall: shadowed, curved fall-lines that bend into the floor (the U), cross-hatched above
-    const wf1 = cr([[18.5, 13.8], [19.6, 20], [21, 27], [23, 35], [26, 43], [30, 51]]);
-    const wf2 = cr([[100.5, 15.8], [99.6, 22], [98, 30], [95.5, 38], [92.5, 46], [89, 54]]);
-    const lrR = resample(lr, 40), flR = resample(fl, 40);
-    let lwS = ribs(R, lr, fl, 64, { w: 0.3, op: 0.75, kx: 0.1, ky: 0.88, frac: [0.72, 1] });
-    lwS += K.hatch(lrR.concat(blend(lrR, flR, 0.5).reverse()), { angle: 58, gap: 1.3, w: 0.25, op: 0.4, rng: R, jitter: 0.3 });
-    for (const t of [0.3, 0.46, 0.62]) lwS += line(blend(lrR, flR, t).map((p, i) => [p[0], p[1] + 0.5 * Math.sin(i * 0.8 + t * 9)]), 0.3, 0.3);
-    s += knock(lwS, [{ d: pd(wf1), w: 1.3 }]) + line(wf1, 0.3, 0.6, ' stroke-dasharray="1.4 0.9"');
-    // right wall: sunlit, sparse ribs, avalanche chutes, gneiss banding
-    const rrR = resample(rr, 40), frR = resample(fr, 40);
-    let rwS = ribs(R, rr, fr, 30, { w: 0.3, op: 0.45, kx: 0.1, ky: 0.88, frac: [0.45, 0.95] });
-    rwS += ribs(R, rr, fr, 9, { w: 0.5, op: 0.6, kx: 0.08, ky: 0.9, frac: [0.3, 0.6] });
-    let band = '';
-    for (const t of [0.22, 0.36, 0.5, 0.64]) {
-      const b = blend(rrR, frR, t).map((p, i) => [p[0], p[1] + 0.6 * Math.sin(i * 0.7 + t * 10)]);
-      for (let i = 0; i < b.length - 2; i += 2) if (R() < 0.7) band += pd([b[i], b[i + 1], b[i + 2]]);
+    // left wall in shadow: fall-lines that drop sheer and sweep out into the floor (the U), cross-hatched high up
+    const N = 70, A = resample(lr, N), F = resample(flr, N);
+    let lwS = '';
+    for (let i = 0; i < N; i++) lwS += pd(q(A[i], F[i], 0.72 + R() * 0.28));
+    lwS = S(lwS, 0.3, 0.72);
+    const lA = resample(lr, 40), lF = resample(flr, 40);
+    lwS += K.hatch(lA.concat(blend(lA, lF, 0.55).reverse()), { angle: 56, gap: 1.25, w: 0.25, op: 0.4, rng: R, jitter: 0.3 });
+    let gb = '';
+    for (const t of [0.24, 0.38, 0.52, 0.66, 0.8]) { const b = lA.map((a, i) => { const p = q(a, lF[i], 1)[Math.round(t * 10)]; return [p[0], p[1] + 0.5 * Math.sin(i * 0.9 + t * 9)]; }); for (let i = 0; i < b.length - 2; i += 2) if (R() < 0.75) gb += pd([b[i], b[i + 1], b[i + 2]]); }
+    lwS += S(gb, 0.3, 0.32);
+    const wf1 = q([15, 13.8], resample(flr, 101)[52], 0.82);
+    s += knock(lwS, [{ d: pd(wf1), w: 1.4 }]) + line(wf1.map((p, i) => [p[0] + 0.25 * Math.sin(i * 2.1), p[1]]), 0.28, 0.6);
+    // right wall in sun: sparse fall-lines, darker avalanche chutes, banded gneiss
+    const M = 34, A2 = resample(rrr, M), F2 = resample(frr, M);
+    let rwS = '', ch = '';
+    for (let i = 0; i < M; i++) rwS += pd(q(A2[i], F2[i], 0.4 + R() * 0.5));
+    for (let i = 2; i < M; i += 4) ch += pd(q(A2[i], F2[i], 0.3 + R() * 0.3));
+    rwS = S(rwS, 0.3, 0.42) + S(ch, 0.5, 0.6);
+    const rA = resample(rrr, 40), rF = resample(frr, 40);
+    gb = '';
+    for (const t of [0.2, 0.32, 0.44, 0.56, 0.68]) { const b = rA.map((a, i) => { const p = q(a, rF[i], 1)[Math.round(t * 10)]; return [p[0], p[1] + 0.55 * Math.sin(i * 0.8 + t * 10)]; }); for (let i = 0; i < b.length - 2; i += 2) if (R() < 0.75) gb += pd([b[i], b[i + 1], b[i + 2]]); }
+    rwS += S(gb, 0.28, 0.26);
+    const wf2 = q([105.5, 14], resample(frr, 101)[51], 0.82);
+    s += knock(rwS, [{ d: pd(wf2), w: 1.4 }]) + line(wf2.map((p, i) => [p[0] + 0.25 * Math.sin(i * 2.1), p[1]]), 0.28, 0.6);
+    // talus cones where chutes meet the floor
+    let tc = '';
+    for (const [x, y, sgn] of [[33, 61, 1], [44, 52.6, 1], [87, 61, -1], [76, 52.6, -1]]) for (let k = -3; k <= 3; k++) tc += pd([[x - sgn * 2.2, y - 3.4], [x + k * 0.9, y + 0.4]]);
+    s += S(tc, 0.25, 0.45);
+    // the floor: meadow, Lamoille Creek, the road, aspen groves, conifers along the wall feet
+    const floor = fl.concat(frr);
+    s += clip(floor, prule(R, 0, 120, 47, 75, 0.9, 3.2, { w: 0.25, op: 0.3, seg: 6, gapw: 3 }));
+    s += K.stipple(floor, { n: 50, r: 0.25, op: 0.4, rng: R });
+    s += line(cr([[59.4, 46.4], [58, 48.6], [60.2, 51], [55.6, 54], [58.6, 57.6], [50, 61.6], [54, 65.4], [44, 70], [48, 75]]), 0.5, 0.8);
+    const rc = cr([[61.6, 46.4], [64.6, 50], [62, 54.4], [70, 60], [66, 66], [78, 75]]);
+    s += line(rc.map((p) => [p[0] - 0.15 - (p[1] - 46) * 0.06, p[1]]), 0.35, 0.75) + line(rc.map((p) => [p[0] + 0.15 + (p[1] - 46) * 0.06, p[1]]), 0.35, 0.75);
+    let asp = '';
+    for (const [gx, gy, n2] of [[38, 62, 7], [52, 57, 5], [72, 64, 7], [80, 57, 5], [47, 69, 6], [60, 50.5, 4]]) {
+      const sc = 0.25 + (gy - 46) * 0.022;
+      for (let k = 0; k < n2; k++) { const x = gx + (R() - 0.5) * 7 * sc, y = gy + (R() - 0.5) * 2 * sc, r = (0.7 + R() * 0.5) * sc * 1.6; asp += 'M' + pt([x - r, y - r]) + 'a' + r2(r) + ' ' + r2(r) + ' 0 1 0 ' + r2(2 * r) + ' 0a' + r2(r) + ' ' + r2(r) + ' 0 1 0 ' + r2(-2 * r) + ' 0M' + pt([x, y]) + 'V' + r2(y + r * 1.4); }
     }
-    rwS += S(band, 0.3, 0.38);
-    s += knock(rwS, [{ d: pd(wf2), w: 1.3 }]) + line(wf2, 0.3, 0.55, ' stroke-dasharray="1.4 0.9"');
-    // floor: meadow, Lamoille Creek, the road, conifers and aspen along the wall feet
-    const floor = fl.concat(fr);
-    s += clip(floor, prule(R, 0, 120, 47, 75, 0.9, 3.4, { w: 0.25, op: 0.3, seg: 6, gapw: 3 }));
-    s += K.stipple(floor, { n: 60, r: 0.25, op: 0.45, rng: R });
-    s += line(cr([[60, 46.5], [58.5, 49], [61, 52], [56.5, 56], [60, 61], [51, 66], [54.5, 70], [46, 75]]), 0.45, 0.75);
-    const road = cr([[63.5, 46.5], [67, 50], [64, 54], [72, 58], [66.5, 63], [80, 68], [77, 75]]);
-    s += line(road, 0.35, 0.7) + line(road.map((p) => [p[0] + 0.5 + (p[1] - 46) * 0.04, p[1]]), 0.35, 0.7);
+    s += S(asp, 0.3, 0.75, ' fill="currentColor" fill-opacity="0.12"');
     const tr = [];
-    for (let i = 0; i < 26; i++) {
-      const side = i % 2, t = 0.15 + R() * 0.82, p = resample(side ? fr : fl, 30)[Math.floor(t * 29)], up = R() * 5;
-      tr.push([p[0] + (side ? 1 : -1) * up * 0.8, p[1] - up, 1.1 + (p[1] - 45) * 0.13]);
-    }
+    for (let i = 0; i < 30; i++) { const side = i % 2, p = resample(side ? fr : fl, 40)[4 + Math.floor(R() * 34)], up = R() * 6; tr.push([p[0] + (side ? 1 : -1) * up * 0.7, p[1] - up, 1.0 + (p[1] - 45) * 0.14]); }
     s += firs(R, tr, 2);
-    s += K.stipple([[30, 60], [40, 54], [46, 56], [36, 63]], { n: 30, r: 0.45, op: 0.5, rng: R }) + K.stipple([[80, 56], [90, 60], [86, 64], [76, 59]], { n: 26, r: 0.45, op: 0.45, rng: R });
     s += line(fl, 0.4, 0.55) + line(fr, 0.4, 0.55);
-    s += K.path(lr, { w: 1.0 }) + K.path(rr, { w: 1.0 });
+    s += line(ls, 0.85, 0.95) + line(rs, 0.85, 0.95) + K.path(lr, { w: 1.0 }) + K.path(rr, { w: 1.0 });
     return plate(K, s);
   };
 
@@ -191,41 +211,44 @@
   B['ruby-dome'] = (K) => {
     const R = K.rng('ruby-dome');
     const far = K.ridge(R, [[-2, 31], [6, 27.5], [12, 29], [18, 25.5], [27, 30]], 0.6, 1.1);
-    const far2 = K.ridge(R, [[92, 28], [99, 24], [105, 26.5], [112, 24.5], [122, 28]], 0.6, 1.1);
-    const m = K.ridge(R, [[-2, 44], [8, 40], [16, 36], [24, 31], [32, 25], [40, 19], [46, 14], [51, 10.5], [56, 8.6], [61, 8], [65, 8.8], [70, 11.5], [76, 16], [82, 21], [87, 24], [92, 23], [98, 27], [106, 31], [114, 34], [122, 37]], 0.5, 0.9);
-    const aL = cr([[50, 11], [45, 19], [40, 27], [35, 35], [29, 43], [22, 50]]);
-    const aR = cr([[70, 11.5], [75, 19], [80, 27], [86, 35], [93, 43], [101, 50]]);
+    const far2 = K.ridge(R, [[96, 27], [102, 23.5], [108, 26], [114, 24], [122, 27.5]], 0.6, 1.1);
+    const m = K.ridge(R, [[-2, 41], [6, 38], [13, 34], [19, 31], [24, 27.5], [29, 22.5], [34, 19], [39, 16.4], [44, 12.6], [48, 10.8], [51, 11.4], [55, 8.6], [58.5, 7.2], [61, 7.6], [64.5, 9.2], [68.5, 9.8], [72, 12.4], [75.5, 11.2], [79, 13.6], [83, 17.5], [87, 17], [91, 20.4], [97, 24.2], [104, 27.8], [112, 31], [122, 34]], 0.5, 0.9);
+    const aL = K.ridge(R, [[21, 49.6], [25, 45.6], [28, 43.4], [31, 38.6], [33, 37.8], [35.6, 31.6], [38, 27.2], [39.6, 26.4], [41, 20.6], [43.4, 16], [45, 12.2]], 0.6, 0.8).reverse();
+    const aR = K.ridge(R, [[72.6, 12.2], [75.4, 17.4], [77, 18.4], [80, 24.6], [82.6, 28.6], [84, 29.2], [87.5, 35], [91.4, 40.4], [94, 43], [102, 49.6]], 0.6, 0.8);
     const mp = under(m, 52);
-    const hw = aL.slice().reverse().concat(m.filter((p) => p[0] > 50 && p[0] < 70), aR);
-    const lo = m.filter((p) => p[0] <= 50).concat(aL, [[-2, 50]]);
-    const ro = aR.concat([[122, 50]], m.filter((p) => p[0] >= 70).reverse());
+    const hw = aL.slice().reverse().concat(m.filter((p) => p[0] > 45 && p[0] < 72.6), aR);
+    const lo = m.filter((p) => p[0] <= 45).concat(aL, [[-2, 50]]);
+    const ro = aR.concat([[122, 50]], m.filter((p) => p[0] >= 72.6).reverse());
     let s = knock(sky(K, R, 40), [mp, under(far, 52), under(far2, 52)]);
     s += knock(K.flank(far, { gap: 1.6, len: 5, w: 0.3, op: 0.35, rng: R }) + K.path(far, { w: 0.4, op: 0.5 }) + K.flank(far2, { gap: 1.6, len: 5, w: 0.3, op: 0.35, rng: R }) + K.path(far2, { w: 0.4, op: 0.5 }), [mp]);
-    // headwall of the cirque: steep, dark, cut by snow couloirs
-    const snow = [[54, 12.5], [58, 10.6], [63, 11], [66.5, 13.6], [62, 15.4], [57, 15.8]];
-    const cou = [cr([[57, 15], [55, 22], [53, 29], [51.5, 36]]), cr([[63, 14.5], [64.5, 21], [66, 28], [68, 35]]), cr([[46, 22], [44.5, 28], [43, 34]])];
-    let h = K.hatch(hw, { angle: 90, gap: 0.85, w: 0.28, op: 0.5, rng: R, jitter: 0.5 });
-    h += clip([[60, 0], [122, 0], [122, 60], [60, 60]], K.hatch(hw, { angle: 74, gap: 1.1, w: 0.25, op: 0.4, rng: R }));
-    h += K.flank(m.filter((p) => p[0] > 49 && p[0] < 71), { gap: 0.6, len: 26, w: 0.3, op: 0.45, rng: R });
+    // the cirque headwall: dark granite and gneiss, late snow on the summit, couloirs, talus below
+    const snow = [[53, 15.4], [55.6, 13.6], [57.4, 15.8], [55.4, 17.6]];
+    const cou = [cr([[57, 13.6], [55.4, 21], [53.6, 28], [52, 35]]), cr([[63, 14], [64.4, 21], [66, 28], [67.6, 34.6]]), cr([[47, 18], [45.4, 25], [44, 32]]), cr([[70, 16], [72.6, 23], [74.6, 29]])];
+    let h = K.hatch(hw, { angle: 90, gap: 0.8, w: 0.28, op: 0.52, rng: R, jitter: 0.5 });
+    h += clip([[59, 0], [122, 0], [122, 60], [59, 60]], K.hatch(hw, { angle: 74, gap: 1.05, w: 0.25, op: 0.42, rng: R }));
+    h += K.flank(m.filter((p) => p[0] > 44 && p[0] < 74), { gap: 0.6, len: 26, w: 0.3, op: 0.45, rng: R });
     h = knock(h, [snow].concat(cou.map((c) => ({ d: pd(c), w: 1.3 }))));
-    h += line(cr([[30, 42], [45, 46.5], [60, 47.5], [75, 46.5], [92, 42]]), 0.3, 0.45) + line(cr([[36, 38], [50, 41.5], [64, 42.4], [78, 41], [88, 37.5]]), 0.3, 0.35);
-    h += K.stipple([[44, 40], [52, 37], [56, 46], [42, 48]], { n: 26, r: 0.3, op: 0.5, rng: R }) + K.stipple([[64, 37], [72, 39], [74, 47], [62, 46]], { n: 26, r: 0.3, op: 0.5, rng: R });
-    s += clip(hw, h) + line(snow, 0.3, 0.5);
+    h += line(cr([[28, 42.6], [44, 46.8], [60, 47.8], [76, 46.8], [94, 42.6]]), 0.3, 0.45) + line(cr([[34, 38.4], [48, 41.8], [62, 42.6], [76, 41.4], [88, 38]]), 0.3, 0.35);
+    h += K.stipple([[44, 40], [54, 36.6], [56, 46], [40, 48]], { n: 30, r: 0.3, op: 0.5, rng: R }) + K.stipple([[64, 36], [74, 38.4], [78, 47], [62, 46]], { n: 30, r: 0.3, op: 0.5, rng: R });
+    let bt = '';
+    for (const [x0, x1] of [[50, 47], [60, 59], [70, 73.4]]) bt += pd(cr([[x0, yAt(m, x0) + 1], [x0 - 0.6, yAt(m, x0) + 9], [(x0 + x1) / 2, yAt(m, x0) + 18], [x1, 40]], 4));
+    h += S(bt, 0.45, 0.6);
+    s += clip(hw, h);
     // outer faces: lit left, shaded right
     s += clip(lo, K.flank(m, { gap: 1.4, len: 14, w: 0.3, op: 0.45, rng: R }) + K.hatch(lo, { angle: 70, gap: 2.4, w: 0.25, op: 0.3, rng: R }));
     s += clip(ro, K.flank(m, { gap: 0.9, len: 16, w: 0.3, op: 0.55, rng: R }) + K.hatch(ro, { angle: 66, gap: 0.95, w: 0.25, op: 0.45, rng: R }) + K.hatch(ro, { angle: 120, gap: 1.8, w: 0.25, op: 0.3, rng: R }));
     s += line(aL, 0.55, 0.85) + line(aR, 0.55, 0.85);
-    // the tarn with the summit's reflection
-    const lake = [];
-    for (let i = 0; i <= 36; i++) { const a = (i / 36) * Math.PI * 2; lake.push([60 + 47 * Math.cos(a), 55.2 + 4.8 * Math.sin(a) + (R() - 0.5) * 0.5]); }
-    const refl = m.filter((p) => p[0] > 26 && p[0] < 96).map((p) => [p[0], 50.6 + (50.6 - p[1]) * -0.3 + 0.5]);
-    const reflP = [[26, 50.4]].concat(refl.map((p) => [p[0], 50.4 + (p[1] - 50.4) * 0 + Math.max(0, 52 - yAt(m, p[0])) * 0.22]), [[96, 50.4]]);
-    s += clip(lake, prule(R, 10, 110, 50.9, 60, 0.75, 1.3, { w: 0.3, op: 0.45, seg: 9, gapw: 2.5 }) + K.hatch(reflP, { angle: 0, gap: 0.55, w: 0.3, op: 0.45, rng: R }));
-    s += line(lake.slice(18), 0.6, 0.85) + line(lake.slice(0, 19), 0.45, 0.6);
+    // the tarn: irregular shore, the summit reflected
+    const fs = cr([[14, 55.4], [20, 52], [30, 50.8], [42, 51.2], [52, 50.4], [62, 50.9], [74, 50.4], [86, 51], [98, 51.8], [106, 54.2]], 4);
+    const ns = cr([[106, 54.2], [101, 57.6], [90, 59], [80, 58.2], [72, 60.2], [60, 59.4], [46, 60], [34, 58.6], [24, 59.2], [17, 57.6], [14, 55.4]], 4);
+    const lake = fs.concat(ns.slice(1));
+    const reflP = [[24, 50.6]].concat(m.filter((p) => p[0] > 24 && p[0] < 100).map((p) => [p[0], 50.6 + Math.max(0, 52 - p[1]) * 0.2]), [[100, 50.6]]);
+    s += clip(lake, prule(R, 10, 110, 51.2, 60, 0.75, 1.3, { w: 0.3, op: 0.45, seg: 9, gapw: 2.5 }) + K.hatch(reflP, { angle: 0, gap: 0.55, w: 0.3, op: 0.42, rng: R }));
+    s += line(fs, 0.6, 0.85) + line(ns, 0.45, 0.65);
     // foreground shore: boulders, sedge, limber pines
-    s += K.hatch([[-2, 60], [20, 59], [50, 61], [80, 60.4], [122, 59.6], [122, 75], [-2, 75]], { angle: -12, gap: 1.6, w: 0.25, op: 0.28, rng: R });
-    s += rocks(R, [[8, 64, 2.4], [15, 66.5, 1.6], [28, 62.6, 1.3], [40, 68, 2.8], [55, 63.5, 1.1], [70, 66, 1.8], [86, 63, 1.4], [97, 69, 2.6]], { w: 0.5 });
-    s += firs(R, [[104, 66, 11], [110, 68, 14], [115.5, 65, 9]], 10, 0.55);
+    s += K.hatch([[-2, 61], [20, 60.4], [50, 62], [80, 61.4], [122, 60.6], [122, 75], [-2, 75]], { angle: -12, gap: 1.6, w: 0.25, op: 0.28, rng: R });
+    s += rocks(R, [[7, 65, 2.4], [14.5, 67.4, 1.5], [28, 63.6, 1.2], [40, 69, 2.8], [55, 64.2, 1.0], [70, 67, 1.8], [86, 64, 1.3], [96, 70, 2.6]], { w: 0.5 });
+    s += firs(R, [[104, 67, 11], [110, 69, 14], [115.5, 66, 9]], 10, 0.55);
     s += K.path(m, { w: 1.0 });
     return plate(K, s);
   };
@@ -252,7 +275,7 @@
     for (let i = 0; i <= 20; i++) { const a = (i / 20) * Math.PI * 2; lk.push([38 + 7.4 * Math.cos(a), 39.8 + 1.5 * Math.sin(a)]); }
     s += clip(lk, K.ruling(30, 46, 38.6, 41.4, { gap: 0.6, w: 0.25, op: 0.5, rng: R })) + line(lk, 0.45, 0.85);
     s += line(cr([[27, 41], [38, 42.8], [49, 41]]), 0.4, 0.6);
-    s += line([[38, 42.9], [45, 45], [33, 47.5], [46, 50.5], [32, 53.5], [42, 56.5], [36, 61]], 0.4, 0.75);
+    s += line([[38, 42.9], [41.6, 44.4], [36.4, 45.8], [42, 47.6], [35.8, 49.4], [41.4, 51.2], [36, 53], [39.6, 54.4]], 0.35, 0.6);
     // the window in the crest south of Hole in the Mountain Peak
     s += S(pd(hole, true), 0.5, 0.9);
     // fans and valley floor at Wells: sage, rail line, the little town
@@ -279,9 +302,9 @@
     const lp = wl.concat([[56, 58], [50, 65], [43, 75], [-2, 75]]);
     const rp = [[62.5, 55]].concat(wr, [[122, 75], [92, 75], [76, 66], [67, 60]]);
     const spires = [];
-    for (const [x, h, w] of [[7, 7, 2.2], [10.5, 9.5, 1.8], [13, 6, 1.6], [19, 8, 2.4], [22.5, 5, 1.6], [28, 6.5, 2]]) {
+    for (const [x, h, w] of [[6, 4.6, 2.8], [8.8, 6.4, 2.4], [11.4, 4.4, 2.6], [13.8, 3.2, 2], [19.6, 5.4, 2.8], [22.4, 3.6, 2.2], [28, 3.4, 2.4]]) {
       const by = yAt(wl, x) + 0.8;
-      spires.push([[x - w / 2, by], [x - w * 0.32, by - h * 0.6], [x - w * 0.12, by - h], [x + w * 0.18, by - h * 0.94], [x + w * 0.34, by - h * 0.5], [x + w / 2, by]]);
+      spires.push([[x - w / 2, by], [x - w * 0.4, by - h * 0.55], [x - w * 0.22, by - h * 0.78], [x - w * 0.05, by - h], [x + w * 0.16, by - h * 0.86], [x + w * 0.3, by - h * 0.9], [x + w * 0.42, by - h * 0.45], [x + w / 2, by]]);
     }
     const crP = under(crest, 60);
     let s = knock(sky(K, R, 30), [crP, lp, rp].concat(spires));
@@ -298,14 +321,14 @@
     };
     s += wall(wl, lp, true) + wall(wr, rp, false);
     let sp = '';
-    for (const p of spires) sp += K.hatch([p[2], p[3], p[4], p[5], [p[2][0], p[5][1]]], { angle: 90, gap: 0.45, w: 0.25, op: 0.65, rng: R }) + line(p, 0.5, 0.9);
+    for (const p of spires) sp += K.hatch([p[3], p[4], p[5], p[6], p[7], [p[3][0], p[7][1]]], { angle: 90, gap: 0.45, w: 0.25, op: 0.65, rng: R }) + line(p, 0.5, 0.9);
     s += sp;
     const tr = [];
     for (let i = 0; i < 30; i++) { const left = i % 2 === 0, x = left ? 4 + R() * 46 : 66 + R() * 50, rim = left ? yAt(wl, x) : yAt(wr, x), y = rim + 17 + R() * 14; if (y < 73) tr.push([x, y, 1.8 + (y - 40) * 0.08]); }
     s += firs(R, tr, 2, 0.5);
     // river, and the cabins of Jarbidge town on the canyon floor
-    const bl = cr([[57.5, 55.5], [55.6, 60], [52, 65], [45, 75]]), br = cr([[62.5, 55.5], [61.6, 61], [60.5, 66], [61, 75]]);
-    s += clip(bl.concat(br.slice().reverse()), K.ruling(40, 64, 55, 75, { gap: 0.9, w: 0.28, op: 0.5, rng: R })) + line(bl, 0.45, 0.8) + line(br, 0.45, 0.8);
+    const bl = cr([[58.4, 55.5], [57, 60], [54, 65.4], [49, 75]]), br = cr([[61.6, 55.5], [61, 60.6], [59, 66], [58.6, 75]]);
+    s += clip(bl.concat(br.slice().reverse()), prule(R, 40, 64, 56, 75, 0.7, 1.6, { w: 0.28, op: 0.55, seg: 2.5, gapw: 1.6 })) + line(bl, 0.45, 0.8) + line(br, 0.45, 0.8) + rocks(R, [[53.4, 66, 0.9], [60.4, 70, 1.1], [56, 61, 0.6]], { w: 0.4 });
     let cab = '';
     for (const [x, y, k] of [[64.4, 58.4, 0.6], [66.6, 60.6, 0.75], [63.6, 63.8, 0.95], [69, 63.4, 0.9], [66, 68.5, 1.25], [72.5, 68, 1.1]]) {
       const w = 3 * k, h = 1.8 * k;
@@ -404,10 +427,10 @@
     for (let u = 0.9; u < 6.4; u += 0.85) d += pd(T([[u, 0.4], [u, u < 5 ? 0.4 + (u / 5) * 4.2 : 4.6]]));
     s += S(d, 0.3, 0.75) + S(pd(box(4.8, 7.2, 4.6, 6.2), true), 0.45, 0.9, ' fill="currentColor" fill-opacity="0.35"');
     // boiler with cylindrical shading, bands, handrail
-    s += S(pd(box(7.2, 37, 9.8, 19.4), true), 0.6, 0.95);
+    s += S(pd(T([[7.6, 19.4], [37, 19.4], [37, 9.8], [7.6, 9.8], [6.9, 11.4], [6.6, 14.6], [6.9, 17.8]]), true), 0.6, 0.95);
     d = '';
     for (const v of [10.3, 10.9, 11.6, 12.4, 13.4, 14.6]) d += pd(T([[7.6, v], [36.6, v]]));
-    for (const u of [14.5, 21, 29, 34.5]) d += pd(T([[u, 9.8], [u, 19.4]]));
+    for (const u of [14.5, 34.5]) d += pd(T([[u, 9.8], [u, 19.4]]));
     s += S(d, 0.28, 0.6) + line(T([[9, 16.8], [36.4, 16.8]]), 0.3, 0.8) + line(T([[6.6, 9.6], [37, 9.6]]), 0.55, 0.9);
     // headlamp, stack, domes, bell
     s += S(pd(head, true), 0.45, 0.95) + K_hatch(head, 0.6) + S(pd(box(8.8, 10, 25.4, 26.6), true), 0.35, 0.9);
@@ -453,7 +476,7 @@
     const R = K.rng('promontory-summit');
     K_hatch = (poly, op, gap) => K.hatch(poly, { angle: 90, gap: gap || 0.6, w: 0.25, op: op, rng: R });
     const yR = 58.4, sc = 0.92;
-    const J = loco(59.5, 1, yR, sc, 'jupiter'), U = loco(60.5, -1, yR, sc, 'up119');
+    const J = loco(59.85, 1, yR, sc, 'jupiter'), U = loco(60.15, -1, yR, sc, 'up119');
     const far = K.ridge(R, [[54, 41], [66, 34], [76, 31], [86, 32.5], [98, 30], [110, 32.5], [122, 35]], 0.6, 1.0);
     const hl = K.ridge(R, [[-2, 44], [14, 40.5], [28, 42], [44, 39], [60, 41.4], [76, 38.4], [92, 40.6], [108, 38.6], [122, 42]], 0.6, 1.0);
     let bg = knock(sky(K, R, 44), [under(hl), under(far)]);
@@ -481,65 +504,77 @@
     const m = K.ridge(R, [[-2, 22], [5, 17], [10, 19], [15, 13], [19, 15], [23, 10], [26, 12], [28.5, 8.5], [31, 11], [35, 15.5], [40, 13.5], [46, 17], [52, 14], [57, 10.5], [61, 12.5], [65, 9], [69, 11.5], [74, 15.5], [80, 13], [86, 17.5], [92, 15], [98, 19], [104, 17], [111, 21], [122, 24]], 0.8, 0.8);
     const mp = under(m, base);
     let s = knock(sky(K, R, 30), [mp]);
-    const fac = [], cans = [];
-    const xs = [-6, 14, 36, 58, 80, 102, 126];
-    for (let i = 0; i < xs.length - 1; i++) {
-      const a = xs[i] + (i ? 2.2 : 0), b = xs[i + 1] - 2.2, mid = (a + b) / 2 + (R() - 0.5) * 3, ay = 33 + R() * 4;
-      fac.push([[a, base], [mid, ay], [b, base]]);
-      if (i) { const cx = xs[i] + (R() - 0.5), top = 21 + R() * 5; cans.push([[xs[i] - 2.2, base], [cx - 0.4, top], [cx + 0.4, top], [xs[i] + 2.2, base]]); }
-    }
-    let f = K.flank(m, { gap: 0.85, len: 26, base: 44, w: 0.3, op: 0.5, rng: R }) + K.flank(m, { gap: 1.0, len: 16, w: 0.3, op: 0.4, rng: R, shadowOnly: true });
-    f += K.hatch(mp, { angle: 62, gap: 2.4, w: 0.22, op: 0.25, rng: R });
-    f = knock(f, fac.concat(cans, [[[23, 10.6], [27, 9.8], [26.6, 14.6], [24.6, 15.4]], [[28.5, 9.4], [31.4, 11.2], [30.2, 15.8]], [[57, 11.4], [60, 12.8], [58.4, 16]], [[65, 9.8], [68.4, 11.8], [66.6, 16.6], [64.6, 14]], [[15, 13.8], [18, 15.4], [16.4, 19]]]));
+    // facets: truncated spur ends standing on the fault; canyons cut back between them
+    const xs = [-9, 12, 33.5, 55, 77, 99, 129], ap = [];
+    for (let i = 0; i < xs.length - 1; i++) ap.push([(xs[i] + xs[i + 1]) / 2 + (R() - 0.5) * 4, 32.5 + R() * 4]);
+    const fac = ap.map((a, i) => [[xs[i], base], a, [xs[i + 1], base]]);
+    const cans = [];
+    for (let i = 1; i < xs.length - 1; i++) { const top = 21 + R() * 5, cx = xs[i] + (R() - 0.5) * 2; cans.push({ p: [ap[i - 1], [cx - 1.4, top], [cx + 1.4, top], ap[i], [xs[i], base]], cx, top, mouth: xs[i] }); }
+    let f = K.flank(m, { gap: 0.85, len: 24, base: 44, w: 0.3, op: 0.48, rng: R }) + K.flank(m, { gap: 1.0, len: 15, w: 0.3, op: 0.38, rng: R, shadowOnly: true });
+    f += K.hatch(mp, { angle: 62, gap: 2.2, w: 0.22, op: 0.25, rng: R });
+    f = knock(f, fac.concat(cans.map((c) => c.p), [[[23, 10.6], [27, 9.8], [26.6, 14.6], [24.6, 15.4]], [[28.5, 9.4], [31.4, 11.2], [30.2, 15.8]], [[57, 11.4], [60, 12.8], [58.4, 16]], [[65, 9.8], [68.4, 11.8], [66.6, 16.6], [64.6, 14]], [[15, 13.8], [18, 15.4], [16.4, 19]]]));
     s += f;
-    for (const t of fac) {
-      const [A, M, Bp] = t, half = [M, [(A[0] + Bp[0]) / 2 + 1.2, base], Bp];
-      s += K.hatch(t, { angle: 90, gap: 1.7, w: 0.25, op: 0.38, rng: R }) + K.hatch(half, { angle: 70, gap: 0.85, w: 0.25, op: 0.5, rng: R });
-      s += line([A, M, Bp], 0.55, 0.85);
+    // spur crests rising from each facet apex to the summit ridge
+    let sp = '';
+    for (const a of ap) { const x2 = a[0] + (R() - 0.5) * 5, y2 = yAt(m, x2) + 1.5; sp += pd(cr([a, [(a[0] + x2) / 2 + (R() - 0.5) * 2, (a[1] + y2) / 2], [x2, y2]], 4)); }
+    s += S(sp, 0.4, 0.55);
+    for (const c of cans) {
+      const gorge = [[c.mouth - 2.6, base - 9], [c.mouth + 2.6, base - 9], [c.mouth + 0.4, base], [c.mouth - 0.4, base]];
+      s += K.hatch(c.p, { angle: 90, gap: 1.1, w: 0.24, op: 0.38, rng: R }) + K.hatch(gorge, { angle: 90, gap: 0.42, w: 0.26, op: 0.62, rng: R }) + line([gorge[0], gorge[3]], 0.35, 0.7) + line([gorge[1], gorge[2]], 0.35, 0.7);
+      s += line(cr([[c.cx, c.top + 1], [c.cx + 0.6, (c.top + base) / 2], [c.mouth, base]], 4), 0.3, 0.6);
     }
-    for (const c of cans) s += K.hatch(c, { angle: 90, gap: 0.42, w: 0.28, op: 0.62, rng: R }) + line(c, 0.4, 0.8) + line([[(c[1][0] + c[2][0]) / 2, c[1][1] + 2], [(c[0][0] + c[3][0]) / 2 + 0.3, base]], 0.3, 0.6);
-    // Bonneville and Provo benches across the foot
-    s += clip(mp, K.hatch(rect(-2, 122, 42.6, 44.2), { angle: 90, gap: 0.5, w: 0.25, op: 0.5, rng: R }) + line([[-2, 44.4], [122, 44.4]], 0.55, 0.9) + line([[-2, 47.3], [122, 47.3]], 0.4, 0.7));
+    for (const t of fac) {
+      const [A, M, Bp] = t, half = [M, [(A[0] + Bp[0]) / 2 + 2, base], Bp];
+      s += K.hatch(t, { angle: 90, gap: 1.6, w: 0.25, op: 0.36, rng: R }) + K.hatch(half, { angle: 72, gap: 0.8, w: 0.25, op: 0.5, rng: R });
+      s += clip(t, line([[-2, 45.2], [122, 45.2]], 0.5, 0.85) + K.hatch(rect(-2, 122, 45.4, 46.6), { angle: 90, gap: 0.45, w: 0.22, op: 0.45, rng: R }) + line([[-2, 47.9], [122, 47.9]], 0.35, 0.6));
+      s += line([A, M, Bp], 0.5, 0.85);
+    }
     s += K.path(m, { w: 1.0 }) + line([[-2, base], [122, base]], 0.9, 0.95);
-    // the valley floor: the city's survey grid in perspective
+    // the valley floor: city blocks, trees, the survey grid
     let g = '';
-    for (let k = 1; k <= 10; k++) { const y = base + 24 * Math.pow(k / 10, 1.5); g += 'M-2 ' + r2(y) + 'H122'; }
-    for (let xb = -90; xb <= 210; xb += 15) { const at = (y) => 60 + (xb - 60) * ((y - 49) / 26); g += 'M' + pt([at(51), 51]) + 'L' + pt([at(75), 75]); }
-    s += S(g, 0.25, 0.28);
-    s += K.stipple([[-2, 51], [122, 51], [122, 75], [-2, 75]], { n: 140, r: 0.32, op: 0.45, rng: R });
+    for (let k = 1; k <= 9; k++) { const y = base + 24 * Math.pow(k / 9, 1.6); let x = -2 + R() * 3; while (x < 122) { const e = x + 4 + R() * 14; g += 'M' + r2(x) + ' ' + r2(y) + 'H' + r2(Math.min(e, 122)); x = e + 0.8 + R() * 2; } }
+    for (let xb = -60; xb <= 180; xb += 30) { const at = (y) => 60 + (xb - 60) * ((y - 49) / 26); g += 'M' + pt([at(51.5), 51.5]) + 'L' + pt([at(75), 75]); }
+    s += S(g, 0.25, 0.26);
+    s += K.stipple([[-2, 51], [122, 51], [122, 75], [-2, 75]], { n: 170, r: 0.34, op: 0.45, rng: R });
     return plate(K, s);
   };
 
   /* ---------------- Lake Bonneville shorelines: level benches etched across a range front ---------------- */
   B['lake-bonneville-shorelines'] = (K) => {
     const R = K.rng('lake-bonneville-shorelines');
-    const base = 53;
-    // skyline drawn with the benches in profile at both ends of the ridge
-    const m = K.ridge(R, [[-2, 46], [2, 45.6], [4, 44], [7, 40], [9.5, 38.8], [13, 38.6], [15, 36.5], [18, 32], [20.5, 30.3], [24, 30], [26, 27.5], [32, 21], [40, 16], [47, 13.2], [54, 14.6], [60, 13], [68, 15.6], [76, 18.6], [84, 22], [92, 27.6], [94.5, 30], [98.5, 30.4], [102, 33.8], [107, 38.2], [109, 38.7], [113, 39], [116, 43.5], [119, 45.7], [124, 46]], 0.3, 0.8);
+    const base = 54;
+    // the range rises from the valley at the left (the benches show in profile as steps) and runs off the plate
+    const m = K.ridge(R, [[-2, 46.6], [3, 46.1], [5.5, 44.4], [8.5, 40.8], [10.5, 39.6], [14.5, 39.4], [16.5, 37.6], [19.5, 33.4], [21.5, 31.6], [25.5, 31.3], [27.5, 29], [32, 23.6], [38, 19], [44, 15.6], [50, 13.6], [56, 14.8], [62, 12], [68, 13.6], [74, 11.2], [80, 13.8], [88, 12.4], [96, 15.4], [104, 13.8], [112, 16.6], [122, 15.4]], 0.35, 0.8);
     const mp = under(m, base);
-    let s = knock(sky(K, R, 46), [mp]);
-    const benches = [[30.3, 0.8], [38.7, 0.7], [45.6, 0.55]];
-    // spurs and ravines
-    let f = K.flank(m, { gap: 1.1, len: 40, base: base, w: 0.28, op: 0.36, rng: R });
+    let s = knock(sky(K, R, 44), [mp]);
+    const benches = [[31.4, 0.75], [39.5, 0.65], [46.2, 0.5]];
+    const spurs = [30, 43, 57, 71, 85, 99, 113];
+    // spurs and ravines down the face, shaded on their right flanks
+    let f = K.flank(m, { gap: 1.0, len: 42, base: base, w: 0.28, op: 0.36, rng: R }) + K.hatch(mp, { angle: 64, gap: 1.7, w: 0.22, op: 0.25, rng: R });
     let sp = '';
-    for (const x of [16, 30, 45, 61, 76, 90]) {
-      const y0 = yAt(m, x) + 0.8, c = cr([[x, y0], [x + 1.4, y0 + (base - y0) * 0.35], [x + 0.6, y0 + (base - y0) * 0.7], [x + 2.6, base]]);
-      sp += line(c, 0.45, 0.6);
-      f += clip(c.concat(c.slice().reverse().map((p) => [p[0] + 5.5, p[1]])), K.hatch(c.concat(c.slice().reverse().map((p) => [p[0] + 5.5, p[1]])), { angle: 80, gap: 0.7, w: 0.25, op: 0.45, rng: R }));
+    for (const x of spurs) {
+      const y0 = yAt(m, x) + 0.8, c = cr([[x, y0], [x + 1.4, y0 + (base - y0) * 0.35], [x + 0.4, y0 + (base - y0) * 0.7], [x + 2.4, base]]);
+      sp += pd(c);
+      const sh = c.concat(c.slice().reverse().map((p) => [p[0] + 6.5, p[1]]));
+      f += clip(sh, K.hatch(sh, { angle: 80, gap: 0.65, w: 0.25, op: 0.48, rng: R }));
     }
-    f += sp;
-    f = knock(f, benches.map(([y]) => rect(-2, 122, y - 0.25, y + 1.5)));
+    f += S(sp, 0.45, 0.6);
+    f = knock(f, benches.map(([y]) => rect(-2, 122, y - 0.25, y + 1.4)));
     s += f;
+    // the shorelines: wave-cut riser, level tread, crisp outer edge notched where gullies cut it
     for (const [y, w] of benches) {
-      s += clip(mp, K.hatch(rect(-2, 122, y - 2.6, y - 0.25), { angle: 90, gap: 0.5, w: 0.25, op: 0.55, rng: R, jitter: 0.2 }) + line([[-2, y - 0.25], [122, y - 0.25]], 0.3, 0.6) + line([[-2, y + 1.5], [122, y + 1.5]], w, 0.95));
+      let edge = '', xa = -2;
+      for (const x of spurs) { const g = x + 5.2; edge += 'M' + r2(xa) + ' ' + r2(y + 1.4) + 'L' + r2(g - 0.9) + ' ' + r2(y + 1.4) + 'L' + r2(g) + ' ' + r2(y + 2.4) + 'L' + r2(g + 0.9) + ' ' + r2(y + 1.4); xa = g + 0.9; }
+      edge += 'L122 ' + r2(y + 1.4);
+      s += clip(mp, K.hatch(rect(-2, 122, y - 2.4, y - 0.25), { angle: 90, gap: 0.55, w: 0.25, op: 0.45, rng: R, jitter: 0.2 }) + line([[-2, y - 0.25], [122, y - 0.25]], 0.3, 0.5) + S(edge, w, 0.95));
     }
     s += K.path(m, { w: 1.0 });
     // valley plain and what is left of the lake
     s += line([[-2, base], [122, base]], 0.5, 0.75);
-    s += prule(R, 0, 120, 54.5, 60, 1.2, 1.8, { w: 0.25, op: 0.3, seg: 7, gapw: 3 });
-    s += K.stipple([[-2, 53.5], [122, 53.5], [122, 60.2], [-2, 60.2]], { n: 80, r: 0.28, op: 0.4, rng: R });
-    s += line(cr([[-2, 61], [30, 60.7], [60, 61.3], [90, 60.8], [122, 61.1]]), 0.5, 0.8);
-    s += prule(R, 0, 120, 62, 75, 0.8, 2.2, { w: 0.3, op: 0.45, seg: 9, gapw: 2.5 });
+    s += prule(R, 0, 120, 55.5, 60.5, 1.2, 1.8, { w: 0.25, op: 0.3, seg: 7, gapw: 3 });
+    s += K.stipple([[-2, 54.5], [122, 54.5], [122, 61], [-2, 61]], { n: 80, r: 0.28, op: 0.4, rng: R });
+    s += line(cr([[-2, 61.8], [30, 61.5], [60, 62.1], [90, 61.6], [122, 61.9]]), 0.5, 0.8);
+    s += prule(R, 0, 120, 62.8, 75, 0.8, 2.2, { w: 0.3, op: 0.45, seg: 9, gapw: 2.5 });
     return plate(K, s);
   };
 
@@ -547,32 +582,36 @@
   B['bingham-canyon-mine'] = (K) => {
     const R = K.rng('bingham-canyon-mine');
     const sk = K.ridge(R, [[-2, 13], [10, 9], [22, 11], [34, 6.5], [46, 8.5], [58, 5.5], [70, 8], [82, 6.5], [94, 10], [106, 8], [122, 12]], 0.6, 1.0);
-    const cx = 60, N = 13, lev = [];
-    for (let k = 0; k < N; k++) { const t = k / (N - 1), rx = 64 - 57 * Math.pow(t, 0.85), top = 18 + 40 * Math.pow(t, 1.05), ry = rx * 0.37; lev.push({ rx, ry, cy: top + ry }); }
-    const ell = (e, a0, a1, dy, dr, k) => { const o = []; for (let i = 0; i <= k; i++) { const a = a0 + ((a1 - a0) * i) / k; o.push([cx + (e.rx - dr) * Math.cos(a), e.cy + dy - (e.ry - dr * 0.37) * Math.sin(a)]); } return o; };
+    const N = 13, lev = [];
+    for (let k = 0; k < N; k++) { const t = k / (N - 1), rx = (64 - 57 * Math.pow(t, 0.85)) * (k ? 1 + (R() - 0.5) * 0.05 : 1), top = 18 + 40 * Math.pow(t, 1.05) + (k ? (R() - 0.5) * 0.6 : 0); lev.push({ cx: 60 - 5 * Math.sin(t * 2.6), rx, ry: rx * 0.37, cy: top + rx * 0.37 }); }
+    const ell = (e, a0, a1, dy, dr, k) => { const o = []; for (let i = 0; i <= k; i++) { const a = a0 + ((a1 - a0) * i) / k; o.push([e.cx + (e.rx - dr) * Math.cos(a), e.cy + dy - (e.ry - dr * 0.37) * Math.sin(a)]); } return o; };
     const pit = ell(lev[0], 0, Math.PI * 2, 0, 0, 64);
     let s = knock(sky(K, R, 24), [under(sk)]);
+    // Oquirrh slopes above the rim, flat-topped waste dumps on the shoulders
     let hill = K.flank(sk, { gap: 1.0, len: 14, w: 0.28, op: 0.45, rng: R }) + K.hatch(under(sk, 44), { angle: 64, gap: 1.6, w: 0.22, op: 0.3, rng: R });
-    hill += line([[-2, 23.4], [14, 22.6], [20, 23], [24, 25.6]], 0.45, 0.7) + line([[96, 24.6], [101, 22.2], [112, 21.6], [122, 22]], 0.45, 0.7);
-    hill += K.stipple([[-2, 23.6], [14, 22.8], [24, 25.8], [-2, 30]], { n: 40, r: 0.28, op: 0.5, rng: R }) + K.stipple([[96, 24.8], [101, 22.4], [122, 22.2], [122, 30]], { n: 40, r: 0.28, op: 0.5, rng: R });
+    const d1 = [[-2, 22.6], [16, 21.6], [22, 22.2], [27, 25.6], [-2, 30]], d2 = [[94, 25.4], [99, 21.4], [110, 20.8], [122, 21.2], [122, 30]];
+    hill = knock(hill, [d1, d2]);
+    for (const dp of [d1, d2]) hill += clip(dp, K.stipple(dp, { n: 60, r: 0.28, op: 0.55, rng: R }) + K.hatch(dp, { angle: 100, gap: 1.1, w: 0.25, op: 0.4, rng: R })) + line(dp.slice(0, 4), 0.5, 0.8);
     s += knock(hill + K.path(sk, { w: 0.7, op: 0.85 }), [pit]);
+    // the spiral haul road, descending the benches in switchbacks
+    const at = (kf, a) => { const k = Math.min(N - 2, Math.floor(kf)), f = kf - k, e0 = lev[k], e1 = lev[k + 1]; const e = { cx: e0.cx + (e1.cx - e0.cx) * f, rx: e0.rx + (e1.rx - e0.rx) * f, ry: e0.ry + (e1.ry - e0.ry) * f, cy: e0.cy + (e1.cy - e0.cy) * f }; return [e.cx + e.rx * Math.cos(a), e.cy - e.ry * Math.sin(a) + 0.5]; };
+    const road = [];
+    for (const [ac, k0, k1] of [[2.4, 1, 10], [0.78, 2, 8]]) { const seg = []; for (let k = k0; k <= k1; k++) { const a = ac + (k % 2 ? 0.16 : -0.16); seg.push(at(k, a)); seg.push(at(k + 0.12, a + (k % 2 ? -0.05 : 0.05))); } road.push(seg); }
     // terraces: riser bands (shadowed on the left), crests, toes
     let tr = '';
     for (let k = 1; k < N; k++) {
       const e = lev[k], h = 1.0 + 0.5 * (1 - k / N), C = ell(e, -0.3, Math.PI + 0.3, 0, 0, 40), Tt = ell(e, -0.3, Math.PI + 0.3, h, 0.35, 40);
       const band = C.concat(Tt.slice().reverse());
-      tr += clip(rect(-2, cx, 0, 80), K.hatch(band, { angle: 90, gap: 0.5, w: 0.25, op: 0.6, rng: R })) + clip(rect(cx, 122, 0, 80), K.hatch(band, { angle: 90, gap: 0.95, w: 0.25, op: 0.45, rng: R }));
+      tr += clip(rect(-2, e.cx - e.rx * 0.25, 0, 80), K.hatch(band, { angle: 90, gap: 0.45, w: 0.25, op: 0.62, rng: R }) + K.hatch(band, { angle: 60, gap: 1.0, w: 0.22, op: 0.35, rng: R }));
+      tr += clip(rect(e.cx - e.rx * 0.25, 122, 0, 80), K.hatch(band, { angle: 90, gap: 0.9, w: 0.25, op: 0.45, rng: R }));
       tr += line(C, 0.42, 0.85) + line(Tt, 0.25, 0.45);
     }
+    tr = knock(tr, road.map((r) => ({ d: pd(r), w: 1.6 })));
+    tr += road.map((r) => line(r.map((p) => [p[0], p[1] - 0.45]), 0.3, 0.85) + line(r.map((p) => [p[0], p[1] + 0.45]), 0.3, 0.85)).join('');
     tr += S(pd(ell(lev[0], 0, Math.PI, 0, 0, 48)), 0.6, 0.9);
-    // haul roads switchbacking down the benches
-    let rd = '';
-    const P = (k, a) => { const e = lev[k]; return [cx + e.rx * Math.cos(a), e.cy - e.ry * Math.sin(a) + 0.4]; };
-    for (const [k0, a0, k1, a1] of [[1, 2.55, 4, 2.2], [4, 2.2, 7, 2.6], [7, 2.6, 10, 2.15], [2, 0.55, 5, 0.95], [5, 0.95, 8, 0.6]]) { const a = P(k0, a0), b = P(k1, a1); rd += pd([a, b]) + pd([[a[0] + 0.7, a[1] + 0.2], [b[0] + 0.7, b[1] + 0.2]]); }
-    tr += S(rd, 0.3, 0.85);
     const last = lev[N - 1], pond = [];
-    for (let i = 0; i <= 20; i++) { const a = (i / 20) * Math.PI * 2; pond.push([cx + 3.6 * Math.cos(a), last.cy + 1.4 + 1.0 * Math.sin(a)]); }
-    tr += clip(pond, K.ruling(55, 65, last.cy, last.cy + 3, { gap: 0.55, w: 0.25, op: 0.6, rng: R })) + line(pond, 0.35, 0.8);
+    for (let i = 0; i <= 20; i++) { const a = (i / 20) * Math.PI * 2; pond.push([last.cx + 3.6 * Math.cos(a), last.cy + 1.4 + 1.0 * Math.sin(a)]); }
+    tr += clip(pond, K.ruling(last.cx - 5, last.cx + 5, last.cy, last.cy + 3, { gap: 0.55, w: 0.25, op: 0.6, rng: R })) + line(pond, 0.35, 0.8);
     s += clip(pit, tr);
     // near rim and the overlook
     const near = ell(lev[0], Math.PI, Math.PI * 2, 0, 0, 48);
@@ -593,13 +632,13 @@
     let f = K.flank(m, { gap: 0.9, len: 22, base: hz, w: 0.3, op: 0.5, rng: R }) + K.flank(m, { gap: 0.8, len: 12, w: 0.3, op: 0.4, rng: R, shadowOnly: true });
     f += K.hatch(mp, { angle: 64, gap: 1.9, w: 0.22, op: 0.28, rng: R });
     for (const x of [24, 40, 52, 70, 84, 100]) f += line(cr([[x, yAt(m, x) + 0.6], [x + 1.4, (yAt(m, x) + hz) / 2], [x + 3, hz]]), 0.35, 0.55);
-    f = knock(f, [rect(-2, 122, 32.4, 33.4), rect(-2, 122, 36.4, 37.2)]);
+    f = clip(mp, knock(f, [rect(-2, 122, 32.4, 33.4), rect(-2, 122, 36.4, 37.2)]));
     s += f + clip(mp, line([[-2, 33.4], [122, 33.4]], 0.4, 0.7) + line([[-2, 37.2], [122, 37.2]], 0.35, 0.6));
     s += K.path(m, { w: 1.0 }) + line([[-2, hz], [122, hz]], 0.45, 0.7);
     // lake, the island's reflection, the causeway
-    const rf = [[3, hz]].concat(m.map((p) => [p[0], hz + (hz - p[1]) * 0.42]), [[120, hz]]);
+    const rf = [[3, hz]].concat(m.map((p) => [p[0], hz + (hz - p[1]) * 0.3]), [[120, hz]]);
     s += prule(R, 0, 120, hz + 0.8, 60, 0.7, 2.0, { w: 0.3, op: 0.45, seg: 9, gapw: 2.4 });
-    s += K.hatch(rf, { angle: 0, gap: 0.6, w: 0.28, op: 0.4, rng: R });
+    s += K.hatch(rf, { angle: 0, gap: 0.65, w: 0.25, op: 0.28, rng: R, breaks: 0.5 });
     s += line([[122, 47.6], [112, 41.6]], 0.45, 0.8) + line([[122, 48.6], [113, 41.8]], 0.35, 0.6);
     // shore with saltgrass, and the bison herd
     const sh = cr([[-2, 59.6], [20, 58.8], [40, 59.8], [62, 59], [84, 60], [104, 59.2], [122, 59.8]]);
@@ -616,36 +655,38 @@
     const R = K.rng('spiral-jetty');
     const hz = 17;
     const far = K.ridge(R, [[-2, 17], [8, 15.4], [18, 16.2], [30, 14], [42, 15.6], [52, 16.6], [64, 16.8], [78, 15], [92, 13.4], [104, 15.4], [122, 16.4]], 0.4, 1.0);
-    const rp = cr([[-2, 29], [6, 30.4], [13, 33], [19, 36.6], [23, 41], [25, 44.6], [21, 46.4], [12, 46.6], [4, 47.8], [-2, 49]]);
-    const shore = cr([[-2, 61.4], [10, 62.6], [22, 62], [36, 64.2], [48, 65.6], [62, 66.4], [76, 65.2], [90, 66.6], [104, 64.6], [122, 63.6]]);
+    // Rozel Point: rocky basalt hills coming down to the water on the left
+    const hill = K.ridge(R, [[-2, 21], [5, 19], [11, 21.5], [17, 23], [23, 26.5], [29, 29.6], [35, 32.4], [40, 34.6]], 0.6, 0.9);
+    const we = cr([[40, 34.6], [35, 37.4], [27, 40.6], [19, 44.4], [10, 47.6], [-2, 50.4]]);
+    const land = hill.concat(we.slice(1));
+    const shore = cr([[-2, 52], [8, 54.2], [20, 56.6], [34, 58.4], [50, 59.2], [64, 58.6], [78, 57.6], [86, 56.8], [92, 57], [104, 58.6], [122, 58]]);
     const fs = shore.concat([[122, 75], [-2, 75]]);
-    // the jetty in plan (u east, v north), projected: causeway north from shore, then a counterclockwise coil inward
-    const C = [54, 41.6], q = 0.4, r0 = 26, turns = 2.55, bw = 1.9;
+    // the jetty in plan (u east, v north), projected: a short causeway north from shore, then a counterclockwise coil inward
+    const C = [66, 40], q = 0.42, r0 = 24, turns = 2.6, bw = 1.9;
     const plan = [];
-    for (let v = -58; v < 0; v += 4) plan.push([r0, v]);
-    for (let i = 0; i <= 150; i++) { const t = i / 150, a = t * turns * Math.PI * 2, r = r0 * (1 - 0.9 * t); plan.push([r * Math.cos(a), r * Math.sin(a)]); }
+    for (let v = -40; v < 0; v += 4) plan.push([r0, v]);
+    for (let i = 0; i <= 130; i++) { const t = i / 130, a = t * turns * Math.PI * 2, r = r0 * (1 - 0.9 * t); plan.push([r * Math.cos(a), r * Math.sin(a)]); }
     const proj = (p) => [C[0] + p[0], C[1] - q * p[1]];
-    const edge = (off) => plan.map((p, i) => { const a = plan[Math.max(0, i - 1)], b = plan[Math.min(plan.length - 1, i + 1)]; let tx = b[0] - a[0], ty = b[1] - a[1]; const l = Math.hypot(tx, ty) || 1; return proj([p[0] - (ty / l) * off, p[1] + (tx / l) * off]); });
-    const jet = edge(bw).concat(edge(-bw).reverse()), halo = edge(bw + 1.7).concat(edge(-bw - 1.7).reverse());
-    const center = plan.map(proj);
-    let s = knock(sky(K, R, hz - 0.5), [under(far, hz + 1)]);
-    s += K.path(far, { w: 0.45, op: 0.55 }) + K.flank(far, { gap: 1.6, len: 1.6, w: 0.25, op: 0.35, rng: R });
+    const nrm = plan.map((p, i) => { const a = plan[Math.max(0, i - 1)], b = plan[Math.min(plan.length - 1, i + 1)]; const tx = b[0] - a[0], ty = b[1] - a[1], l = Math.hypot(tx, ty) || 1; return [-ty / l, tx / l]; });
+    const edge = (off) => plan.map((p, i) => proj([p[0] + nrm[i][0] * off, p[1] + nrm[i][1] * off]));
+    const jet = edge(bw).concat(edge(-bw).reverse()), halo = edge(bw + 1.8).concat(edge(-bw - 1.8).reverse());
+    let s = knock(sky(K, R, hz - 0.5), [under(far, hz + 1), land]);
+    s += knock(K.path(far, { w: 0.45, op: 0.55 }) + K.flank(far, { gap: 1.6, len: 1.6, w: 0.25, op: 0.35, rng: R }), [land]);
     // water: ruled, shimmering, knocked out by the white salt rim around the jetty
-    let w = prule(R, 0, 120, hz + 0.6, 66, 0.7, 2.3, { w: 0.28, op: 0.5, seg: 8, gapw: 2.4 });
-    w = knock(w, [rp.concat([[-2, 49]]), fs, halo, { d: pd(center), w: 4.5 }]);
-    s += w;
-    // Rozel Point: dark basalt headland, old pilings off its tip
-    s += clip(rp, K.hatch(rp, { angle: 60, gap: 0.8, w: 0.28, op: 0.55, rng: R }) + K.hatch(rp, { angle: 130, gap: 1.3, w: 0.25, op: 0.4, rng: R }) + K.stipple(rp, { n: 50, r: 0.4, op: 0.6, rng: R }));
-    s += line(rp.slice(0, 7), 0.75, 0.95) + line(rp.slice(6), 0.45, 0.7);
+    let w = prule(R, 0, 120, hz + 0.6, 60, 0.7, 2.2, { w: 0.28, op: 0.5, seg: 8, gapw: 2.4 });
+    s += knock(w, [land, fs, halo]);
+    s += clip(land, K.flank(hill, { gap: 0.8, len: 20, w: 0.3, op: 0.5, rng: R }) + K.hatch(land, { angle: 62, gap: 1.0, w: 0.26, op: 0.45, rng: R }) + K.hatch(land, { angle: 128, gap: 1.6, w: 0.24, op: 0.3, rng: R }) + K.stipple(land, { n: 70, r: 0.38, op: 0.6, rng: R }));
+    s += K.path(hill, { w: 0.85 }) + line(we, 0.5, 0.75);
     let pil = '';
-    for (let i = 0; i < 7; i++) pil += 'M' + pt([27 + i * 1.6, 45 + i * 0.25]) + 'v-' + r2(1.2 + R() * 0.6);
+    for (let i = 0; i < 5; i++) pil += 'M' + pt([30 + i * 1.6, 40.6 + i * 0.35]) + 'v-' + r2(1.1 + R() * 0.6);
     s += S(pil, 0.4, 0.8);
-    // the coil: dark basalt, salt-white rims
-    s += fillp(jet, 0.5, 0.3, 0.9) + K.stipple(jet, { n: 260, r: 0.32, op: 0.75, rng: R });
-    s += line(edge(bw), 0.35, 0.9) + line(edge(-bw), 0.35, 0.9);
-    // foreground shore: basalt boulders on salt-crusted mud
+    // the coil: dark basalt boulders, salt-white rims
+    let rk = '';
+    for (let i = 0; i < plan.length; i++) for (let k = 0; k < 2; k++) { const o = (R() - 0.5) * 2 * bw * 0.8, p = proj([plan[i][0] + nrm[i][0] * o + (R() - 0.5) * 1.6, plan[i][1] + nrm[i][1] * o + (R() - 0.5) * 1.6]); rk += 'M' + pt(p) + 'h0.01'; }
+    s += fillp(jet, 0.5, 0.3, 0.9) + S(rk, 0.7, 0.75) + line(edge(bw), 0.35, 0.9) + line(edge(-bw), 0.35, 0.9);
+    // foreground: the hillside we stand on, basalt boulders on salt-crusted mud
     s += line(shore, 0.7, 0.9) + clip(fs, K.hatch(fs, { angle: -10, gap: 1.4, w: 0.25, op: 0.3, rng: R }));
-    s += rocks(R, [[6, 66, 2.2], [13, 69, 1.6], [24, 66.8, 1.2], [34, 71, 2.6], [44, 68.4, 1.0], [96, 69.4, 1.8], [106, 67, 1.3], [113, 71.4, 2.4]], { w: 0.5 });
+    s += rocks(R, [[6, 62, 2.2], [13, 66, 1.6], [24, 63.4, 1.2], [34, 69, 2.6], [46, 65, 1.0], [97, 66, 1.8], [106, 63.6, 1.3], [113, 69.4, 2.4]], { w: 0.5 });
     return plate(K, s);
   };
 })();

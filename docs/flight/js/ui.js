@@ -107,6 +107,7 @@
     $('#r-alt').textContent = n0(pos.alt);
     $('#r-alt-tr').textContent = pos.vr > 300 ? '↑' : pos.vr < -300 ? '↓' : '';
     $('#r-gs').textContent = n0(pos.gs);
+    $('#r-mph').textContent = pos.gs == null ? '—' : n0(pos.gs * 1.15078);
     $('#r-trk').textContent = String(Math.round(G.norm360(pos.trk || 0))).padStart(3, '0') + '°';
     $('#r-oat').textContent = minus(Math.round(oat(pos)));
     // look-out line
