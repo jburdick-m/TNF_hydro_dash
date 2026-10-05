@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" data-theme="day">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AA2735 Window Atlas</title>
+<meta name="description" content="A window-seat atlas for American Airlines AA2735, Chicago to Sacramento along the 40th parallel.">
+<meta name="theme-color" content="#E8EBE4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Window Atlas">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=B612+Mono:wght@400;700&family=B612:ital,wght@0,400;0,700;1,400&family=IM+Fell+DW+Pica:ital@0;1&display=swap">
+<link rel="stylesheet" href="vendor/maplibre/maplibre-gl.css">
+<link rel="stylesheet" href="css/app.css">
+<script>
+  // initial theme guess before anything paints
+  (function () {
+    var q = new URLSearchParams(location.search).get('theme'), m = null;
+    try { m = JSON.parse(localStorage.getItem('wa.theme')); } catch (e) {}
+    var t = q === 'day' || q === 'night' ? q : m === 'day' || m === 'night' ? m : (matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day');
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
+</head>
+<body>
+<div id="map" aria-label="Chart of the route"></div>
+<div class="scrim scrim-top" aria-hidden="true"></div>
+<div class="scrim scrim-bottom" aria-hidden="true"></div>
+
+<header id="hud-id" class="ov">
+  <div class="flt">AA2735</div>
+  <div class="legline"><span id="hud-leg">ORD → SMF</span> <span id="hud-phase" class="phase"></span></div>
+  <div class="prog" aria-hidden="true">
+    <span id="hud-dep" class="pt"></span>
+    <span class="rule"><span id="prog-fill" class="fill"></span><span id="prog-plane" class="pplane"><svg viewBox="-10 -10 20 20" width="14" height="14"><path d="M10 0 L-6 -6 L-3 0 L-6 6 Z" /></svg></span></span>
+    <span id="hud-arr" class="pt"></span>
+  </div>
+</header>
+
+<div id="hud-tr" class="ov">
+  <button id="src-tag" class="tag" data-src="EST" aria-label="Position source; open settings">EST</button>
+  <button id="theme-btn" class="tag tbtn" aria-label="Theme: cycle auto, day, night">AUTO</button>
+</div>
+
+<div id="cam" class="seg cam ov" role="group" aria-label="Camera">
+  <button data-cam="window" aria-pressed="true">Window</button><button data-cam="chase" aria-pressed="false">Chase</button><button data-cam="map" aria-pressed="false">Map</button>
+</div>
+<button id="follow" class="tag follow ov" hidden>Follow</button>
+
+<button id="readouts" class="ov" aria-label="Instruments; open details">
+  <span class="rd"><span class="rl">ALT</span><span class="rv"><span id="r-alt">—</span><span id="r-alt-tr" class="tr"></span></span><span class="ru">FT</span></span>
+  <span class="rd"><span class="rl">GS</span><span class="rv" id="r-gs">—</span><span class="ru">KT</span></span>
+  <span class="rd"><span class="rl">TRK</span><span class="rv" id="r-trk">—</span><span class="ru">TRUE</span></span>
+  <span class="rd"><span class="rl">OAT</span><span class="rv" id="r-oat">—</span><span class="ru">°C</span></span>
+</button>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="synchint" class="ov">Tap the map where you see you are · Esc to cancel</div>
+
+<footer id="bottom" class="ov">
+  <div id="pvbar" hidden>
+    <span class="sc">Preview</span>
+    <input id="pv-range" type="range" min="0" max="1000" value="0" aria-label="Preview position along the flight">
+    <span id="pv-time" class="mono"></span>
+    <button id="pv-60" class="tag" aria-pressed="false">60×</button><button id="pv-240" class="tag" aria-pressed="false">240×</button><button id="pv-live" class="tag">Live</button>
+  </div>
+  <div class="aux"><span id="below"></span><button id="wxline" class="linkish"></button></div>
+  <button id="lookout" aria-label="Next feature on your side; open the look-out list">
+    <span class="lo-label sc">Look out</span>
+    <span class="lo-when"></span>
+    <span class="lo-name"></span>
+    <span class="lo-tag"></span>
+  </button>
+</footer>
+
+<section id="sheet" aria-label="Atlas" aria-hidden="true">
+  <div class="sheet-head">
+    <nav id="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" data-tab="look" aria-selected="true">Look out</button>
+      <button role="tab" data-tab="strip" aria-selected="false">Strip</button>
+      <button role="tab" data-tab="inst" aria-selected="false">Instruments</button>
+      <button role="tab" data-tab="wx" aria-selected="false">Weather</button>
+      <button role="tab" data-tab="fires" aria-selected="false">Fires</button>
+      <button role="tab" data-tab="set" aria-selected="false">Settings</button>
+    </nav>
+    <div class="sheet-ctl"><button id="sheet-grow" class="txtbtn" aria-label="Expand or shrink">⇕</button><button id="sheet-close" class="txtbtn" aria-label="Close">Close</button></div>
+  </div>
+  <div id="sheet-body">
+    <div class="panel" id="p-look">
+      <div id="look-filter" class="seg" role="group" aria-label="Filter"><button data-f="mine" aria-pressed="true">Your side</button><button data-f="both" aria-pressed="false">Both sides</button></div>
+      <div id="look-list"></div>
+    </div>
+    <div class="panel" id="p-strip" hidden><div id="strip"></div></div>
+    <div class="panel" id="p-inst" hidden><div id="inst"></div></div>
+    <div class="panel" id="p-wx" hidden><div id="wx"></div></div>
+    <div class="panel" id="p-fires" hidden><div id="fires"></div></div>
+    <div class="panel" id="p-set" hidden><div id="set"></div></div>
+    <article class="panel" id="p-detail" hidden></article>
+  </div>
+</section>
+
+<script src="data/route.js"></script>
+<script src="js/relay-feed.js"></script>
+<script src="vendor/maplibre/maplibre-gl.js"></script>
+<script src="js/geo.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/map.js"></script>
+<script src="js/live.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

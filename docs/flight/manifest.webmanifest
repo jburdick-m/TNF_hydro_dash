@@ -1,0 +1,15 @@
+{
+  "name": "AA2735 Window Atlas",
+  "short_name": "Window Atlas",
+  "description": "A window-seat atlas for AA2735, Chicago to Sacramento along the 40th parallel.",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#E8EBE4",
+  "theme_color": "#E8EBE4",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

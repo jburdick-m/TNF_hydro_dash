@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#E8EBE4"/>
+  <g fill="none" stroke="#1C2629">
+    <circle cx="256" cy="256" r="176" stroke-width="3"/>
+    <circle cx="256" cy="256" r="164" stroke-width="1.2"/>
+    <circle cx="256" cy="256" r="120" stroke-width="1" stroke-dasharray="2 6"/>
+  </g>
+  <g stroke="#1C2629" stroke-width="1.5">
+    <path d="M256 80v24M256 408v24M80 256h24M408 256h24"/>
+  </g>
+  <g id="t" stroke="#4C5A5E" stroke-width="1.2"></g>
+  <path d="M256 70 L278 256 L256 442 L234 256 Z" fill="#1C2629"/>
+  <path d="M256 70 L278 256 L256 256 Z" fill="#E8EBE4" stroke="#1C2629" stroke-width="2"/>
+  <path d="M256 442 L234 256 L256 256 Z" fill="#E8EBE4" stroke="#1C2629" stroke-width="2"/>
+  <path d="M70 256 L256 234 L442 256 L256 278 Z" fill="#1C2629"/>
+  <path d="M442 256 L256 234 L256 256 Z" fill="#E8EBE4" stroke="#1C2629" stroke-width="2"/>
+  <path d="M70 256 L256 278 L256 256 Z" fill="#E8EBE4" stroke="#1C2629" stroke-width="2"/>
+  <path d="M120 300 C 200 280, 300 240, 400 214" fill="none" stroke="#A8336B" stroke-width="10" stroke-dasharray="26 14" stroke-linecap="round"/>
+  <circle cx="256" cy="256" r="12" fill="#A8336B" stroke="#E8EBE4" stroke-width="4"/>
+  <text x="256" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="40" fill="#1C2629">N</text>
+</svg>
