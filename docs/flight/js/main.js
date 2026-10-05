@@ -12,6 +12,7 @@
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.content = t === 'night' ? '#0E1519' : '#E8EBE4';
     WA.map.recolor();
+    WA.emit('theme', t);
   }
   function autoTheme() {
     if (WA.themeMode !== 'auto') return applyTheme(WA.themeMode);
