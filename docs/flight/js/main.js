@@ -100,6 +100,7 @@
     WA.on('tick', () => { WA.computePos(); frame(true); });
 
     loadScript('js/illustrations.js', 0);
+    ['js/plates-sierra.js', 'js/plates-basin.js', 'js/plates-rockies.js'].forEach((f) => loadScript(f, 0));
     loadScript('data/pois.js', 0);
     loadScript('data/pois-extra.js', 0);
 

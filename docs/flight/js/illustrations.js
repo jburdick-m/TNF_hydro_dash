@@ -40,7 +40,11 @@
 
   /* ---------------- scene state: layers, occluders, vignette ---------------- */
   var LAY, ORD, VIG, MASK, MW, MH, RH, MS = 4, VL = null;
-  var SW = { f: '.42', h: '.6', m: '.85', b: '1.1', x: '1.35', w: '1.55' };
+  // Burin weights. Tone comes from line density, not weight: hairlines for hatching (f, h),
+  // a firmer line for secondary outlines (m) and the one crisp silhouette per plate (b).
+  // Each weight is a CSS var so small renderings (billboards, strip map) can thicken them.
+  var SW = { f: '.26', h: '.36', m: '.5', b: '.78', x: '1.1', w: '1.3' };
+  var HD = .74; // global hatch density (spacing multiplier)
   function begin(seed, w, h, vig) {
     rnd = mul((seed * 2654435761) >>> 0);
     LAY = {}; ORD = []; VIG = vig !== false; MASK = null;
@@ -51,7 +55,7 @@
     var s = '', ks = ORD.filter(function (k) { return k[0] === 't'; }).concat(ORD.filter(function (k) { return k[0] !== 't'; }));
     ks.forEach(function (k) {
       var a = k[0] === 't' ? 'fill="currentColor" fill-opacity="' + k.slice(1) + '" stroke="none"'
-        : 'stroke-width="' + SW[k[0]] + '"' + (k.length > 1 ? ' stroke="var(--magenta, #A8336B)"' : '');
+        : 'style="stroke-width:var(--iw-' + k[0] + ',' + SW[k[0]] + ')"' + (k.length > 1 ? ' stroke="var(--magenta, #A8336B)"' : '');
       s += '<path ' + a + ' d="' + LAY[k].join('') + '"/>';
     });
     return s + (extra || '');
@@ -158,6 +162,7 @@
       Q.push([u, w]); if (w < v0) v0 = w; if (w > v1) v1 = w;
     }
     var g = ph == null ? rnd() : ph, k = 0;
+    sp *= HD;
     for (var v = v0 + sp * rr(.2, .8); v < v1; v += sp, k++) {
       var xs = [];
       for (i = 0, j = Q.length - 1; i < Q.length; j = i++) {
@@ -267,22 +272,55 @@
     var dn = o.d == null ? 1 : o.d, lit = o.lit == null ? .22 : o.lit, sw = o.sw || 'h', len = o.len || 1, snow = o.snow;
     if (snow) lit = M.max(lit, .45);
     ln(p, o.ol || 'm', .03);
-    for (var i = 1; i < p.length - 1; i++) {
-      var q = p[i], sl = (p[i + 1][1] - p[i - 1][1]) / (p[i + 1][0] - p[i - 1][0]), dep = base - q[1];
+    var P = rs(p, o.fs || .5), f = prof(p);
+    for (var i = 1; i < P.length - 1; i++) {
+      var q = P[i], sl = (P[i + 1][1] - P[i - 1][1]) / (P[i + 1][0] - P[i - 1][0]), dep = base - q[1];
       if (dep < .8) continue;
-      var sh = sl > .06, pr = (sh ? cl(.45 + sl * .8, 0, 1) : lit) * dn;
+      var sh = sl > .06, pr = (sh ? cl(.5 + sl * .8, 0, 1) : lit * .8) * dn;
       if (rnd() > pr) continue;
-      var L = dep * (sh ? rr(.45, 1) : snow ? rr(.35, .9) : rr(.08, .4)) * len, le = cl(sl, -1.6, 1.6) * .38 + rr(-.08, .08), pts = [];
+      var L = dep * (sh ? rr(.45, 1) : snow ? rr(.35, .9) : rr(.06, .34)) * len, le = cl(sl, -1.6, 1.6) * .38 + rr(-.08, .08), pts = [];
       for (var k = 0; k <= 5; k++) { var t = k / 5; pts.push([q[0] + le * L * t * (1 - .3 * t), q[1] + .45 + L * t]); }
       tl(pts, sw, snow ? snowTone(snow, sh) : 1, rr(0, .35));
+    }
+    // cross-hatching: contour-following strokes laid over the deepest shadowed faces
+    if (o.xh !== false && dn >= .75) {
+      var ext = [[p[0][0], base], [p[p.length - 1][0], base]], poly = p.concat(ext.reverse());
+      hatch(poly, o.xa == null ? 24 : o.xa, .95, o.xs || 'f', function (x, y) {
+        var a = f(x - .9), b = f(x + .9), c = f(x); if (a === null || b === null) return 0;
+        var s = (b - a) / 1.8, d = y - c, H = base - c;
+        if (d < .6 || d > H * .85 * len) return 0;
+        if (snow && snow(x, y)) return 0;
+        return cl((s - .28) * 1.1, 0, .9) * (.55 + .45 * vn(x * .35, y * .35)) * (dn > 1 ? 1 : .8);
+      });
     }
     if (o.occ !== false) occR(p);
   }
   function snowTone(snow, sh) { return function (x, y) { return snow(x, y) ? (sh ? .45 : 0) : 1; }; }
+  // engraved sky: evenly ruled horizontals, densest at the zenith, clearing toward the horizon,
+  // broken into soft banks by low-frequency noise
   function sky(y0, y1, t) {
-    hatch([[-2, y0], [122, y0], [122, y1], [-2, y1]], 0, 1.5, 'f', function (x, y) {
-      return t * .75 * (.2 + .8 * cl((y1 - y) / (y1 - y0), 0, 1)) * (.15 + .85 * vn(x * .1 + 3, y * .45));
-    });
+    hatch([[-2, y0], [122, y0], [122, y1], [-2, y1]], 0, 1.05, 'f', function (x, y) {
+      return t * .85 * (.15 + .85 * M.pow(cl((y1 - y) / (y1 - y0), 0, 1), .8)) * (.25 + .75 * vn(x * .07 + 3, y * .32));
+    }, .5);
+  }
+  // still water: close horizontal ruling, finer and tighter with distance, broken by glints
+  function water(y0, y1, t, tf) {
+    for (var y = y0 + .35, g = .38, k = 0; y < y1; y += g, g = M.min(1.25, g * 1.045), k++) {
+      (function (y, k) {
+        var z = noise(), base = t * (.55 + .45 * sm(y0, y1, y));
+        tl([[-2, y], [122, y]], y - y0 < 4 ? 'f' : 'h', function (x) {
+          var v = base * (.7 + .5 * z(x * .09 + k)) * (tf ? tf(x, y) : 1);
+          return v * (vn(x * .5, y * 3) > .18 ? 1 : 0);
+        }, (k * .618 + .1) % 1 * .85 + .05, .6);
+      })(y, k);
+    }
+  }
+  // stipple: dots placed where tone(x,y) beats a random threshold
+  function stip(x0, y0, x1, y1, sp, tn, st) {
+    for (var y = y0, r = 0; y < y1; y += sp * .86, r++) for (var x = x0 + (r & 1) * sp * .5; x < x1; x += sp) {
+      var px = x + rr(-.4, .4) * sp, py = y + rr(-.4, .4) * sp, t = tn(px, py);
+      if (t > rnd() && vis(px, py) > rnd() * .6) put(st || 'h', 'M' + n1(px) + ' ' + n1(py) + 'h.05');
+    }
   }
   function cloud(cx, cy, w, h) {
     var n = M.max(3, M.round(w / 4.5)), bs = [], i;

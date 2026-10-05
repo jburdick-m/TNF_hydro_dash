@@ -12,9 +12,9 @@
     try { if (document.currentScript && document.currentScript.src) return new URL('../vendor/maplibre-contour/maplibre-contour.min.js', document.currentScript.src).href; } catch (e) { /* */ }
     return 'vendor/maplibre-contour/maplibre-contour.min.js';
   })();
-  // Contour intervals in feet, keyed by TILE zoom. The source uses 256-px tiles, so tile zoom = map zoom + 1.
+  // Contour intervals in feet, [minor, index], keyed by tile zoom (= map zoom for 512-px vector tiles).
   // Index intervals nest (4000 > 2000 > 1000 > 500 > 200) so lines never jump between tile zooms in the pitched view.
-  const THRESHOLDS = { 1: [2000, 4000], 7: [500, 2000], 9: [200, 1000], 12: [100, 500], 14: [40, 200] };
+  const THRESHOLDS = { 0: [2000, 4000], 6: [500, 2000], 8: [200, 1000], 11: [100, 500], 13: [40, 200] };
 
   let loading = null, dem = null, demUrl = null, want = false, gen = 0;
 
@@ -87,7 +87,7 @@
     }
     if (!map.getSource(SRC)) {
       map.addSource(SRC, {
-        type: 'vector', tileSize: 256, maxzoom: 14,
+        type: 'vector', maxzoom: 13,
         tiles: [dem.contourProtocolUrl({ multiplier: 3.28084, thresholds: THRESHOLDS, elevationKey: 'ele', levelKey: 'level', contourLayer: 'contours', extent: 4096, buffer: 1 })],
         attribution: 'Contours: maplibre-contour',
       });
