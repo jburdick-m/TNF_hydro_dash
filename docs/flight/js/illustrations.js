@@ -83,9 +83,9 @@
   }
   // ragged oval vignette: 1 inside, fading to 0 at a wavy elliptical edge
   function vgc(x, y) {
-    var dx = (x - 60) / 57.5, dy = (y - 36) / 34.5, r = M.sqrt(dx * dx + dy * dy), t = M.atan2(dy, dx);
-    r /= 1 + .035 * M.sin(5 * t + 1.3) + .025 * M.sin(9 * t + .4) + .02 * M.sin(17 * t + 2.1);
-    return r >= 1 ? 0 : r < .66 ? 1 : (1 - r) / .34;
+    var dx = (x - 60) / 56.5, dy = (y - 36) / 34, r = M.sqrt(dx * dx + dy * dy), t = M.atan2(dy, dx);
+    r /= 1 + .04 * M.sin(5 * t + 1.3) + .03 * M.sin(9 * t + .4) + .025 * M.sin(17 * t + 2.1);
+    return r >= 1 ? 0 : r < .52 ? 1 : 1 - sm(.52, 1, r);
   }
   function vg(x, y) {
     if (!VIG) return 1;
@@ -110,30 +110,45 @@
     if (mi < 0) return;
     keep[mi] = 1; rdpF(r, a, mi, keep); rdpF(r, mi, b, keep);
   }
-  function emit(r, st, straight) {
-    var n = r.length, m = n >> 1;
+  var RB = new Float64Array(1 << 15), KB = new Uint8Array(1 << 14), RN = 0;
+  function emit(st) {
+    var n = RN, m = n >> 1, r = RB; RN = 0;
     if (n < 4 || (n === 4 && M.abs(r[0] - r[2]) + M.abs(r[1] - r[3]) < .3)) return;
-    if (straight) { put(st, 'M' + n1(r[0]) + ' ' + n1(r[1]) + 'L' + n1(r[n - 2]) + ' ' + n1(r[n - 1])); return; }
-    var keep = new Uint8Array(m), s = '', c = 0; keep[0] = keep[m - 1] = 1; rdpF(r, 0, m - 1, keep);
-    for (var i = 0; i < m; i++) if (keep[i]) { s += (c === 0 ? 'M' : c === 1 ? 'L' : ' ') + n1(r[2 * i]) + ' ' + n1(r[2 * i + 1]); c++; }
+    KB.fill(0, 0, m); KB[0] = KB[m - 1] = 1; rdpF(r, 0, m - 1, KB);
+    var s = '', c = 0;
+    for (var i = 0; i < m; i++) if (KB[i]) { s += (c === 0 ? 'M' : c === 1 ? 'L' : ' ') + n1(r[2 * i]) + ' ' + n1(r[2 * i + 1]); c++; }
     put(st, s);
   }
   // toned line: sampled along its length, kept where tone x visibility exceeds the threshold
   function tl(p, st, tone, th, step) {
-    step = step || .7;
-    var fn = typeof tone === 'function', tc = tone == null ? 1 : tone, run = [], straight = p.length === 2;
+    if (p.length === 2) return seg(p[0][0], p[0][1], p[1][0], p[1][1], st, tone, th, step);
+    step = step || .85;
+    var fn = typeof tone === 'function', tc = tone == null ? 1 : tone; RN = 0;
     if (!fn && tc <= th) return;
     for (var s = 1; s < p.length; s++) {
       var ax = p[s - 1][0], ay = p[s - 1][1], bx = p[s][0], by = p[s][1], n = M.ceil(M.sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)) / step) || 1;
       for (var k = s === 1 ? 0 : 1; k <= n; k++) {
         var x = ax + (bx - ax) * k / n, y = ay + (by - ay) * k / n, t = fn ? tone(x, y) : tc;
-        if (t > th && t * vis(x, y) > th) run.push(x, y);
-        else if (run.length) { emit(run, st, straight); run = []; }
+        if (t > th && t * vis(x, y) > th) { if (RN < 32760) { RB[RN++] = x; RB[RN++] = y; } }
+        else if (RN) emit(st);
       }
     }
-    if (run.length) emit(run, st, straight);
+    if (RN) emit(st);
   }
-  function ln(p, st, th) { tl(p, st, 1, th == null ? rr(0, .2) : th); }
+  // straight toned segment: only the run end points are needed
+  function seg(ax, ay, bx, by, st, tone, th, step) {
+    var fn = typeof tone === 'function', tc = tone == null ? 1 : tone;
+    if (!fn && tc <= th) return;
+    var n = M.ceil(M.sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)) / (step || .75)) || 1, on = false, sx = 0, sy = 0, lx = 0, ly = 0;
+    for (var k = 0; k <= n; k++) {
+      var x = ax + (bx - ax) * k / n, y = ay + (by - ay) * k / n, t = fn ? tone(x, y) : tc;
+      if (t > th && t * vis(x, y) > th) { if (!on) { on = true; sx = x; sy = y; } lx = x; ly = y; }
+      else if (on) { on = false; segOut(st, sx, sy, lx, ly); }
+    }
+    if (on) segOut(st, sx, sy, lx, ly);
+  }
+  function segOut(st, sx, sy, lx, ly) { if (M.abs(sx - lx) + M.abs(sy - ly) >= .3) put(st, 'M' + n1(sx) + ' ' + n1(sy) + 'L' + n1(lx) + ' ' + n1(ly)); }
+  function ln(p, st, th) { tl(p, st, 1, th == null ? rr(.1, .35) : th); }
   function lnc(p, st, th) { ln(p.concat([p[0]]), st, th); }
   // parallel hatching clipped to polygon P; line k drawn where tone > golden-sequence threshold
   function hatch(P, ang, sp, st, tone, ph) {
@@ -152,7 +167,7 @@
       xs.sort(function (p, q) { return p - q; });
       var th = (g + k * .618034) % 1 * .96 + .02;
       for (var m = 0; m + 1 < xs.length; m += 2)
-        tl([[xs[m] * c - v * s, xs[m] * s + v * c], [xs[m + 1] * c - v * s, xs[m + 1] * s + v * c]], st, tone, th);
+        seg(xs[m] * c - v * s, xs[m] * s + v * c, xs[m + 1] * c - v * s, xs[m + 1] * s + v * c, st, tone, th, 1);
     }
   }
   // flat tone fill, clipped to the smooth oval (Sutherland-Hodgman)
@@ -241,7 +256,7 @@
         var q = pk[i], t = M.abs(x - q[0]) / q[2];
         if (t < 1) { var e = q[3] == null ? 1.3 : q[3], v = q[1] * (e ? M.pow(1 - t, e) : .5 + .5 * M.cos(PI * t)); if (v > h) h = v; }
       }
-      h += (rough || 0) * fbm(nz, x * .2) * (.35 + h / 25);
+      h += (rough || 0) * fbm(nz, x * .28) * (.35 + h / 22);
       p.push([x, base - M.max(0, h)]);
     }
     return p;
@@ -265,8 +280,8 @@
   }
   function snowTone(snow, sh) { return function (x, y) { return snow(x, y) ? (sh ? .45 : 0) : 1; }; }
   function sky(y0, y1, t) {
-    hatch([[-2, y0], [122, y0], [122, y1], [-2, y1]], 0, 1.45, 'f', function (x, y) {
-      return t * (.25 + .75 * cl((y1 - y) / (y1 - y0), 0, 1)) * (.55 + .45 * vn(x * .06, y * .3));
+    hatch([[-2, y0], [122, y0], [122, y1], [-2, y1]], 0, 1.5, 'f', function (x, y) {
+      return t * .75 * (.2 + .8 * cl((y1 - y) / (y1 - y0), 0, 1)) * (.15 + .85 * vn(x * .1 + 3, y * .45));
     });
   }
   function cloud(cx, cy, w, h) {
@@ -329,9 +344,9 @@
   G.range = function () {
     begin(11);
     ground(60, .5); tufts(62, 71, 12);
-    var a = ridge(-2, 122, 61, [[12, 15, 24, 1.1], [40, 7, 16, 1], [80, 5, 14], [106, 13, 22, 1.2]], 2);
+    var a = ridge(-2, 122, 61, [[12, 15, 24, 1.1], [40, 7, 16, 1], [80, 5, 14], [106, 13, 22, 1.2]], 2.8);
     mtn(a, 66, { ol: 'b', d: 1.15 });
-    var b = ridge(-2, 122, 53, [[26, 21, 26, 1.4], [57, 31, 24, 1.6], [69, 25, 14, 1.3], [97, 22, 24, 1.4]], 2.5);
+    var b = ridge(-2, 122, 53, [[26, 21, 26, 1.4], [57, 31, 24, 1.6], [69, 25, 14, 1.3], [97, 22, 24, 1.4]], 3.6);
     mtn(b, 58);
     var c = ridge(-2, 122, 45, [[8, 15, 18], [40, 21, 20, 1.5], [85, 27, 26, 1.6], [116, 15, 18]], 1.5);
     mtn(c, 48, { d: .5, sw: 'f', ol: 'h', len: .7 });
@@ -345,7 +360,7 @@
     var f = ridge(-2, 58, 66, [[2, 20, 34, 1.1], [34, 8, 18, 1]], 2);
     mtn(f, 74, { ol: 'b', d: 1.2 });
     var snow = function (x, y) { return y < 30 + 3 * M.sin(x * .9) + 2 * M.sin(x * 2.3); };
-    var p = ridge(-2, 122, 58, [[58, 50, 38, 1.45], [93, 27, 22, 1.3], [22, 19, 22, 1.2], [118, 16, 14]], 2.2);
+    var p = ridge(-2, 122, 58, [[58, 50, 38, 1.45], [93, 27, 22, 1.3], [22, 19, 22, 1.2], [118, 16, 14]], 3.2);
     mtn(p, 63, { snow: snow, d: 1.15, ol: 'b' });
     var b = ridge(-2, 122, 45, [[10, 19, 20, 1.3], [108, 23, 22, 1.4], [76, 13, 14]], 1.2);
     mtn(b, 48, { d: .4, sw: 'f', ol: 'h', len: .6 });
@@ -371,7 +386,7 @@
     var v = ridge(-4, 124, 58, [[54, 50, 62, 1.85], [80, 31, 20, 1.5]], 1.1, .7);
     v.forEach(function (q) { if (q[1] < 11) q[1] = 11 + .5 * M.sin(q[0] * 2.3); });
     mtn(v, 62, { snow: snow, d: 1.15, ol: 'b' });
-    lens(56, 4.5, 20);
+    lens(58, 7.5, 18);
     sky(1, 32, .5);
     return end();
   };
@@ -468,23 +483,23 @@
 
   G.river = function () {
     begin(71);
-    var hz = 22, K = 50, pj = function (X, D) { return [60 + X * K / D, hz + K / D]; };
-    var C = [], X = -4.3, D = 3.85, ax = M.atan2(.9 - 3.85, .8 + 4.3), ds = .01, ph = .9, i, k, t, c;
+    var hz = 15, K = 58, pj = function (X, D) { return [60 + X * K / D, hz + K / D]; };
+    var C = [], X = -3.8, D = 3.3, ax = M.atan2(.95 - 3.3, .55 + 3.8), ds = .01, ph = .9, i, k, t, c;
     while (D > .8 && C.length < 5000) {
-      var lam = 1.1 + .62 * D, om = 1.62, th = ax + om * M.sin(ph);
+      var lam = 1.25 + .5 * D, om = 1.72, th = ax + om * M.sin(ph);
       C.push([X, D, th, om * M.cos(ph) * TAU / lam]);
       X += M.cos(th) * ds; D += M.sin(th) * ds; ph += TAU * ds / lam;
     }
-    var w = .07, L1 = [], L2 = [];
+    var w = .075, L1 = [], L2 = [];
     for (i = 0; i < C.length; i += 2) { c = C[i]; var nx = -M.sin(c[2]), nd = M.cos(c[2]); L1.push(pj(c[0] + nx * w, c[1] + nd * w)); L2.push(pj(c[0] - nx * w, c[1] - nd * w)); }
     var RP = L1.concat(L2.slice().reverse());
-    hatch(RP, 0, .62, 'f', .8);
-    ln(L1, 'm', .02); ln(L2, 'm', .02);
+    hatch(RP, 0, .7, 'f', .6);
+    ln(L1, 'm', .04); ln(L2, 'm', .04);
     mask(RP);
     // oxbow lakes cut off from old bends
     var OX = [], tries = 0;
     while (OX.length < 3 && tries++ < 300) {
-      var oD = rr(1.1, 3.2), oX = rr(-1.05, 1.05) * oD, r = rr(.17, .27) * (.6 + oD * .2), sp = pj(oX, oD), ok = vg(sp[0], sp[1]) > .5;
+      var oD = rr(1.1, 2.8), oX = rr(-1.05, 1.05) * oD, r = rr(.17, .27) * (.6 + oD * .2), sp = pj(oX, oD), ok = vg(sp[0], sp[1]) > .5;
       for (i = 0; ok && i < C.length; i += 4) if (M.hypot(C[i][0] - oX, C[i][1] - oD) < r + w + .12) ok = false;
       for (k = 0; ok && k < OX.length; k++) if (M.hypot(OX[k][0] - oX, OX[k][1] - oD) < r + OX[k][2] + .1) ok = false;
       if (!ok) continue;
@@ -495,7 +510,7 @@
         O1.push(pj(oX + (r + ww) * M.cos(a), oD + (r + ww) * M.sin(a))); O2.push(pj(oX + (r - ww) * M.cos(a), oD + (r - ww) * M.sin(a)));
       }
       var OP = O1.concat(O2.slice().reverse());
-      hatch(OP, 0, .62, 'f', .75); ln(O1, 'h', .02); ln(O2, 'h', .02); mask(OP);
+      hatch(OP, 0, .75, 'f', .5); ln(O1, 'h', .04); ln(O2, 'h', .04); mask(OP);
       for (k = 1; k <= 3; k++) {
         var sc = []; for (t = .1; t <= .9; t += .04) { var a2 = a0 + t * 4.5; sc.push(pj(oX + (r - w - k * .045) * M.cos(a2), oD + (r - w - k * .045) * M.sin(a2))); }
         tl(sc, 'f', .7, rr(0, .3));
@@ -507,9 +522,9 @@
       for (i = 0; i < C.length; i += 2) {
         c = C[i]; var ka = c[3], sgn = ka > 0 ? 1 : -1, good = M.abs(ka) > 1.1 && M.abs(ka) * off < .75;
         if (good && (sg === 0 || sgn === sg)) { sg = sgn; run.push(pj(c[0] - M.sin(c[2]) * sgn * off, c[1] + M.cos(c[2]) * sgn * off)); }
-        else { if (run.length > 3) tl(run, 'f', .8, rr(0, .3)); run = []; sg = 0; }
+        else { if (run.length > 3) tl(run, 'f', 1, rr(.05, .3)); run = []; sg = 0; }
       }
-      if (run.length > 3) tl(run, 'f', .8, rr(0, .3));
+      if (run.length > 3) tl(run, 'f', 1, rr(.05, .3));
     }
     // cottonwoods on the cut banks
     for (i = 0; i < C.length; i += 9) {
@@ -518,10 +533,10 @@
       ln(ell(q[0], q[1], rc, rc * .8, PI, TAU, 7), 'h', .1);
     }
     var bl = ridge(-2, 122, hz + 1.5, [[12, 3.5, 14, 0], [36, 4.8, 16, 0], [64, 3, 12, 0], [90, 5.2, 18, 0], [113, 3.6, 12, 0]], 1, .8);
-    lines(hz + 1.5, 37, .35, .45, 1.12);
+    lines(hz + 1.5, 30, .3, .45, 1.12);
     mtn(bl, hz + 2.6, { d: .9, sw: 'f', ol: 'h' });
-    cloud(86, 9, 22, 5); cloud(30, 12, 12, 3);
-    sky(1, hz, .45);
+    cloud(84, 9.5, 18, 4);
+    sky(1, hz, .4);
     return end();
   };
 
@@ -674,7 +689,7 @@
     var RW = [[124, 15], [110, 17.5], [101, 22.5], [95, 29], [90, 41], [76, 61], [75, 67], [82, 76], [124, 76]];
     [[LW, -1, .4], [RW, 1, .85]].forEach(function (W) {
       var P = W[0], sd = W[1], edge = P.slice(1, 5);
-      hatch(P, 90, .7, 'h', function (x, y) { var ex = xAt(edge, y); return y < 41 && y > 18 && (x - ex) * sd < 2.6 && (x - ex) * sd > -.5 ? 0 : W[2] * (.7 + .3 * vn(x * .2, y * .1)); });
+      hatch(P, sd < 0 ? 72 : 102, .75, 'h', function (x, y) { var ex = xAt(edge, y); return y < 41 && y > 18 && (x - ex) * sd < 2.6 && (x - ex) * sd > -.5 ? 0 : W[2] * (.7 + .3 * vn(x * .2, y * .1)); });
       for (var y = 22; y < 74; y += rr(3, 5)) { var xe = y < 41 ? xAt(edge, y) - 2.6 * sd : xAt(P.slice(4, 7), y); ln([[xe, y], [xe - sd * rr(6, 14), y + rr(-.6, .6)]], 'h', .1); }
       ln(edge.map(function (q) { return [q[0] - 2.6 * sd, q[1]]; }), 'h', .05);
       ln(P.slice(1, 8), 'm', .02);
@@ -700,7 +715,7 @@
     var RB1 = [[50, 66], [44, 70], [36, 76]], RB2 = [[70, 66], [77, 70], [86, 76]];
     ln(RB1, 'h', .05); ln(RB2, 'h', .05);
     hatch(RB1.concat(RB2.slice().reverse()), 0, .9, 'f', .55);
-    lines(23, 41, .45, .7, 1.06);
+    lines(23, 41, .75, .5, 1.05);
     var ms = ridge(-2, 122, 23, [[30, 5, 10, .4], [62, 4, 8, .3], [88, 6, 12, .4]], .6);
     mtn(ms, 23.5, { d: .7, sw: 'f', ol: 'h' });
     sky(1, 22, .45);
@@ -777,9 +792,9 @@
       if (inF(px, py) && vis(px, py) > rnd() * .7) put('h', 'M' + n1(px) + ' ' + n1(py) + 'h.2');
     }
   }
-  function strata(tb, inF, sp, st, t) {
-    for (var d = sp * .5, k = 0; d < 30; d += sp, k++) {
-      var p = []; for (var x = -2; x <= 122; x += 2) p.push([x, tb(x) + d]);
+  function strata(tb, inF, sp, st, t, md) {
+    for (var d = sp * .5, k = 0; d < (md || 30); d += sp, k++) {
+      var p = []; for (var x = -2; x <= 122; x += 4) p.push([x, tb(x) + d]);
       tl(p, st, function (x, y) { return inF(x, y) ? t : 0; }, ((k * .618) % 1) * .5 + .02);
     }
   }
@@ -793,12 +808,12 @@
     var inL = function (j) { return function (x, y) { var s = sf(x); return s !== null && y > s && (j === 0 || y > bd[j - 1](x)) && y < bd[j](x); }; };
     fish(42, 48.5, 36);
     dots(inL(0), 1.9); for (i = 0; i < 6; i++) { var jx = rr(27, 45); ln([[jx, 10], [jx + rr(-.5, .5), 18]], 'f', .05); }
-    strata(bd[0], inL(1), .9, 'f', .6);
+    strata(bd[0], inL(1), .9, 'f', .6, 12);
     dots(inL(2), 1.6);
-    strata(bd[2], inL(3), 1.33, 'f', .95);
+    strata(bd[2], inL(3), 1.33, 'f', .95, 6);
     for (j = 0; j < 3; j++) for (var x = (j % 2) * 1.7; x < 122; x += 3.4) { var y0 = bd[2](x) + j * 1.33; tl([[x, y0], [x, y0 + 1.33]], 'f', function (x, y) { return inL(3)(x, y) ? 1 : 0; }, .05); }
-    strata(bd[3], inL(4), .3, 'h', 1);
-    strata(bd[4], inL(5), .72, 'f', .7);
+    strata(bd[3], inL(4), .3, 'h', 1, 3);
+    strata(bd[4], inL(5), .72, 'f', .7, 24);
     var in6 = inL(6);
     for (var y = 58, r = 0; y < 76; y += 3.1, r++) for (x = (r % 2) * 2.4; x < 122; x += 4.8) {
       var px = x + rr(-1, 1), py = y + rr(-.8, .8), a = rr(.7, 1.4), b = a * rr(.55, .8);
@@ -825,21 +840,20 @@
     }
     mask(O.concat(I.slice().reverse())); mask(H);
   }
-  function spike(x, y, h) {
-    var w = 1.25, F = [[x - w, y + 2.2], [x + w, y + 2.2], [x + w * .95, y - h], [x - w * .95, y - h]], S = [[x + w, y + 2.2], [x + w + 1.1, y + 1.7], [x + w + 1.0, y - h - .5], [x + w * .95, y - h]];
-    var HF = [[x - w - 2.8, y - h], [x + w + .2, y - h], [x + w + .2, y - h - 1.8], [x - w - 2.4, y - h - 2.3], [x - w - 3.0, y - h - 1.2]], HS = [[x + w + .2, y - h], [x + w + 1.3, y - h - .5], [x + w + 1.3, y - h - 2.3], [x + w + .2, y - h - 1.8]], HT = [[x - w - 2.4, y - h - 2.3], [x + w + .2, y - h - 1.8], [x + w + 1.3, y - h - 2.3], [x - w - 1.3, y - h - 2.8]];
-    hatch(S, 90, .45, 'h', .95); hatch(F, 90, 1, 'f', .25); hatch(HS, 90, .45, 'h', .95); hatch(HF, 0, .9, 'f', .35);
-    lnc(F, 'm', 0); lnc(S, 'm', 0); lnc(HF, 'm', 0); lnc(HS, 'm', 0); lnc(HT, 'h', 0);
-    mask(F); mask(S); mask(HF); mask(HS); mask(HT);
-    var TT = [[x - 15, y + 1.6], [x + 13, y - .4], [x + 17.5, y + 3.2], [x - 10.5, y + 5.4]], TF = [[x - 10.5, y + 5.4], [x + 17.5, y + 3.2], [x + 17.5, y + 7], [x - 10.5, y + 9.2]], TS = [[x - 15, y + 1.6], [x - 10.5, y + 5.4], [x - 10.5, y + 9.2], [x - 15, y + 5.4]];
-    hatch(TT, -4.5, .8, 'f', .5); hatch(TF, 90, .55, 'h', .75); hatch(TS, 90, .5, 'h', .95);
-    lnc(TT, 'm', 0); lnc(TF, 'm', 0); lnc(TS, 'm', 0);
-    mask(TT); mask(TF); mask(TS);
+  // railroad spike lying in the grass: square shank, chisel point, head hooked to one side
+  function spike(x, y, L, ang) {
+    var c = M.cos(ang), sn = M.sin(ang), F = function (u, v) { return [x + u * c - v * sn, y + u * sn + v * c]; }, w = 1.5;
+    var SH = [F(0, -w), F(L * .82, -w), F(L, -.25), F(L, .25), F(L * .82, w), F(0, w)];
+    var HD = [F(-2.2, -w - 3.2), F(0, -w - 3.2), F(.4, -w - 2.2), F(.4, w + .9), F(-2.2, w + .9)];
+    var SD = [F(0, w), F(L * .82, w), F(L, .25), F(L, 1.2), F(L * .82, w + 1.3), F(.2, w + 1.4)];
+    hatch(SD, ang * 180 / PI, .45, 'h', .95); hatch(SH, ang * 180 / PI + 90, 1, 'f', .3); hatch(HD, ang * 180 / PI + 90, .5, 'h', .8);
+    lnc(SH, 'm', 0); lnc(HD, 'm', 0); ln(SD.slice(2), 'm', 0); ln([F(-2.2, w + .9), F(-2, w + 2), F(.2, w + 2.1), F(.4, w + .9)], 'h', 0);
+    mask(SH); mask(HD); mask(SD); mask([F(-2.2, w + .9), F(-2, w + 2), F(.2, w + 2.1), F(.4, w + .9)]);
   }
   G.history = function () {
     begin(151);
     var hz = 41, K = 34, pj = function (X, D) { return [60 + X * K / D, hz + K / D]; };
-    spike(95, 64, 24);
+    spike(80, 61, 26, -.32);
     wheel(30, 53, 12.2, 13.8);
     for (var s = -1; s <= 1; s += 2) {
       var E = [[], []];
@@ -916,16 +930,16 @@
   G.forest = function () {
     begin(173);
     var h0 = ridge(-4, 124, 74, [[30, 4, 40, 0], [96, 3, 30, 0]], .5);
-    trees(h0, 8, 114, 11, 20, 27, .9, 1);
+    trees(h0, 10, 112, 13, 19, 26, .75, 1);
     lines(70, 76, .4, .7, 1.1); occR(h0);
     var h1 = ridge(-4, 124, 64, [[20, 5, 30, 0], [70, 6, 34, 0], [110, 4, 20, 0]], .6);
-    trees(h1, -2, 122, 4.2, 10, 14, .85);
+    trees(h1, -2, 122, 5.5, 10, 14, .7);
     hatch(under(h1, 76), 70, 1, 'f', .4); occR(h1);
     var h2 = ridge(-4, 124, 55, [[40, 7, 36, 0], [92, 5, 26, 0]], .5);
-    trees(h2, -2, 122, 2.5, 5.5, 7.5, .75);
+    trees(h2, -2, 122, 3.4, 5.5, 7.5, .55);
     hatch(under(h2, 66), 70, 1, 'f', .3); occR(h2);
     var h3 = ridge(-4, 124, 49, [[14, 6, 26, 0], [64, 9, 30, 0], [110, 5, 20, 0]], .5);
-    trees(h3, -2, 122, 1.6, 3, 4, .6);
+    trees(h3, -2, 122, 2.4, 3, 4, .45);
     occR(h3);
     var mt = ridge(-2, 122, 44, [[30, 26, 30, 1.4], [72, 32, 30, 1.5], [104, 20, 22, 1.3]], 1.5);
     mtn(mt, 46, { d: .55, sw: 'f', ol: 'h', snow: function (x, y) { return y < 22 + 2 * M.sin(x * 1.3); } });
@@ -944,16 +958,19 @@
   }
   function billow(cx, cy, r, t) {
     var c = ell(cx, cy, r, r * .88, 0, TAU, M.max(16, M.round(r * 4)));
-    ln(c, t < .35 ? 'm' : 'h', .02);
-    hatch(c, -30, .62, 'f', function (x, y) { var u = ((x - cx) * .5 + (y - cy) * .85) / r; return cl(.12 + .7 * u + (1 - t) * .35, 0, 1); });
+    ln(c, t < .3 ? 'm' : 'h', .05);
+    hatch(c, -25, .6, 'f', function (x, y) { var u = ((x - cx) * .45 + (y - cy) * .9) / r; return cl(.05 + .75 * u + (1 - t) * .45, 0, 1); });
     mask(c);
   }
   G.fire = function () {
     begin(181);
     var rg = ridge(-4, 124, 57, [[104, 17, 74, 0], [26, 6, 30, 0]], 1.2, .8), rf = prof(rg), x, i;
-    for (x = 48; x < 100; x += rr(2.2, 4)) flame(x, rf(x), rr(3, 8) * (1 - M.abs(x - 74) / 60));
+    for (x = 50; x < 98; x += rr(2.4, 4.2)) flame(x, rf(x), rr(4, 9) * (1 - M.abs(x - 74) / 50));
     for (x = 44; x < 104; x += rr(4, 8)) { var y = rf(x), sh = rr(4, 9); ln([[x, y], [x + rr(-.4, .4), y - sh]], 'm', 0); ln([[x, y - sh * .6], [x - 1.2, y - sh * .5]], 'h', 0); }
-    for (i = 0; i < 17; i++) { var t = i / 16; billow(70 + 42 * M.pow(t, 1.4) + rr(-2, 2), 41 - 33 * t + rr(-1.5, 1.5), 3.2 + 11 * t, t); }
+    for (i = 0; i < 26; i++) {
+      var t = i / 25, r = 2.6 + 8 * t, cx = 72 + 32 * M.pow(t, 1.5), cy = 40 - 30 * M.pow(t, .85), j = (i % 3 - 1) * r * 1.05 + rr(-1.5, 1.5);
+      billow(cx + j * .55, cy + j * .8, r * rr(.75, 1.1), t);
+    }
     trees(rg, 0, 42, 3, 4, 6.5, .8, 1);
     mtn(rg, 78, { d: 1.2, ol: 'm', lit: .35 });
     ground(64, .4);
@@ -1091,8 +1108,14 @@
     var cls = opts.className == null ? 'illo illo-' + k : opts.className;
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + (VB[k] || '0 0 120 72') + '" class="' + attr(cls) + '" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid meet" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">' + body(k) + '</svg>';
   }
-  var t0 = Date.now(), kinds = {};
-  Object.keys(G).forEach(function (k) { if (k !== 'plane' && k !== 'compass') kinds[k] = illo(k); });
-  root.ILLUSTRATIONS = { kinds: kinds, plane: illo('plane'), compass: illo('compass'), buildMs: Date.now() - t0 };
+  // Plates are drawn on first use and cached; any left over are drawn during idle time.
+  var API = { kinds: {} }, names = Object.keys(G);
+  names.forEach(function (k) {
+    Object.defineProperty(k === 'plane' || k === 'compass' ? API : API.kinds, k, { enumerable: true, get: function () { return illo(k); } });
+  });
+  API.build = function () { var t = Date.now(); names.forEach(body); return Date.now() - t; };
+  root.ILLUSTRATIONS = API;
   root.illo = illo;
+  var ric = root.requestIdleCallback, queue = names.slice();
+  if (ric) (function idle(dl) { while (queue.length && (!dl || dl.timeRemaining() > 6)) body(queue.shift()); if (queue.length) ric(idle, { timeout: 4000 }); })();
 })(typeof window !== 'undefined' ? window : this);
