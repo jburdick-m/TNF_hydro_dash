@@ -129,7 +129,7 @@
     const pv = $('#pvbar');
     pv.hidden = !S.preview;
     if (S.preview) { $('#pv-range').value = Math.round(S.preview.frac * 1000); $('#pv-time').textContent = hmz(pos.t, G.TZ_IANA[G.tzAt(pos.lon)]); $('#pv-60').setAttribute('aria-pressed', S.preview.playing === 60); $('#pv-240').setAttribute('aria-pressed', S.preview.playing === 240); }
-    $('#follow').hidden = WA.map.follow || !WA.map.map;
+    $('#follow').hidden = !WA.map.map || WA.map.mode === 'map'; $('#follow').setAttribute('aria-pressed', !!WA.map.follow);
   };
   const POI_COUNT = () => poiBase.length;
   function oat(pos) { return pos.oat != null ? pos.oat : 15 - 1.98 * ((pos.alt || 0) / 1000); }
@@ -485,14 +485,14 @@
     $('#sheet-body').addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('g[data-id]')) { e.preventDefault(); U.openDetail(e.target.dataset.id); } });
     $('#sheet-body').addEventListener('scroll', () => { if (!strip.auto) strip.lastUserScroll = Date.now(); }, { passive: true });
     $('#cam').addEventListener('click', (e) => { const b = e.target.closest('button[data-cam]'); if (b) WA.map.setMode(b.dataset.cam); });
-    $('#follow').addEventListener('click', () => { WA.map.follow = true; WA.map.camera(WA.pos, true); WA.emit('follow'); });
+    $('#follow').addEventListener('click', () => WA.map.setFollow(!WA.map.follow));
     $('#theme-btn').addEventListener('click', () => { const m = { auto: 'day', day: 'night', night: 'auto' }[WA.themeMode]; WA.setTheme(m); });
     $('#pv-range').addEventListener('input', (e) => WA.setPreview(+e.target.value / 1000));
     $('#pv-60').addEventListener('click', () => WA.playPreview(60));
     $('#pv-240').addEventListener('click', () => WA.playPreview(240));
     $('#pv-live').addEventListener('click', () => WA.setPreview(null));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (S.syncPending) { S.syncPending = false; document.body.classList.remove('syncing'); } else U.closeSheet(); } });
-    WA.on('follow', () => { $('#follow').hidden = WA.map.follow || !WA.map.map; document.querySelectorAll('#cam button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.cam === WA.map.mode)); });
+    WA.on('follow', () => { $('#follow').hidden = !WA.map.map || WA.map.mode === 'map'; $('#follow').setAttribute('aria-pressed', !!WA.map.follow); document.querySelectorAll('#cam button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.cam === WA.map.mode)); });
   };
   function applySetting(k, v) {
     if (k === 'leg') WA.setLegMode(v);

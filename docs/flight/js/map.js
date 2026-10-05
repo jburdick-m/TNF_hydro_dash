@@ -163,21 +163,23 @@
       map.on('click', (e) => { if (WA.S.syncPending) { WA.S.syncPending = false; document.body.classList.remove('syncing'); WA.syncTo(e.lngLat); WA.toast('Position synced to the route.'); M.follow = true; } });
       WA.emit('mapready');
     });
-    // Pinch-zoom and tilt keep following and are remembered per camera mode; a one-finger pan or a rotate pauses follow.
-    const pause = (e) => { if (e && e.originalEvent && M.follow && !M.flying) { M.follow = false; WA.emit('follow'); } };
-    ['dragstart', 'rotatestart'].forEach((n) => map.on(n, pause));
-    const adjustStart = (e) => { if (e && e.originalEvent && M.follow) M.adjusting = Date.now(); };
-    const adjustEnd = (e) => {
-      if (!e || !e.originalEvent || !M.follow || M.mode === 'map') return;
-      M.userView[M.mode] = { zoom: map.getZoom(), pitch: map.getPitch() };
+    // With Follow on, pan / zoom / tilt adjust the view relative to the plane and it keeps following:
+    // the zoom, tilt and pan offset are remembered per camera mode. Follow off = free map.
+    const gesture = (e) => { if (e && e.originalEvent && M.follow && M.mode !== 'map') M.adjusting = Date.now(); };
+    const settle = (e) => {
+      if (!e || !e.originalEvent || !M.follow || M.mode === 'map' || !WA.pos) return;
+      const uv = (M.userView[M.mode] = Object.assign({}, M.userView[M.mode], { zoom: map.getZoom(), pitch: map.getPitch() }));
+      const base = M.baseView(WA.pos, Object.assign({}, uv, { dk: 0 })), c = map.getCenter(), at = [c.lng, c.lat];
+      uv.dk = G.hav(base.center, at); uv.da = uv.dk > 0.5 ? G.norm180(G.bearing(base.center, at) - base.bearing) : 0;
+      if (uv.dk <= 0.5) uv.dk = 0;
       WA.store.set('camView', M.userView);
       M.adjusting = Date.now();
       setTimeout(() => { if (Date.now() - M.adjusting >= 1100) { M.adjusting = 0; M.camera(WA.pos); } }, 1200);
     };
-    ['zoomstart', 'pitchstart', 'zoom', 'pitch'].forEach((n) => map.on(n, adjustStart)); // refreshed through long gestures
-    ['zoomend', 'pitchend'].forEach((n) => map.on(n, adjustEnd));
+    ['dragstart', 'drag', 'zoomstart', 'zoom', 'pitchstart', 'pitch'].forEach((n) => map.on(n, gesture)); // refreshed through long gestures
+    ['dragend', 'zoomend', 'pitchend'].forEach((n) => map.on(n, settle));
     // while following, two-finger gestures zoom and tilt but don't rotate (rotation would fight the window bearing)
-    const syncRotate = () => { try { if (M.follow && M.mode !== 'map') map.touchZoomRotate.disableRotation(); else map.touchZoomRotate.enableRotation(); } catch (e) { /* */ } };
+    const syncRotate = () => { try { if (M.follow && M.mode !== 'map') { map.touchZoomRotate.disableRotation(); map.dragRotate.disable(); } else { map.touchZoomRotate.enableRotation(); map.dragRotate.enable(); } } catch (e) { /* */ } };
     WA.on('follow', syncRotate); syncRotate();
     // aircraft
     const pe = document.createElement('div'); pe.className = 'plane-mk'; pe.innerHTML = planeSVG();
@@ -291,14 +293,15 @@
   };
 
   // ---- camera ----
-  // Tapping the mode that is already active resets its zoom/tilt to the default view.
+  M.setFollow = function (on) { M.follow = !!on; M.adjusting = 0; if (on) M.camera(WA.pos, true); WA.emit('follow'); };
+  // Tapping the mode that is already active resets its zoom/tilt/pan to the default view.
   M.setMode = function (m) {
     if (m === M.mode && M.follow && M.userView[m]) { delete M.userView[m]; WA.store.set('camView', M.userView); }
     M.mode = m; WA.store.set('cam', m); M.follow = true; M.adjusting = 0; M.camera(WA.pos, true); WA.emit('follow');
   };
   M.camera = function (pos, force) {
     const map = M.map; if (!map || !pos || (!M.follow && !force)) return;
-    if (!force && M.adjusting && Date.now() - M.adjusting < 1100) return; // user is pinching/tilting
+    if (!force && M.adjusting && Date.now() - M.adjusting < 1100) return; // user is panning/pinching/tilting
     const uv = M.userView[M.mode] || {};
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const ease = (o) => { M.flying = true; if (reduce || force) map.jumpTo(o); else map.easeTo(Object.assign({ duration: 950, easing: (t) => t }, o)); setTimeout(() => (M.flying = false), force ? 50 : 1000); };
@@ -312,19 +315,23 @@
       return;
     }
     M.mapFitDone = false;
-    if (M.mode === 'chase') {
-      ease({ center: G.dest(here, pos.trk, 25), zoom: uv.zoom != null ? uv.zoom : 8.2, pitch: uv.pitch != null ? uv.pitch : 60, bearing: pos.trk });
-      return;
-    }
-    // WINDOW: camera roughly over the aircraft, looking out the window side
-    const pitch = uv.pitch != null ? uv.pitch : 38, zoom = uv.zoom != null ? uv.zoom : 7.4, H = map.getContainer().clientHeight || innerHeight; // pitch halved from 76 at the user's request; zoom out a touch to keep the view wide
+    const v = M.baseView(pos, uv);
+    if (uv.dk) v.center = G.dest(v.center, v.bearing + (uv.da || 0), uv.dk);
+    ease(v);
+  };
+  // Follow camera for the current mode before any user pan offset: {center, zoom, pitch, bearing}
+  M.baseView = function (pos, uv) {
+    const map = M.map, here = [pos.lon, pos.lat];
+    if (M.mode === 'chase') return { center: G.dest(here, pos.trk, 25), zoom: uv.zoom != null ? uv.zoom : 8.2, pitch: uv.pitch != null ? uv.pitch : 60, bearing: pos.trk };
+    // WINDOW: camera roughly over the aircraft, looking out the window side (default tilt halved from 76 at the user's request)
+    const pitch = uv.pitch != null ? uv.pitch : 38, zoom = uv.zoom != null ? uv.zoom : 7.4, H = map.getContainer().clientHeight || innerHeight;
     const mpp = 40075016 * Math.cos(pos.lat * G.D2R) / (512 * Math.pow(2, zoom));
     const camKm = (1.5 * H * mpp) / 1000, fov2 = 18.43;
     const alt = camKm * Math.cos(pitch * G.D2R), back = camKm * Math.sin(pitch * G.D2R);
     const ang = pitch - fov2 + 0.27 * 2 * fov2; // aircraft ~27% up from the bottom edge, above the look-out line
     const offset = Math.max(20, back - alt * Math.tan(ang * G.D2R));
     const wb = WA.windowBearing(pos);
-    ease({ center: G.dest(here, wb, offset), zoom, pitch, bearing: wb });
+    return { center: G.dest(here, wb, offset), zoom, pitch, bearing: wb };
   };
   M.flyTo = function (lon, lat) {
     if (!M.map) return;

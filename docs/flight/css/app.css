@@ -249,3 +249,7 @@ body.sheet-open #bottom, body.sheet-open .scrim-bottom { display: none; }
 
 /* compass rose: tucked into the bottom-left corner, just above the bottom overlay (main.js sets --rose-b) */
 #map .wa-rose { left: calc(2px + var(--sl)); top: auto; bottom: var(--rose-b, 150px); width: 58px; height: 58px; }
+
+/* Follow is a toggle: filled when on, outlined when off */
+.follow[aria-pressed="true"] { background: var(--magenta); color: var(--paper); }
+.follow[aria-pressed="false"] { background: color-mix(in srgb, var(--paper) 80%, transparent); color: var(--ink-2); border-color: var(--ink-2); }
