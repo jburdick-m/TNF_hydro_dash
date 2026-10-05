@@ -11,7 +11,7 @@
   const BASEMAPS = ['relief', 'topo', 'sat', 'chart'];
   const BIG_RIVERS = ['Mississippi', 'Missouri', 'Platte', 'North Platte', 'South Platte', 'Loup', 'Elkhorn', 'Des Moines', 'Iowa', 'Cedar', 'Rock', 'Fox', 'Laramie', 'Green', 'Bear', 'Weber', 'Jordan', 'Humboldt', 'Truckee', 'Yuba', 'Feather', 'American', 'Sacramento'];
   const BIG_RIVER_NAMES = BIG_RIVERS.map((n) => n + ' River');
-  const M = (WA.map = { reliefStyle: WA.store.get('reliefStyle', 'classic'), mode: WA.store.get('cam', 'window'), follow: true, basemap: WA.store.get('basemap', 'relief'), relief3: WA.store.get('relief3', false), ready: false });
+  const M = (WA.map = { showBillboards: false, reliefStyle: WA.store.get('reliefStyle', 'classic'), mode: WA.store.get('cam', 'window'), follow: true, basemap: WA.store.get('basemap', 'relief'), relief3: WA.store.get('relief3', false), ready: false });
   if (['window', 'chase', 'map'].indexOf(M.mode) < 0) M.mode = 'window';
   try { const q = new URLSearchParams(location.search).get('relief'); if (q) M.reliefStyle = q; } catch (e) { /* */ }
 
@@ -219,6 +219,10 @@
     vis('sat', b === 'sat'); vis('topo', b === 'topo'); vis('relief-day', b === 'relief' && !night); vis('relief-night', b === 'relief' && night);
     if (M.reliefStyle === 'classic') vis('hillshade', b === 'chart');
   };
+  // Pictorial sprites from js/map-illustrations.js stay hidden (no illustrations on the map); water lining and the compass rose remain.
+  const SPRITE_LAYERS = ['illus-flat', 'illus-mounts', 'illus-vg'];
+  M.hideSprites = function () { const map = M.map; if (!map || !M.ready) return; SPRITE_LAYERS.forEach((id) => { if (map.getLayer(id) && map.getLayoutProperty(id, 'visibility') !== 'none') map.setLayoutProperty(id, 'visibility', 'none'); }); };
+  WA.on('tick', M.hideSprites);
   M.setBasemap = function (b) { if (BASEMAPS.indexOf(b) < 0) b = 'relief'; M.basemap = b; WA.store.set('basemap', b); if (M.map && M.ready) { M.recolor(); M.applyRelief(); } };
   M.setSat = function (on) { M.setBasemap(on ? 'sat' : 'relief'); };
   M.setRelief3 = function (on) { M.relief3 = on; WA.store.set('relief3', on); if (M.map && M.ready) try { M.map.setTerrain({ source: 'dem', exaggeration: on ? 4 : 2 }); } catch (e) { /* */ } };
@@ -301,6 +305,8 @@
 
   // ---- illustrated billboards for nearby priority-1 POIs ----
   M.updateBillboards = function (pos, list) {
+    // Illustrations live in the look-out list and detail plates, not on the map (user preference).
+    if (!M.showBillboards) { for (const k in M.billboards || {}) try { M.billboards[k].remove(); } catch (e) { /* */ } M.billboards = {}; return; }
     if (!M.map || !window.illo) return;
     const keep = {};
     const here = [pos.lon, pos.lat];
