@@ -1,0 +1,33 @@
+name: Flight relay (AA2735)
+
+# Republishes live ADS-B position for the docs/flight/ window atlas to ntfy.sh
+# (the ADS-B feeds have no CORS, so the phone can't read them directly).
+# One run covers one leg: it exits ~15 min after landing, or at MAX_MINUTES.
+# Start a run by editing docs/flight/relay-trigger.txt, or from the Actions tab.
+
+on:
+  push:
+    paths:
+      - "docs/flight/relay-trigger.txt"
+  workflow_dispatch:
+    inputs:
+      max_minutes:
+        description: "Max minutes to run (GitHub caps a job at 360)"
+        default: "345"
+
+concurrency:
+  group: flight-relay
+  cancel-in-progress: true
+
+jobs:
+  relay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
+      - name: Relay AAL2735 position to ntfy.sh
+        run: python3 scripts/flight_relay.py
+        env:
+          CALLSIGN: AAL2735
+          NTFY_TOPIC: aa2735-window-atlas-k7q2m9
+          MAX_MINUTES: ${{ github.event.inputs.max_minutes || '345' }}
