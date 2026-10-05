@@ -84,7 +84,7 @@
     U.horizon = horizon;
   };
   function lookPhrase(p) {
-    const when = p.eta < 60 && p.eta > -180 ? 'now' : p.eta < 0 ? 'passing' : 'in ' + dur(p.eta);
+    const when = p.eta < 60 && p.eta > -90 ? 'now' : p.eta < 0 ? 'abeam ' + dur(-p.eta) + ' ago' : 'in ' + dur(p.eta);
     return when + ' · ' + p.clock + " o'clock " + p.angle + ' · ' + n0(p.distNow / G.KM_PER_MI) + ' mi';
   }
 
@@ -146,6 +146,7 @@
     document.querySelectorAll('#tabs button').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === t));
     document.querySelectorAll('.panel').forEach((p) => (p.hidden = p.id !== 'p-' + t));
     $('#p-detail').hidden = true;
+    $('#sheet-body').scrollTop = 0;
     U.renderSheet(true);
     if (t === 'strip') U.strip.scroll(true);
   };
@@ -170,7 +171,7 @@
     document.querySelectorAll('#look-filter button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.f === U.filter));
     if (!POI_COUNT() && !(WA.live.fires || []).length) { el.innerHTML = '<p class="quiet">The feature gazetteer is still being engraved. It will appear here as soon as it arrives.</p>'; return; }
     const row = (p) => '<li><button class="lk' + (p.mine ? ' mine' : '') + (p.kind === 'fire' ? ' fire' : '') + '" data-id="' + esc(p.id) + '">' +
-      '<span class="lk-eta">' + (p.passed ? hm(pos.wall + p.eta, WA.to.tz) : p.eta < 60 ? 'now' : dur(p.eta)) + '</span>' +
+      '<span class="lk-eta">' + (p.passed ? hm(pos.wall + p.eta, G.TZ_IANA[G.tzAt(p.lon)]) : p.eta < -60 ? dur(-p.eta) + ' ago' : p.eta < 60 ? 'now' : dur(p.eta)) + '</span>' +
       '<span class="lk-main"><span class="lk-name">' + (p.priority === 1 ? '<span class="p1" title="Priority">✦</span>' : '') + esc(p.name) + '</span>' +
       '<span class="lk-meta">' + esc(p.side === 'right' ? 'Right' : 'Left') + ' · ' + p.clock + " o'clock " + p.angle + ' · ' + n0(p.abKm / G.KM_PER_MI) + ' mi off · ' + esc(p.kind) + '</span>' +
       (p.tagline ? '<span class="lk-tag">' + esc(p.tagline) + '</span>' : '') + '</span></button></li>';
@@ -269,7 +270,7 @@
     html += '<p class="wx-sub">Cloud low ' + n0(w.lo) + '% · mid ' + n0(w.mid) + '% · high ' + n0(w.hi) + '%' + (w.vis != null ? ' · visibility ' + n0(w.vis / 1609) + ' mi' : '') + '</p>';
     if (w.ws != null) html += '<p class="wx-line"><span class="sc">Jet stream · ' + w.lvl + ' hPa</span><br>' + Math.round(w.ws) + ' kt from ' + card(w.wd) + (hw != null ? ', ' + Math.abs(Math.round(hw)) + ' kt ' + (hw >= 0 ? 'headwind' : 'tailwind') : '') + (w.temp != null ? ' · ' + minus(Math.round(w.temp)) + ' °C aloft' : '') + '</p>';
     html += '<p class="wx-line"><span class="sc">Ahead</span><br>' + esc(aheadSummary()) + '</p>';
-    html += '<ol class="wx-seg">' + L.wxAhead.map((a) => '<li data-cls="' + a.cls + '"><span class="wx-dot"></span><span>' + n0((a.s - (pos ? pos.s : 0)) / G.KM_PER_MI) + ' mi · ' + esc(G.stateAt(a.lon, a.lat)) + '</span><span class="wx-c">' + esc(L.verdictText[a.cls].replace('Ground view: ', '')) + '</span></li>').join('') + '</ol>';
+    html += '<ol class="wx-seg">' + L.wxAhead.map((a) => '<li data-cls="' + a.cls + '"><span class="wx-dot"></span><span>' + n0(Math.max(0, a.s - (pos ? pos.s : 0)) / G.KM_PER_MI) + ' mi · ' + esc(G.stateAt(a.lon, a.lat)) + '</span><span class="wx-c">' + esc(L.verdictText[a.cls].replace('Ground view: ', '')) + '</span></li>').join('') + '</ol>';
     if (L.smf) { const d = L.smf; html += '<p class="wx-line"><span class="sc">At ' + esc(WA.to.iata) + ' · ' + esc(WA.to.city) + '</span><br>' + Math.round(d.temperature_2m) + ' °F, ' + esc(L.wmo(d.weather_code)) + ', wind ' + Math.round(d.wind_speed_10m) + ' kt from ' + card(d.wind_direction_10m) + '</p>'; }
     html += '<p class="quiet small">Model analysis from Open-Meteo; updated every 10 min or 100 km.</p>';
     el.innerHTML = html;
@@ -323,7 +324,7 @@
   }
 
   // ------------------------------------------------------------------ strip map
-  const strip = (U.strip = { k: 1.25, top: 56, lastUserScroll: 0 });
+  const strip = (U.strip = { k: 1.9, top: 56, lastUserScroll: 0 });
   strip.y = (s) => strip.top + s * strip.k;
   strip.build = function () {
     const el = $('#strip'); if (!el || !WA.route) return;
@@ -353,23 +354,24 @@
     // features
     const feats = U.pois().filter((p) => Math.abs(p.cross) < 260 && p.s >= 0 && p.s <= r.total).sort((a, b) => a.s - b.s);
     const last = { left: -1e9, right: -1e9 };
+    const clip = (t, n) => (t.length > n ? t.slice(0, n - 1).trim() + '…' : t);
     for (const p of feats) {
       const side = sideOf(p), mine = side === S.side, sgn = side === 'right' ? 1 : -1;
-      const big = p.priority === 1, want = strip.y(p.s), gap = big ? 54 : 26;
-      if ((p.priority || 3) === 3 && want < last[side] + 8) continue; // thin out minor items
+      const big = p.priority === 1, want = strip.y(p.s), gap = big ? 50 : 32;
+      if ((p.priority || 3) === 3 && want < last[side] + 24) continue; // thin out minor items
       const y = Math.max(want, last[side] + gap);
       last[side] = y;
-      const xd = cx + sgn * Math.min(cx - 20, 22 + Math.log(1 + Math.abs(p.cross)) * 8);
-      const xt = cx + sgn * 24;
+      const xt = cx + sgn * 22, room = big ? cx - 80 : cx - 34;
+      const chars = Math.max(12, Math.floor(room / 6.6));
       P.push('<g class="st-f' + (mine ? ' mine' : '') + (p.kind === 'fire' ? ' fire' : '') + '" data-id="' + esc(p.id) + '" tabindex="0" role="button" aria-label="' + esc(p.name) + '">');
-      P.push('<path class="st-lead" d="M' + cx + ' ' + want.toFixed(1) + ' L' + xd.toFixed(1) + ' ' + want.toFixed(1) + (Math.abs(y - want) > 2 ? ' L' + xt.toFixed(1) + ' ' + (y - 4).toFixed(1) : '') + '" />');
-      P.push('<circle class="st-dot" cx="' + xd.toFixed(1) + '" cy="' + want.toFixed(1) + '" r="' + (big ? 3.4 : 2.4) + '" />');
+      P.push('<path class="st-lead" d="M' + cx + ' ' + want.toFixed(1) + ' L' + (cx + sgn * 10) + ' ' + want.toFixed(1) + ' L' + (xt - sgn * 2).toFixed(1) + ' ' + y.toFixed(1) + '" />');
+      P.push('<circle class="st-dot" cx="' + cx + '" cy="' + want.toFixed(1) + '" r="' + (big ? 3.4 : 2.4) + '" />');
       const anchor = sgn > 0 ? 'start' : 'end';
-      T(xt + sgn * 8, y + 4, 'st-name' + (big ? ' big' : ''), p.name, anchor);
-      T(xt + sgn * 8, y + 16, 'st-kind', p.kind + (p.elevFt ? ' · ' + n0(p.elevFt) + ' ft' : ''), anchor);
+      T(xt, y + 4, 'st-name' + (big ? ' big' : ''), clip(p.name, chars), anchor);
+      T(xt, y + 16, 'st-kind', clip(p.kind + (p.elevFt ? ' · ' + n0(p.elevFt) + ' ft' : '') + ' · ' + n0(Math.abs(p.cross) / G.KM_PER_MI) + ' mi off', chars + 8), anchor);
       if (big) {
         const svg = illo(p.kind, 'st-illo');
-        if (svg) { const ix = sgn > 0 ? W - 52 : 8; P.push('<svg x="' + ix + '" y="' + (y - 18).toFixed(1) + '" width="44" height="44" class="st-illo-wrap">' + svg.replace(/^<svg/, '<svg width="44" height="44"') + '</svg>'); }
+        if (svg) { const ix = sgn > 0 ? W - 50 : 6; P.push('<svg x="' + ix + '" y="' + (y - 20).toFixed(1) + '" width="44" height="44" class="st-illo-wrap">' + svg.replace(/^<svg/, '<svg width="44" height="44"') + '</svg>'); }
       }
       P.push('</g>');
     }

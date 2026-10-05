@@ -133,6 +133,7 @@
     map.on('error', (e) => { if (e && e.error && /webgl/i.test(String(e.error.message))) M.fail('WebGL failed; the chart is off.'); });
     map.on('load', () => {
       M.ready = true;
+      const at = el.querySelector('.maplibregl-ctrl-attrib'); if (at) at.classList.remove('maplibregl-compact-show');
       addGlyphs(pal());
       try { map.setTerrain({ source: 'dem', exaggeration: M.relief3 ? 3 : 1.5 }); } catch (e) { /* no terrain */ }
       setSky();
@@ -146,11 +147,11 @@
     ['dragstart', 'rotatestart', 'pitchstart', 'zoomstart'].forEach((n) => map.on(n, pause));
     // aircraft
     const pe = document.createElement('div'); pe.className = 'plane-mk'; pe.innerHTML = planeSVG();
-    M.plane = new maplibregl.Marker({ element: pe, rotationAlignment: 'map', pitchAlignment: 'map' }).setLngLat([WA.from.lon, WA.from.lat]).addTo(map);
+    M.plane = new maplibregl.Marker({ element: pe, rotationAlignment: 'map', pitchAlignment: 'viewport' }).setLngLat([WA.from.lon, WA.from.lat]).addTo(map);
     M.billboards = {};
   };
   function planeSVG() {
-    return '<svg viewBox="-20 -20 40 40" width="34" height="34" aria-hidden="true"><path d="M0-17 L2.2-6 L15 2 L15 5 L2.2 1 L1.6 11 L6 14.5 L6 16.5 L0 15 L-6 16.5 L-6 14.5 L-1.6 11 L-2.2 1 L-15 5 L-15 2 L-2.2-6 Z" fill="var(--magenta)" stroke="var(--paper)" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+    return '<svg viewBox="-20 -20 40 40" width="42" height="42" aria-hidden="true"><path d="M0-17 L2.2-6 L15 2 L15 5 L2.2 1 L1.6 11 L6 14.5 L6 16.5 L0 15 L-6 16.5 L-6 14.5 L-1.6 11 L-2.2 1 L-15 5 L-15 2 L-2.2-6 Z" fill="var(--magenta)" stroke="var(--paper)" stroke-width="1.6" stroke-linejoin="round"/></svg>';
   }
   M.fail = function (msg) {
     const el = document.getElementById('map');
@@ -228,7 +229,7 @@
     const mpp = 40075016 * Math.cos(pos.lat * G.D2R) / (512 * Math.pow(2, zoom));
     const camKm = (1.5 * H * mpp) / 1000, fov2 = 18.43;
     const alt = camKm * Math.cos(pitch * G.D2R), back = camKm * Math.sin(pitch * G.D2R);
-    const ang = pitch - fov2 + 0.1 * 2 * fov2; // aircraft ~10% up from the bottom edge
+    const ang = pitch - fov2 + 0.27 * 2 * fov2; // aircraft ~27% up from the bottom edge, above the look-out line
     const offset = Math.max(20, back - alt * Math.tan(ang * G.D2R));
     const wb = WA.windowBearing(pos);
     ease({ center: G.dest(here, wb, offset), zoom, pitch, bearing: wb });
