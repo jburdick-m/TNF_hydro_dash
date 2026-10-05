@@ -22,6 +22,16 @@
   }
   WA.setTheme = function (m) { WA.themeMode = m; WA.store.set('theme', m); autoTheme(); $('#theme-btn').textContent = m.toUpperCase(); };
 
+  // keep the compass rose sitting just above the bottom overlay (its height changes with preview / look-out text)
+  function placeRose() {
+    const foot = document.getElementById('bottom'), map = document.getElementById('map');
+    if (!foot || !map) return;
+    const b = map.getBoundingClientRect().bottom - foot.getBoundingClientRect().top + 2;
+    document.documentElement.style.setProperty('--rose-b', Math.max(8, Math.round(b)) + 'px');
+  }
+  try { new ResizeObserver(placeRose).observe(document.getElementById('bottom')); } catch (e) { /* old browser: CSS default */ }
+  addEventListener('resize', placeRose);
+
   // ---------- late-arriving data from other modules ----------
   function loadScript(src, tries) {
     const s = document.createElement('script');

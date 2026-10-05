@@ -43,8 +43,8 @@
   // Burin weights. Tone comes from line density, not weight: hairlines for hatching (f, h),
   // a firmer line for secondary outlines (m) and the one crisp silhouette per plate (b).
   // Each weight is a CSS var so small renderings (billboards, strip map) can thicken them.
-  var SW = { f: '.26px', h: '.36px', m: '.5px', b: '.78px', x: '1.1px', w: '1.3px' };
-  var HD = .74; // global hatch density (spacing multiplier)
+  var SW = { f: '.2px', h: '.27px', m: '.4px', b: '.58px', x: '1px', w: '1.2px' };
+  var HD = .56; // global hatch density (spacing multiplier)
   function begin(seed, w, h, vig) {
     rnd = mul((seed * 2654435761) >>> 0);
     LAY = {}; ORD = []; VIG = vig !== false; MASK = null;
@@ -170,7 +170,7 @@
         if ((A[1] <= v) !== (B[1] <= v)) xs.push(A[0] + (v - A[1]) / (B[1] - A[1]) * (B[0] - A[0]));
       }
       xs.sort(function (p, q) { return p - q; });
-      var th = (g + k * .618034) % 1 * .96 + .02;
+      var th = M.pow((g + k * .618034) % 1, 1.45) * .96 + .02;
       for (var m = 0; m + 1 < xs.length; m += 2)
         seg(xs[m] * c - v * s, xs[m] * s + v * c, xs[m + 1] * c - v * s, xs[m + 1] * s + v * c, st, tone, th, 1);
     }
@@ -269,18 +269,21 @@
   // mountain: outline, fall-line hatching (dense on the shadowed east faces), occluder
   function mtn(p, base, o) {
     o = o || {};
-    var dn = o.d == null ? 1 : o.d, lit = o.lit == null ? .22 : o.lit, sw = o.sw || 'h', len = o.len || 1, snow = o.snow;
+    var dn = o.d == null ? 1 : o.d, lit = o.lit == null ? .34 : o.lit, sw = o.sw || 'h', len = o.len || 1, snow = o.snow;
     if (snow) lit = M.max(lit, .45);
     ln(p, o.ol || 'm', .03);
-    var P = rs(p, o.fs || .5), f = prof(p);
+    // fall lines at a regular burin pitch: long and close on shadowed (east) faces,
+    // short ticks under the crest on lit faces, alternate lines dropped where lit
+    var P = rs(p, o.fs || .42), f = prof(p);
     for (var i = 1; i < P.length - 1; i++) {
       var q = P[i], sl = (P[i + 1][1] - P[i - 1][1]) / (P[i + 1][0] - P[i - 1][0]), dep = base - q[1];
       if (dep < .8) continue;
-      var sh = sl > .06, pr = (sh ? cl(.5 + sl * .8, 0, 1) : lit * .8) * dn;
-      if (rnd() > pr) continue;
-      var L = dep * (sh ? rr(.45, 1) : snow ? rr(.35, .9) : rr(.06, .34)) * len, le = cl(sl, -1.6, 1.6) * .38 + rr(-.08, .08), pts = [];
-      for (var k = 0; k <= 5; k++) { var t = k / 5; pts.push([q[0] + le * L * t * (1 - .3 * t), q[1] + .45 + L * t]); }
-      tl(pts, sw, snow ? snowTone(snow, sh) : 1, rr(0, .35));
+      var sv = sm(.02, .55, sl), lt = 1 - sv;
+      if (lt > .6 && (i % 3 === 0) && rnd() > lit * dn) continue;
+      if (rnd() > .55 + .45 * dn) continue;
+      var L = dep * len * (sv > .05 ? (.3 + .65 * sv) * rr(.8, 1.08) : snow ? rr(.3, .8) : rr(.1, .42) * (.5 + lit * 1.5)), le = cl(sl, -1.6, 1.6) * .38 + rr(-.05, .05), pts = [];
+      for (var k = 0; k <= 5; k++) { var t = k / 5; pts.push([q[0] + le * L * t * (1 - .3 * t), q[1] + .4 + L * t]); }
+      tl(pts, sv > .5 ? sw : (sw === 'h' ? 'f' : sw), snow ? snowTone(snow, sv > .05) : 1, rr(0, .3));
     }
     // cross-hatching: contour-following strokes laid over the deepest shadowed faces
     if (o.xh !== false && dn >= .75) {
@@ -290,7 +293,8 @@
         var s = (b - a) / 1.8, d = y - c, H = base - c;
         if (d < .6 || d > H * .85 * len) return 0;
         if (snow && snow(x, y)) return 0;
-        return cl((s - .28) * 1.1, 0, .9) * (.55 + .45 * vn(x * .35, y * .35)) * (dn > 1 ? 1 : .8);
+        var sh = cl((s - .22) * 1.2, 0, .95), lt = .16 * sm(.15, .85, d / (H + .01)) * (s < .1 ? 1 : 0);
+        return (sh + lt) * (.55 + .45 * vn(x * .35, y * .35)) * (dn > 1 ? 1 : .85);
       });
     }
     if (o.occ !== false) occR(p);
@@ -300,18 +304,18 @@
   // broken into soft banks by low-frequency noise
   function sky(y0, y1, t) {
     hatch([[-2, y0], [122, y0], [122, y1], [-2, y1]], 0, 1.05, 'f', function (x, y) {
-      return t * .85 * (.15 + .85 * M.pow(cl((y1 - y) / (y1 - y0), 0, 1), .8)) * (.25 + .75 * vn(x * .07 + 3, y * .32));
+      return t * 1.05 * (.12 + .88 * M.pow(cl((y1 - y) / (y1 - y0), 0, 1), .7)) * (.5 + .5 * vn(x * .07 + 3, y * .32));
     }, .5);
   }
   // still water: close horizontal ruling, finer and tighter with distance, broken by glints
   function water(y0, y1, t, tf) {
     for (var y = y0 + .35, g = .38, k = 0; y < y1; y += g, g = M.min(1.25, g * 1.045), k++) {
       (function (y, k) {
-        var z = noise(), base = t * (.55 + .45 * sm(y0, y1, y));
+        var z = noise(), base = t * (.75 + .25 * sm(y0, y1, y));
         tl([[-2, y], [122, y]], y - y0 < 4 ? 'f' : 'h', function (x) {
           var v = base * (.7 + .5 * z(x * .09 + k)) * (tf ? tf(x, y) : 1);
-          return v * (vn(x * .5, y * 3) > .18 ? 1 : 0);
-        }, (k * .618 + .1) % 1 * .85 + .05, .6);
+          return v * (vn(x * .5, y * 3) > .12 ? 1 : 0);
+        }, M.pow((k * .618 + .1) % 1, 1.4) * .85 + .05, .6);
       })(y, k);
     }
   }
@@ -374,6 +378,7 @@
     L.sort(function (a, b) { return b[1] - a[1]; });
     for (var i = 0; i < L.length; i++) { var t = L[i]; if (vg(t[0], t[1] - t[2] * .5) > .08) mask(conifer(t[0], t[1], t[2], sh)); }
   }
+  function pip(P, x, y) { var c = false; for (var i = 0, j = P.length - 1; i < P.length; j = i++) { var A = P[i], B = P[j]; if ((A[1] > y) !== (B[1] > y) && x < (B[0] - A[0]) * (y - A[1]) / (B[1] - A[1]) + A[0]) c = !c; } return c; }
   function under(p, yb) { return p.concat([[p[p.length - 1][0], yb], [p[0][0], yb]]); }
 
   /* ---------------- the plates ---------------- */
@@ -769,7 +774,7 @@
     water(38.7, 76, .85, function (x, y) {
       var l = sm(48, 18, x) * (1 - sm(48, 74, y) * .5), r = sm(72, 104, x) * .45;
       var rd = M.abs(x - 60) < 14 && y < 44 ? .9 : 0;
-      return .38 + .9 * M.max(l, r, rd);
+      return .6 + .7 * M.max(l, r, rd);
     });
     // canyon country beyond the dam
     var far = ridge(-2, 122, 34, [[60, 7, 22, .9], [30, 5, 18, 0], [92, 6, 18, .8]], 1);
@@ -1051,9 +1056,9 @@
     var rg = ridge(-4, 124, 57, [[104, 17, 74, 0], [26, 6, 30, 0]], 1.2, .8), rf = prof(rg), x, i;
     for (x = 50; x < 98; x += rr(2.2, 3.8)) flame(x, rf(x), rr(3.5, 8) * (1 - M.abs(x - 74) / 50));
     for (x = 44; x < 104; x += rr(3.5, 7)) { var y = rf(x), sh = rr(4, 9); ln([[x, y], [x + rr(-.4, .4), y - sh]], 'm', 0); ln([[x, y - sh * .6], [x - 1.2, y - sh * .5]], 'h', 0); ln([[x, y - sh * .35], [x + 1, y - sh * .28]], 'f', 0); }
-    plume(74, rf(74) - 3, 104, 6, 2.2, 15, 1.7);
+    plume(74, rf(74) - 3, 96, 7, 3, 15, 1.9);
     // a second, thinner column further down the ridge
-    plume(58, rf(58) - 2, 66, 30, 1, 4.5, 1.4);
+    plume(57, rf(57) - 2, 62, 34, .9, 3.4, 1.4);
     trees(rg, 0, 44, 2.6, 4, 6.5, .8, 1);
     mtn(rg, 78, { d: 1.2, ol: 'b', lit: .35 });
     ground(64, .4);
@@ -1097,6 +1102,337 @@
     sky(1, 30, .45);
     return end();
   };
+
+  /* ---------------- bespoke plates for the headline subjects ---------------- */
+  // S[id] = [kind, builder, anchor]; anchor is the subject point (viewBox units) for the
+  // detail plate's leader line.
+  var S = {};
+
+  // Ruby Mountains: Lamoille Canyon, the glacier's U-shaped trough opening toward us
+  S['ruby-mountains'] = ['range', function () {
+    begin(211);
+    ground(63, .45); tufts(64, 72, 14);
+    var nz = noise(), fw = [], x;
+    for (x = -4; x <= 124; x += .5) {
+      var u = (x - 60) / 23, U = M.abs(u) < 1 ? 24 * (1 - M.pow(u * u, 2.6)) : 0;
+      var top = 38 + 3.5 * fbm(nz, x * .22) + 2.5 * M.sin(x * .09) - M.max(0, M.abs(x - 60) - 46) * .6;
+      fw.push([x, 63 - M.max(5, top - U)]);
+    }
+    // a creek and aspen down the trough floor
+    var ck = crs([[60.5, 41], [58.5, 46], [62, 51], [57, 57], [54, 63]], 6);
+    ln(ck, 'h', .05); ln(ck.map(function (q) { return [q[0] + .5 + (q[1] - 41) * .04, q[1]]; }), 'f', .05);
+    var fl = ridge(30, 90, 52, [[60, 6, 18, 0]], .4);
+    trees(fl, 42, 78, 2.4, 2, 3.6, .7, 2);
+    mtn(fw, 64, { ol: 'b', d: 1.05, lit: .4, len: .62, snow: function (x, y) { return y < 29 + 2 * M.sin(x * .9); } });
+    // moraine lines across the trough floor
+    for (var k = 0; k < 3; k++) { var my = 44 + k * 4.5; tl(ell(60, my, 9 + k * 3, 1.2, 0, PI, 20), 'f', .8, .2); }
+    var cq = ridge(-2, 122, 46, [[60, 20, 20, 1.3], [48, 15, 12, 1.2], [72, 17, 12, 1.3]], 1.4);
+    mtn(cq, 47, { d: .7, ol: 'm', sw: 'f', snow: function (x, y) { return y < 33 + 2 * M.sin(x * 1.3); } });
+    var bk = ridge(-2, 122, 30, [[20, 6, 18], [100, 8, 20]], 1);
+    mtn(bk, 31, { d: .35, sw: 'f', ol: 'f', len: .5, xh: false });
+    cloud(96, 9, 18, 4);
+    sky(1, 30, .55);
+    return end();
+  }, [60, 27]];
+
+  S['mount-shasta'] = ['volcano', function () {
+    begin(223);
+    var f = ridge(-2, 122, 64, [[14, 6, 26, 0], [98, 8, 28, 0]], 1.4);
+    trees(f, 0, 120, 2.1, 3, 5.2, .85, 1.3);
+    mtn(f, 74, { d: .8, ol: 'h' });
+    var snow = function (x, y) { return y < 31 + 3.5 * M.sin(x * .8) + 2.5 * M.sin(x * 2.1) + (x < 50 ? 4 : 0); };
+    var v = ridge(-4, 124, 60, [[67, 50, 54, 1.45], [45, 33, 14, 1.2], [104, 13, 24, 1]], 1.1, .6);
+    v.forEach(function (q) { if (q[1] < 12) q[1] = 12 + .35 * M.sin(q[0] * 2.3); });
+    mtn(v, 64, { snow: snow, d: 1.15, ol: 'b' });
+    lens(68, 4.6, 19);
+    sky(1, 34, .5);
+    return end();
+  }, [67, 12]];
+
+  S['lassen-peak'] = ['volcano', function () {
+    begin(227);
+    var tr = ridge(-4, 124, 57, [[20, 2.5, 30, 0], [96, 2, 26, 0]], .4);
+    trees(tr, -2, 122, 2, 2.6, 4.8, .85, .5);
+    water(57.3, 76, .75, function (x) { return .55 + .6 * M.exp(-M.pow((x - 56) / 18, 2)); });
+    var snow = function (x, y) { return y < 33 && vn(x * .35, y * .5) > .42; };
+    var d = ridge(-4, 124, 55, [[56, 34, 32, 0], [83, 19, 12, .8], [95, 15, 11, .8], [24, 11, 22, 0]], 1.1, .6);
+    mtn(d, 57, { snow: snow, d: 1.1, ol: 'b', lit: .4 });
+    var b = ridge(-2, 122, 44, [[10, 10, 22], [112, 12, 20]], 1);
+    mtn(b, 46, { d: .4, sw: 'f', ol: 'h', len: .6, xh: false });
+    cloud(30, 11, 16, 4);
+    sky(1, 30, .5);
+    return end();
+  }, [56, 21]];
+
+  S['boars-tusk'] = ['volcano', function () {
+    begin(229);
+    ground(58, .45); tufts(60, 72, 18, 1.1);
+    var T = crs([[49, 55], [51.6, 47], [51.4, 41], [53.4, 35], [53, 29], [54.6, 23.5], [55.2, 19], [57.4, 15.4], [58.4, 16.6], [58.6, 20.2], [60.6, 23.6], [60.4, 28], [62.8, 32.6], [62.6, 37], [65.4, 42], [67, 48.5], [71.5, 55]], 3);
+    T.forEach(function (q, j) { q[0] += .35 * M.sin(j * 2.1); });
+    hatch(T, 90, .42, 'h', function (x) { return .14 + .8 * sm(56, 64, x); });
+    hatch(T, 18, .8, 'f', function (x, y) { return x > 59 ? .6 * sm(24, 50, y) : 0; });
+    for (var i = 0; i < 6; i++) { var y = 24 + i * 5; ln([[xAt(T, y) + .3, y + rr(-.4, .4)], [xAt(T.slice().reverse(), y) - .3, y + rr(-.4, .4)]], 'f', .2); }
+    ln(T, 'b', 0);
+    mask(T.concat([[70, 56], [50.5, 56]]));
+    var ap = ridge(10, 112, 58, [[60, 10, 44, 1.2]], 1, .6);
+    mtn(ap, 60, { d: .9, ol: 'm', lit: .2 });
+    stip(10, 46, 112, 58, .8, function (x, y) { var t = prof(ap)(x); return t !== null && y > t + .4 ? .3 : 0; }, 'f');
+    var ms = ridge(-2, 122, 50, [[16, 7, 16, 0], [104, 6, 14, 0]], .4, .8);
+    ms.forEach(function (q) { if (q[1] < 45.2) q[1] = 45.2; });
+    mtn(ms, 51, { d: .5, sw: 'f', ol: 'h', xh: false });
+    sky(1, 40, .5);
+    return end();
+  }, [57, 16]];
+
+  // Chimney Rock: Brule-clay cone, Arikaree sandstone spire, a wagon passing on the trail
+  function wagon(x, y, s) {
+    var W = function (a, b) { return [x + a * s, y + b * s]; };
+    var BX = [W(-4, -2.6), W(4, -2.6), W(4.3, -.9), W(-4.2, -.9)], BN = [W(-3.8, -2.6)];
+    for (var i = 0; i <= 12; i++) { var a = PI + PI * i / 12; BN.push(W(-.2 + 4.1 * M.cos(a) * (i < 2 ? 1.08 : 1), -2.6 + 4.2 * M.sin(a))); }
+    hatch(BN, 90, .35, 'f', function (xx) { return xx > x + s ? .35 : .08; }); ln(BN, 'h', 0);
+    for (i = 1; i < 4; i++) ln([W(-3.2 + i * 1.6, -2.6), W(-3.2 + i * 1.6, -6.4 + M.abs(i - 2) * .3)], 'f', 0);
+    hatch(BX, 0, .4, 'f', .7); lnc(BX, 'h', 0); mask(BN); mask(BX);
+    [[-2.8, 1.25], [2.8, 1.45]].forEach(function (w) { var c = W(w[0], -.4), r = w[1] * s; lnc(ell(c[0], c[1], r, r, 0, TAU, 16), 'h', 0); for (var k = 0; k < 6; k++) { var a = k * PI / 6; ln([[c[0] - r * M.cos(a), c[1] - r * M.sin(a)], [c[0] + r * M.cos(a), c[1] + r * M.sin(a)]], 'f', 0); } });
+    ln([W(-4.2, -1.5), W(-7.5, -.6)], 'h', 0);
+    var OX = [W(-12.6, -.5), W(-12, -2.8), W(-9, -3), W(-7.6, -2.2), W(-7.8, -.4)];
+    hatch(OX, 70, .4, 'f', .7); ln(OX, 'h', 0);
+    [-12, -11.2, -8.6, -8].forEach(function (lx) { ln([W(lx, -.6), W(lx + .1, 1.2)], 'h', 0); });
+    ln([W(-12.4, -2.7), W(-13.4, -3.4)], 'h', 0);
+  }
+  S['chimney-rock'] = ['landmark', function () {
+    begin(233);
+    var nz = noise(), cx = 60.2, x, y;
+    wagon(41, 62, 1.1);
+    var r1 = [], r2 = []; for (x = -2; x <= 122; x += 2) { r1.push([x, 63.2 + .02 * (x - 60) + .4 * M.sin(x * .1)]); r2.push([x, 64.8 + .02 * (x - 60) + .4 * M.sin(x * .1)]); }
+    ln(r1, 'h', .2); ln(r2, 'h', .2);
+    var SPR = crs([[57.4, 33], [57.6, 27], [57.2, 22], [57.9, 16], [57.8, 11.5], [58.4, 8.6], [59.6, 7.4], [60.9, 7.6], [61.8, 9.4], [62, 14], [61.7, 19], [62.4, 25], [62.4, 33]], 4);
+    hatch(SPR, 90, .38, 'h', function (x) { return .12 + .85 * sm(59.2, 62.2, x); });
+    [11, 15.5, 21, 26.5, 30.5].forEach(function (y) { tl([[xAt(SPR, y) + .2, y], [xAt(SPR.slice().reverse(), y) - .2, y]], 'f', 1, .02); });
+    ln(SPR, 'm', 0);
+    mask(SPR.concat([[62.4, 35], [57.4, 35]]));
+    var cone = [];
+    for (x = 18; x <= 102; x += .7) { var d = M.abs(x - cx), hg = d < 3.2 ? 25 : 25 * M.pow(cl(1 - (d - 3.2) / 36, 0, 1), 1.9); cone.push([x, 58 - hg + .5 * fbm(nz, x * .4)]); }
+    var cf = prof(cone);
+    for (y = 34.5; y < 57.5; y += .8) {
+      var wl = cx - xAt(cone, y), wr = xAt(cone.slice().reverse(), y) - cx, arc = [];
+      for (var u = -1; u <= 1.0001; u += .05) { var xx = cx + (u < 0 ? wl : wr) * u; arc.push([xx, y + (u < 0 ? wl : wr) * .1 * M.sqrt(M.max(0, 1 - u * u))]); }
+      tl(arc, 'f', function (x, y) { var t = cf(x); return t !== null && y > t + .2 ? (x > cx ? .85 : .3) * (.7 + .3 * vn(x * .4, y)) : 0; }, M.pow(rnd(), 1.4) * .8);
+    }
+    mtn(cone, 58, { d: .9, lit: .1, ol: 'm', xh: false });
+    ground(58.5, .45); tufts(60, 72, 10);
+    var bl = ridge(-2, 122, 52, [[8, 6, 14, .5], [100, 8, 18, .5], [118, 5, 10, .5]], .8);
+    mtn(bl, 54, { d: .6, sw: 'f', ol: 'h', xh: false });
+    lines(48, 58, .3, .5, 1.1);
+    sky(1, 40, .5);
+    return end();
+  }, [60, 8]];
+
+  // Scotts Bluff: the long caprocked bluff with Mitchell Pass and Eagle Rock
+  S['scotts-bluff'] = ['landmark', function () {
+    begin(239);
+    ground(58, .45); tufts(60, 72, 12);
+    var nz = noise(), B = [], x;
+    var key = [[-4, 58], [6, 56], [12, 46], [15, 30], [17, 24], [20, 21.5], [34, 20.5], [46, 21.6], [52, 20.8], [58, 22], [60.5, 25], [62.5, 32], [64.5, 37.5], [67.5, 38.2], [69.5, 33], [71, 28.5], [72.6, 27.2], [75.4, 27], [76.6, 24.6], [77.6, 24.2], [78.6, 26.8], [90, 27.4], [100, 27], [104, 29], [108, 36], [113, 48], [124, 55]];
+    B = crs(key, 4); B.forEach(function (q) { q[1] += .35 * fbm(nz, q[0] * .8); });
+    var bf = prof(B), inB = function (x, y) { var t = bf(x); return t !== null && y > t + .3; };
+    // caprock and strata bands, crossed by gully-following fall lines
+    [[23.5, 'h'], [25, 'f'], [28.5, 'f'], [32.5, 'h'], [37, 'f'], [42, 'f'], [47, 'f']].forEach(function (L, k) {
+      var p = []; for (x = -2; x <= 122; x += 1) p.push([x, L[0] + .5 * M.sin(x * .2 + k)]);
+      tl(p, L[1], function (x, y) { return inB(x, y) ? 1 : 0; }, .05);
+    });
+    mtn(B, 58, { ol: 'b', d: 1.2, lit: .45 });
+    // talus aprons
+    stip(-2, 40, 122, 58, .7, function (x, y) { return inB(x, y) && y > 46 ? .35 : 0; }, 'f');
+    mask(under(B, 59));
+    var far = ridge(-2, 122, 50, [[30, 4, 20, 0], [96, 5, 18, 0]], .5);
+    mtn(far, 51, { d: .4, sw: 'f', ol: 'h', xh: false });
+    cloud(40, 10, 22, 4.5);
+    sky(1, 40, .5);
+    return end();
+  }, [36, 21]];
+
+  // Pyramid Lake: the tufa pyramid island off a barren shore, Anaho Island beyond
+  S['pyramid-lake'] = ['lake', function () {
+    begin(241);
+    var i, wl = 45.5;
+    // tufa knobs on the near shore
+    [[26, 60.5, 8, 5.4], [36.5, 62.5, 4.6, 3]].forEach(function (K) {
+      var P = []; for (var a = PI; a <= TAU + 1e-6; a += PI / 20) P.push([K[0] + K[2] * M.cos(a) * (1 + .08 * M.sin(a * 7)), K[1] + K[3] * M.sin(a) * (1 + .1 * M.sin(a * 5 + K[0]))]);
+      hatch(P, 70, .45, 'h', function (x) { return .3 + .65 * sm(K[0] - 3, K[0] + K[2], x); });
+      stip(K[0] - K[2], K[1] - K[3], K[0] + K[2], K[1], .55, function (x) { return .35 * sm(K[0] + 2, K[0] - K[2], x); }, 'f');
+      ln(P, 'm', 0); mask(P.concat([[K[0] + K[2], 77], [K[0] - K[2], 77]]));
+    });
+    var PY = [[60, wl + .3], [62.8, 41.4], [65.6, 36.2], [68.2, 31.4], [70.4, 27.6], [71.8, 26.4], [73.2, 27.8], [75.6, 32.4], [78.6, 37.6], [81.8, 42], [84.6, wl + .3]];
+    PY = crs(PY, 4); PY.forEach(function (q, j) { q[1] += j && j < PY.length - 1 ? .35 * M.sin(j * 1.7) : 0; });
+    hatch(PY, 72, .42, 'h', function (x) { return x > 71.9 ? .92 : .16; });
+    hatch(PY, -20, .7, 'f', function (x) { return x > 72.5 ? .7 : 0; });
+    stip(60, 26, 72.5, wl, .42, function (x, y) { return pip(PY, x, y) ? .32 : 0; }, 'f');
+    ln(PY, 'b', 0); mask(PY);
+    var AN = ridge(30, 56, wl + .2, [[42, 4.4, 13, 0]], .7, .5);
+    mtn(AN, wl + .2, { d: .7, sw: 'f', ol: 'm', xh: false });
+    mask(under(AN, wl + .3));
+    water(wl, 76, .9, function (x, y) {
+      var d = y - wl, r = M.abs(x - 72) < 12 * (1 - d / 19) ? 1.5 : 0, a = M.abs(x - 42) < 12 * (1 - d / 5) ? 1 : 0;
+      return .45 + .5 * M.max(r, a) + .25 * sm(52, 76, y);
+    });
+    var L = ridge(-2, 122, wl, [[12, 15, 22, 1.2], [36, 9, 14], [92, 19, 26, 1.3], [114, 14, 14, 1.2]], 2);
+    mtn(L, wl, { d: .85 });
+    var F = ridge(-2, 122, wl - 6, [[56, 12, 22, 1.2], [76, 9, 14]], 1);
+    mtn(F, wl - 4, { d: .35, sw: 'f', ol: 'f', len: .5, xh: false });
+    sky(1, 32, .5);
+    return end();
+  }, [71.8, 27]];
+
+  // Black Rock Desert: the great playa, the dark point of Black Rock, a dust devil, the emigrant ruts
+  S['black-rock-desert'] = ['saltflat', function () {
+    begin(251);
+    var hz = 42, i;
+    // emigrant trail ruts curving toward Black Rock
+    for (var s = -1; s <= 1; s += 2) {
+      var R = []; for (var t = 0; t <= 1.0001; t += .02) R.push([46 - 22 * t + s * (1.6 - 1.4 * t) + 6 * M.sin(t * 2.4), 76 - (76 - hz - .5) * M.pow(t, .55)]);
+      tl(R, t > .5 ? 'f' : 'h', function (x, y) { return .4 + .6 * sm(hz, 70, y); }, .1);
+    }
+    // dust devil
+    for (i = 0; i < 26; i++) { var u = i / 25, cy = hz - 1 - u * 22, rx = .5 + 3.4 * M.pow(u, 1.5), cx = 86 + 2.4 * M.sin(u * 4) + u * 3; tl(ell(cx, cy, rx, rx * .22, PI * .05, PI * 1.05, 12), u < .5 ? 'h' : 'f', 1, .05 + u * .5); }
+    // mud-crack polygons in the foreground, fading out into ruled playa
+    var K = 34, pj = function (X, D) { return [60 + X * K / D, hz + K / D]; };
+    for (var j = 0; j < 7; j++) {
+      var D = .95 + j * .32, n = M.ceil(2.2 * D / .32);
+      for (i = -n; i <= n; i++) {
+        var a = pj(i * .32 + rr(-.08, .08), D), b = pj((i + 1) * .32 + rr(-.08, .08), D + rr(-.06, .06)), c = pj(i * .32 + rr(-.1, .1), D + .32);
+        tl([a, b], 'f', .55 - j * .06, rr(0, .2)); if ((i + j) & 1) tl([a, c], 'f', .55 - j * .06, rr(0, .2));
+      }
+    }
+    stip(-2, hz + .5, 122, 76, .8, function (x, y) { return .28 * sm(hz, 76, y); }, 'f');
+    lines(hz, 76, .55, .35, 1.09);
+    // Black Rock: a dark, cross-hatched knob at the end of the range, its mirage beneath it
+    var BR = ridge(10, 40, hz, [[24, 12, 12, 1.2], [33, 6, 8, .9]], 1.4, .5), brf = prof(BR);
+    hatch(under(BR, hz), 70, .4, 'h', .95); hatch(under(BR, hz), 135, .55, 'f', .85); hatch(under(BR, hz), 15, .7, 'f', .6);
+    ln(BR, 'b', .02); occR(BR);
+    for (var y = hz + .4; y < hz + 3; y += .42) tl([[10, y], [40, y]], 'f', function (x) { var t = brf(x); return t !== null && hz - t > (y - hz) * 2.6 ? .9 : 0; }, .1);
+    var BRR = ridge(30, 124, hz, [[52, 7, 16, 1.1], [70, 9, 14, 1.2], [96, 15, 24, 1.3], [116, 11, 14]], 1.6);
+    mtn(BRR, hz, { d: .75, ol: 'm', sw: 'f' });
+    var GR = ridge(-2, 124, hz - 4, [[8, 9, 16], [60, 7, 20], [104, 14, 22, 1.3]], 1);
+    mtn(GR, hz - 3, { d: .35, sw: 'f', ol: 'f', len: .5, xh: false });
+    ln([[-2, hz], [122, hz]], 'h', .1);
+    sky(2, hz - 5, .42);
+    return end();
+  }, [24, 32]];
+
+  // Bonneville Salt Flats: polygon-patterned salt, the speedway, the Silver Island Mountains
+  S['bonneville-salt-flats'] = ['saltflat', function () {
+    begin(257);
+    var hz = 43, K = 32, pj = function (X, D) { return [60 + X * K / D, hz + K / D]; }, i, j;
+    // speedway: black guide line straight to the horizon, with mile markers
+    tl([pj(.6, .9), pj(.6, 40)], 'm', 1, .02); tl([pj(.56, .9), pj(.56, 40)], 'f', 1, .02);
+    for (var D = 1.1; D < 12; D *= 1.5) { var m = pj(.75, D); ln([m, [m[0], m[1] - 3 / D]], 'h', 0); }
+    var dx = .2, dd = .26, V = [];
+    for (j = 0; j < 12; j++) { var DD = .92 + j * dd, row = [], n = M.ceil((1.9 * DD + .3) / dx); for (i = -n; i <= n; i++) row.push(pj(i * dx + rr(-.06, .06), DD + rr(-.07, .07))); V.push({ n: n, r: row, D: DD }); }
+    for (j = 0; j < V.length; j++) {
+      var Rw = V[j], tn = 1 - Rw.D * .17;
+      tl(Rw.r, 'f', tn, rr(0, .3), .5);
+      if (j + 1 < V.length) for (i = -Rw.n; i <= Rw.n; i++) if (((i + j) & 1) === 0) tl([Rw.r[i + Rw.n], V[j + 1].r[i + V[j + 1].n]], 'f', tn, rr(0, .3));
+    }
+    lines(hz, 76, .25, .4, 1.15);
+    // Silver Island Mountains, dark and jagged, floating on a mirage
+    var SI = ridge(-2, 84, hz - 1.4, [[8, 5, 12, 1], [21, 11, 15, 1.2], [31, 8, 7, 1.3], [44, 14.5, 16, 1.35], [53, 10, 7, 1.2], [64, 7, 12, 1.1], [76, 4, 8]], 3.4), sf = prof(SI);
+    for (var y = hz - 1.3; y < hz + 1.2; y += .38) tl([[-2, y], [84, y]], 'f', function (x) { var t = sf(x); return t !== null && hz - 1.4 - t > 1 + (y - hz + 1.3) * 3 ? .85 : 0; }, rr(.05, .3));
+    mtn(SI, hz - 1.4, { d: 1, ol: 'm', lit: .45 });
+    var PP = ridge(80, 124, hz - 1, [[106, 9, 16, 1.3]], .8);
+    mtn(PP, hz - 1, { d: .4, sw: 'f', ol: 'h', xh: false });
+    ln([[-2, hz], [122, hz]], 'h', .1);
+    sky(2, hz - 8, .4);
+    return end();
+  }, [48, 28]];
+
+  // Great Salt Lake: the railroad causeway splitting the pink north arm from the blue south arm
+  S['great-salt-lake'] = ['lake', function () {
+    begin(263);
+    var hz = 26, cw = function (x) { return 57 - .15 * x; }, x;
+    // causeway with its breach bridge
+    var C1 = [], C2 = [];
+    for (x = -2; x <= 122; x += 2) { C1.push([x, cw(x) - .5]); C2.push([x, cw(x) + .5]); }
+    var CP = C1.concat(C2.slice().reverse());
+    hatch(CP, 0, .4, 'f', function (x) { return M.abs(x - 64) < 2 ? 0 : .5; });
+    tl(C1, 'm', function (x) { return M.abs(x - 64) < 2 ? 0 : 1; }, .05); tl(C2, 'h', function (x) { return M.abs(x - 64) < 2 ? 0 : 1; }, .05);
+    ln([[61.6, cw(61.6) - 1], [66.4, cw(66.4) - 1]], 'h', 0);
+    for (x = 62; x <= 66; x += 1) ln([[x, cw(x) - 1], [x, cw(x) + .6]], 'f', 0);
+    // a freight train on it
+    for (var k = 0; k < 7; k++) { var tx = 24 + k * 3.2, ty = cw(tx) - .5, P = [[tx, ty], [tx + 2.8, ty - .42], [tx + 2.8, ty - 1.9], [tx, ty - 1.5]]; hatch(P, 90, .35, 'f', .75); lnc(P, 'h', 0); mask(P); }
+    mask(CP);
+    // north arm (pink): close magenta ruling; south arm: open ruling
+    for (var y = hz + .4, g = .34, n = 0; y < 76; y += g, g = M.min(1.2, g * 1.035), n++) {
+      (function (y, n) {
+        var north = function (x) { return y < cw(x) - .5; };
+        tl([[-2, y], [122, y]], 'fM', function (x) { return north(x) ? .9 * (.8 + .3 * vn(x * .2, y)) : 0; }, M.pow((n * .618) % 1, 1.6) * .8 + .05, .6);
+        tl([[-2, y], [122, y]], y > 60 ? 'h' : 'f', function (x) { return north(x) || y < cw(x) + .5 ? 0 : .62 * (.6 + .5 * vn(x * .2, y)); }, M.pow((n * .618 + .3) % 1, 1.3) * .85 + .05, .6);
+      })(y, n);
+    }
+    // Promontory Point reaching into the north arm, far ranges on the horizon
+    var PR = ridge(-2, 58, hz + 6, [[14, 12, 22, 1.2], [36, 7, 16]], 1.4);
+    mtn(PR, hz + 6.5, { d: .8, ol: 'm', sw: 'f' });
+    mask(under(PR, hz + 9));
+    var F = ridge(-2, 124, hz, [[30, 6, 22], [84, 9, 26, 1.2], [112, 6, 14]], 1);
+    mtn(F, hz + .5, { d: .35, sw: 'f', ol: 'h', len: .5, xh: false });
+    ln([[-2, hz], [122, hz]], 'f', .1);
+    sky(1, hz - 2, .45);
+    return end();
+  }, [64, 47]];
+
+  S['wind-river-range'] = ['range', function () {
+    begin(269);
+    ground(64, .45); tufts(65, 72, 16);
+    var mo = ridge(-4, 124, 63, [[30, 4, 40, 0], [92, 3, 30, 0]], .6);
+    trees(mo, -2, 122, 2.6, 3, 5.6, .8, .8);
+    water(56, 64, .8, function (x) { return .6 + .5 * vn(x * .1, 2); });
+    var tl2 = ridge(-4, 124, 56, [[20, 2, 20, 0], [100, 2, 20, 0]], .4);
+    trees(tl2, -2, 122, 1.6, 1.6, 2.8, .7, .3);
+    var snow = function (x, y) { return y < 30 + 2.5 * M.sin(x * 1.1) + 2 * M.sin(x * 2.9) || (y < 36 && vn(x * .6, y * .5) > .62); };
+    var W = ridge(-2, 122, 52, [[8, 13, 14, 1.3], [24, 19, 15, 1.5], [40, 15, 10, 1.3], [58, 21, 14, 1.5], [86, 17, 16, 1.4], [106, 20, 14, 1.5]], 2.6, .5);
+    mtn(W, 54, { snow: snow, d: 1.1, ol: 'b' });
+    var W2 = ridge(-2, 122, 44, [[16, 16, 10, 1.6], [34, 22, 12, 1.8], [50, 18, 8, 1.6], [70, 30, 13, 1.9], [80, 25, 8, 1.7], [96, 23, 11, 1.7], [114, 15, 9, 1.5]], 2.8, .5);
+    mtn(W2, 46, { snow: function (x, y) { return y < 27 + 2 * M.sin(x * 1.7) || (y < 33 && vn(x * .6, y * .5) > .6); }, d: .8, ol: 'm', sw: 'f' });
+    sky(1, 30, .55);
+    return end();
+  }, [70, 15]];
+
+  // Mississippi at the Quad Cities: the arch bridge, a barge tow, wooded bluffs across the river
+  S['quad-cities'] = ['river', function () {
+    begin(271);
+    var x, i, dk = 41;
+    // barge tow pushing upstream
+    var bx = 18, by = 56;
+    for (i = 0; i < 3; i++) { var P = [[bx + i * 9, by], [bx + i * 9 + 8.6, by], [bx + i * 9 + 8.6, by - 1.6], [bx + i * 9, by - 1.6]]; hatch(P, 0, .35, 'f', .55); lnc(P, 'h', 0); mask(P); }
+    var TB = [[bx + 27, by], [bx + 32, by], [bx + 32, by - 2.4], [bx + 30.6, by - 2.4], [bx + 30.6, by - 4.6], [bx + 28.4, by - 4.6], [bx + 28.4, by - 2.4], [bx + 27, by - 2.4]];
+    hatch(TB, 90, .35, 'f', .8); lnc(TB, 'h', 0); ln([[bx + 29.5, by - 4.6], [bx + 29.5, by - 6]], 'h', 0); mask(TB);
+    for (i = 0; i < 6; i++) ln([[bx + 32.4 + i * 1.2, by - .2 + i * .1], [bx + 33.6 + i * 1.6, by - .2 + i * .12]], 'f', 0);
+    // the bridge: deck, four tied arches with hangers, piers into the water
+    var spans = [[-2, 26], [26, 54], [54, 82], [82, 110], [110, 124]];
+    ln([[-2, dk], [122, dk]], 'm', 0); ln([[-2, dk + .8], [122, dk + .8]], 'h', 0);
+    hatch([[-2, dk], [122, dk], [122, dk + .8], [-2, dk + .8]], 90, .5, 'f', .5);
+    spans.forEach(function (S2) {
+      var a = S2[0], b = S2[1], m = (a + b) / 2, h = (b - a) * .26, A = [];
+      for (x = a; x <= b + 1e-6; x += .5) { var u = (x - m) / ((b - a) / 2); A.push([x, dk - h * (1 - u * u)]); }
+      ln(A, 'h', 0); ln(A.map(function (q) { return [q[0], q[1] + .5]; }), 'f', 0);
+      for (x = a + 2; x < b - 1; x += 2) { var u2 = (x - m) / ((b - a) / 2); ln([[x, dk - h * (1 - u2 * u2) + .5], [x, dk]], 'f', 0); }
+      var pr = [[b - .8, dk + .8], [b + .8, dk + .8], [b + 1.1, dk + 5], [b - 1.1, dk + 5]]; hatch(pr, 90, .3, 'f', function (xx) { return xx > b ? .9 : .3; }); lnc(pr, 'h', 0); mask(pr);
+    });
+    mask([[-2, dk - .2], [122, dk - .2], [122, dk + 1], [-2, dk + 1]]);
+    // river: ruled water, piers and bluffs reflected darker
+    water(dk + 5, 76, .85, function (x, y) {
+      var near = 0; [26, 54, 82, 110].forEach(function (b) { if (M.abs(x - b) < 1.2 && y < dk + 14) near = 1; });
+      return .5 + .7 * near + .2 * sm(60, 76, y);
+    });
+    water(30, dk, .8, function (x, y) { return .45 + .5 * sm(36, 31, y); });
+    // bluffs with hardwoods on the far (Iowa) bank, a church spire and roofs at the foot
+    var BL = ridge(-2, 122, 30, [[24, 9, 30, 0], [74, 11, 36, 0], [112, 7, 18, 0]], 1);
+    for (x = 0; x < 120; x += rr(1.6, 2.6)) { var by2 = prof(BL)(x) + rr(.3, 3), r = rr(.9, 1.6); var cr = ell(x, by2, r, r * .8, PI, TAU, 9); ln(cr, 'h', .05); hatch(cr.concat([[x + r, by2 + .4], [x - r, by2 + .4]]), 70, .4, 'f', .6); mask(cr); }
+    for (x = 40; x < 92; x += rr(2.5, 4)) { var P2 = [[x, 30], [x + 2, 30], [x + 2, 28.6], [x + 1, 27.8], [x, 28.6]]; hatch(P2, 90, .3, 'f', .4); ln(P2, 'f', 0); mask(P2); }
+    ln([[70, 28], [70, 22.5]], 'h', 0); ln([[69.4, 25], [70.6, 25]], 'f', 0);
+    mtn(BL, 31, { d: .7, sw: 'f', ol: 'm', xh: false });
+    sky(1, 22, .45);
+    return end();
+  }, [54, 33]];
 
   /* ---------------- Boeing 737-800, right side, nose right ---------------- */
   function plane() {
@@ -1187,16 +1523,34 @@
   G.plane = plane; G.compass = compass;
   function body(k) { if (!(k in BODY)) BODY[k] = G[k](); return BODY[k]; }
   function attr(s) { return String(s).replace(/[&"<>]/g, function (c) { return { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+  // subject points (viewBox units) for annotation leaders
+  var ANC = { range: [57, 23], peak: [58, 9], volcano: [54, 12], lake: [86, 17], saltflat: [93, 33], canyon: [82, 27], river: [60, 44], city: [59, 17], basin: [92, 36], dunes: [64, 42], plains: [60, 34], reservoir: [60, 35], mine: [60, 36], geology: [36, 12], history: [30, 50], crossing: [52, 30], landmark: [60, 10], forest: [72, 15], fire: [86, 18], airport: [62, 40] };
+  function norm(kind) {
+    var k = String(kind == null ? '' : kind).toLowerCase(); k = ALIAS[k] || k;
+    return Object.prototype.hasOwnProperty.call(G, k) ? k : 'geology';
+  }
+  function key(kind, opts) {
+    var id = opts && opts.id;
+    return id && Object.prototype.hasOwnProperty.call(S, id) ? '#' + id : norm(kind);
+  }
   function illo(kind, opts) {
     opts = opts || {};
-    var k = String(kind == null ? '' : kind).toLowerCase(); k = ALIAS[k] || k;
-    if (!Object.prototype.hasOwnProperty.call(G, k)) k = 'geology';
-    var cls = opts.className == null ? 'illo illo-' + k : opts.className;
+    var k = key(kind, opts), kk = k[0] === '#' ? S[k.slice(1)][0] : k;
+    var cls = opts.className == null ? 'illo illo-' + kk + (k[0] === '#' ? ' illo-' + k.slice(1) : '') : opts.className;
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + (VB[k] || '0 0 120 72') + '" class="' + attr(cls) + '" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid meet" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">' + body(k) + '</svg>';
   }
+  // anchor: the plate's subject as fractions of the 120x72 frame
+  illo.anchor = function (kind, opts) {
+    var k = key(kind, opts), a = k[0] === '#' ? S[k.slice(1)][2] : ANC[k] || [60, 30];
+    return [a[0] / 120, a[1] / 72];
+  };
+  illo.has = function (id) { return Object.prototype.hasOwnProperty.call(S, id); };
+  Object.keys(S).forEach(function (id) { G['#' + id] = S[id][1]; });
   // Plates are drawn on first use and cached; any left over are drawn during idle time.
-  var API = { kinds: {} }, names = Object.keys(G);
+  var API = { kinds: {}, ids: Object.keys(S), idKind: {} }, names = Object.keys(G);
+  API.ids.forEach(function (id) { API.idKind[id] = S[id][0]; });
   names.forEach(function (k) {
+    if (k[0] === '#') return;
     Object.defineProperty(k === 'plane' || k === 'compass' ? API : API.kinds, k, { enumerable: true, get: function () { return illo(k); } });
   });
   API.build = function () { var t = Date.now(); names.forEach(body); return Date.now() - t; };

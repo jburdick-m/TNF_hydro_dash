@@ -18,7 +18,7 @@
   const card = (b) => CARD[Math.round(G.norm360(b) / 22.5) % 16];
   WA.windowBearing = (pos) => G.norm360((pos.trk || 0) + (S.side === 'left' ? -90 : 90));
   WA.toast = function (msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._k); t._k = setTimeout(() => t.classList.remove('on'), 3200); };
-  const illo = (kind, cls) => { try { return window.illo ? window.illo(kind, { className: cls }) || '' : ''; } catch (e) { return ''; } };
+  const illo = (kind, cls, id) => { try { return window.illo ? window.illo(kind, { className: cls, id }) || '' : ''; } catch (e) { return ''; } };
 
   // ------------------------------------------------------------------ POIs
   let poiBase = [], poiLegId = null;
@@ -187,11 +187,10 @@
     document.querySelectorAll('.panel').forEach((x) => (x.hidden = true));
     const el = $('#p-detail'); el.hidden = false;
     const elev = p.elevFt ? n0(p.elevFt) + ' ft' : '';
-    const fig = illo(p.kind, 'd-illo');
+    const fig = illo(p.kind, 'd-illo', p.id);
     el.innerHTML = '<div class="d-top"><button class="txtbtn" id="d-back">← ' + esc(tabName(U.tab)) + '</button><span class="d-kind">' + esc(p.kind) + (p.era ? ' · ' + esc(p.era) : '') + '</span></div>' +
-      '<figure class="d-fig">' + (fig || '<div class="d-noillo"></div>') +
-      '<svg class="d-annot" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true"><path d="M8 9 L30 9 L46 24" /><circle cx="46" cy="24" r="0.9"/>' + (elev ? '<path d="M92 52 L74 52 L60 30"/><circle cx="60" cy="30" r="0.9"/>' : '') + '</svg>' +
-      '<figcaption class="d-lab1">' + esc(p.name) + '</figcaption>' + (elev ? '<span class="d-lab2">' + esc(elev) + '</span>' : '') + '</figure>' +
+      '<figure class="d-fig">' + (fig || '<div class="d-noillo"></div>') + plateAnnot(p, elev) + '</figure>' +
+      '<p class="d-plate">' + esc(plateCaption(p)) + '</p>' +
       '<h2 class="d-name">' + esc(p.name) + '</h2>' + (p.tagline ? '<p class="d-tagline">' + esc(p.tagline) + '</p>' : '') +
       '<p class="d-live" id="d-live"></p>' +
       (p.lookFor ? '<h3 class="sc">What to look for</h3><p>' + esc(p.lookFor) + '</p>' : '') +
@@ -205,8 +204,40 @@
     $('#d-show').onclick = () => { document.body.classList.remove('sheet-full'); U.closeSheet(); WA.map.flyTo(p.lon, p.lat); };
     $('#d-plane').onclick = () => { U.closeSheet(); WA.map.follow = true; WA.map.camera(WA.pos, true); WA.emit('follow'); };
     renderDetailLive();
+    drawLeader(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawLeader);
     $('#sheet-body').scrollTop = 0;
   };
+  // ----- detail plate: King-survey annotation (hairline leader, italic name, small-caps elevation)
+  const ROMAN = [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+  const roman = (n) => { let o = ''; for (const [v, r] of ROMAN) while (n >= v) { o += r; n -= v; } return o; };
+  const DIR8 = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest'];
+  function plateCaption(p) {
+    const all = (window.POIS || []).concat(window.POIS_EXTRA || []);
+    const i = all.findIndex((x) => x.id === p.id);
+    const trk = (WA.pos && WA.pos.trk) || 0, from = G.norm360(trk + (p.side === 'left' ? 90 : -90));
+    return 'Plate ' + (i >= 0 ? roman(i + 1) : '—') + ' · ' + p.name + (p.kind === 'crossing' ? '' : ', from the ' + DIR8[Math.round(from / 45) % 8]);
+  }
+  function plateAnnot(p, elev) {
+    let a = [.5, .3]; try { if (window.illo && window.illo.anchor) a = window.illo.anchor(p.kind, { id: p.id }); } catch (e) { /* default */ }
+    // the illustration sits at inset 8% 6% 4% of a 5:3 figure, the annotation layer is 100 x 60
+    const ax = 6 + 88 * a[0], ay = 0.6 * (8 + 88 * a[1]), left = a[0] > 0.42;
+    const tx = left ? 4.5 : 95.5, anc = left ? 'start' : 'end';
+    return '<svg class="d-annot" viewBox="0 0 100 60" aria-hidden="true" data-ax="' + ax.toFixed(2) + '" data-ay="' + ay.toFixed(2) + '" data-side="' + (left ? 'l' : 'r') + '">' +
+      '<text class="d-t1" x="' + tx + '" y="7.6" text-anchor="' + anc + '">' + esc(p.name) + '</text>' +
+      (elev ? '<text class="d-t2" x="' + tx + '" y="11.4" text-anchor="' + anc + '">elev. ' + esc(elev) + '</text>' : '') +
+      '<path class="d-lead" d=""/><circle class="d-dot" cx="' + ax.toFixed(2) + '" cy="' + ay.toFixed(2) + '" r=".55"/></svg>';
+  }
+  // after layout: underline the label and run the leader from its end to the subject
+  function drawLeader() {
+    const sv = document.querySelector('#p-detail .d-annot'); if (!sv) return;
+    const t1 = sv.querySelector('.d-t1'), t2 = sv.querySelector('.d-t2'), lead = sv.querySelector('.d-lead');
+    let w = 20; try { w = Math.max(t1.getComputedTextLength(), t2 ? t2.getComputedTextLength() : 0); } catch (e) { /* hidden */ }
+    if (!w) return;
+    const ax = +sv.dataset.ax, ay = +sv.dataset.ay, L = sv.dataset.side === 'l', y = t2 ? 13.2 : 9.4;
+    const x0 = L ? 4.5 : 95.5, x1 = L ? x0 + w + 1.2 : x0 - w - 1.2;
+    const dx = ax - x1, dy = ay - y, d = Math.hypot(dx, dy) || 1, ex = ax - dx / d * 1.3, ey = ay - dy / d * 1.3;
+    lead.setAttribute('d', 'M' + x0 + ' ' + y + 'H' + x1.toFixed(2) + 'L' + ex.toFixed(2) + ' ' + ey.toFixed(2));
+  }
   function renderDetailLive() {
     const p = U.list.find((x) => x.id === U.detail), el = $('#d-live'); if (!p || !el) return;
     el.textContent = (p.mine ? 'Your side' : 'Other side') + ' · ' + (p.passed ? 'passed ' + dur(-p.eta) + ' ago' : lookPhrase(p)) + ' · ' + n0(p.abKm / G.KM_PER_MI) + ' mi from the route';
@@ -308,14 +339,14 @@
       '<h3 class="sc">Leg</h3>' + seg('leg', [['auto', 'Auto']].concat(legs.map((l) => [l, l.replace('-', ' → ')])), S.legMode) +
       '<h3 class="sc">Window</h3>' + seg('side', [['left', 'Left'], ['right', 'Right']], S.side) +
       '<h3 class="sc">Theme</h3>' + seg('theme', [['auto', 'Auto'], ['day', 'Day'], ['night', 'Night']], WA.themeMode) +
-      '<h3 class="sc">Chart</h3>' + seg('sat', [['0', 'Chart'], ['1', 'Satellite']], WA.map.sat ? '1' : '0') + ' ' + seg('relief', [['2', 'Relief ×2'], ['4', 'Relief ×4']], WA.map.relief3 ? '4' : '2') +
+      '<h3 class="sc">Basemap</h3>' + seg('basemap', [['relief', 'Relief'], ['topo', 'USGS Topo'], ['sat', 'Satellite'], ['chart', 'Classic']], WA.map.basemap) + ' ' + seg('relief', [['2', 'Relief ×2'], ['4', 'Relief ×4']], WA.map.relief3 ? '4' : '2') +
       '<h3 class="sc">Terrain style</h3>' + seg('reliefstyle', WA.map.reliefStyles(), WA.map.reliefStyle) +
       '<h3 class="sc">Position</h3><p class="quiet small" id="set-src"></p>' +
       '<div class="btnrow"><button class="btn" id="b-gps">' + (S.gpsOn ? 'Stop GPS' : 'Use GPS') + '</button><button class="btn" id="b-sync">Sync position</button></div>' +
       '<div class="btnrow"><button class="btn" data-nudge="-5">−5 min</button><button class="btn" data-nudge="5">+5 min</button><button class="btn" data-nudge="0">Reset offset</button></div>' +
       '<h3 class="sc">Preview</h3><div class="btnrow"><button class="btn" id="b-prev">' + (S.preview ? 'Back to live' : 'Preview the flight') + '</button></div>' +
       '<h3 class="sc">Device</h3><div class="btnrow"><button class="btn" id="b-wake" aria-pressed="' + !!WA.wakeLock + '">Keep screen on</button><button class="btn" id="b-save">Save route offline</button></div><p class="quiet small" id="save-prog"></p>' +
-      '<h3 class="sc">Credits</h3><p class="small credits">Map data: OpenFreeMap © OpenMapTiles © OpenStreetMap contributors. Terrain: AWS / Mapzen Terrain Tiles. Imagery: Esri, Maxar, Earthstar Geographics. Weather: Open-Meteo. Fires: NIFC WFIGS. Place names: BigDataCloud. Live position: adsb.lol, adsb.fi, FlightAware via relay. Type: IM Fell DW Pica (Igino Marini), B612 (Airbus / Intactile). In the spirit of Clarence King’s Geological Exploration of the Fortieth Parallel, 1867–72.</p>';
+      '<h3 class="sc">Credits</h3><p class="small credits">Map data: OpenFreeMap © OpenMapTiles © OpenStreetMap contributors. Terrain: AWS / Mapzen Terrain Tiles. Relief: Esri World Hillshade (Esri, USGS, NASA). Topo: USGS The National Map. Imagery: Esri, Maxar, Earthstar Geographics. Rivers: Natural Earth. Weather: Open-Meteo. Fires: NIFC WFIGS. Place names: BigDataCloud. Live position: adsb.lol, adsb.fi, FlightAware via relay. Type: IM Fell DW Pica (Igino Marini), B612 (Airbus / Intactile). In the spirit of Clarence King’s Geological Exploration of the Fortieth Parallel, 1867–72.</p>';
     renderSettingsLive();
   }
   function renderSettingsLive() {
@@ -371,7 +402,7 @@
       T(xt, y + 4, 'st-name' + (big ? ' big' : ''), clip(p.name, chars), anchor);
       T(xt, y + 16, 'st-kind', clip(p.kind + (p.elevFt ? ' · ' + n0(p.elevFt) + ' ft' : '') + ' · ' + n0(Math.abs(p.cross) / G.KM_PER_MI) + ' mi off', chars + 8), anchor);
       if (big) {
-        const svg = illo(p.kind, 'st-illo');
+        const svg = illo(p.kind, 'st-illo', p.id);
         if (svg) { const ix = sgn > 0 ? W - 50 : 6; P.push('<svg x="' + ix + '" y="' + (y - 20).toFixed(1) + '" width="44" height="44" class="st-illo-wrap">' + svg.replace(/^<svg/, '<svg width="44" height="44"') + '</svg>'); }
       }
       P.push('</g>');
@@ -467,6 +498,7 @@
     if (k === 'side') { S.side = v; WA.store.set('side', v); U.allPoisMap(); U.computeLook(); U.strip.build(); WA.map.camera(WA.pos, true); }
     if (k === 'theme') WA.setTheme(v);
     if (k === 'sat') WA.map.setSat(v === '1');
+    if (k === 'basemap') WA.map.setBasemap(v);
     if (k === 'relief') WA.map.setRelief3(v === '4');
     if (k === 'reliefstyle') WA.map.setReliefStyle(v);
     renderSettings(); U.renderHud();

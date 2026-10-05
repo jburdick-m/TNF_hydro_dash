@@ -66,11 +66,16 @@
     poly(x, ridge.concat([[ridge[ridge.length - 1][0], base], [ridge[0][0], base]]), true);
     x.fillStyle = alpha(p.paper, p.night ? 0.82 : 0.9); x.fill();
     x.save(); x.clip();
+    const clean = o.clean || ridge;
+    // shadow wash under the hachures on facets that fall away to the right
+    x.fillStyle = alpha(p.relief, p.night ? 0.2 : 0.26);
+    for (let i = 1; i < clean.length; i++) { const a = clean[i - 1], b = clean[i]; if ((b[1] - a[1]) / Math.max(1e-6, b[0] - a[0]) <= 0.18) continue; poly(x, [a, b, [b[0], base], [a[0], base]], true); x.fill(); }
     const snowAt = (xx) => topY + (base - topY) * (o.snow || 0) + Math.sin(xx * 1.7 + (o.seed || 0)) * 1.1 + Math.sin(xx * 0.53) * 1.4;
     // shaded flanks: close hachures; the steeper the facet the denser and darker
-    x.strokeStyle = alpha(p.relief, p.night ? 0.95 : 0.9);
+    const hatch = alpha(p.ink2, p.night ? 0.8 : 0.72), soft = alpha(p.relief, p.night ? 0.9 : 0.85);
     for (let xx = ridge[0][0] + 0.6; xx < ridge[ridge.length - 1][0]; xx += 0.95) {
-      const [y0, s] = yAt(ridge, xx);
+      const y0 = yAt(ridge, xx)[0], s = yAt(clean, xx)[1];
+      x.strokeStyle = s > 0.18 ? hatch : soft;
       let ys = y0 + 0.5; if (o.snow) ys = Math.max(ys, snowAt(xx));
       if (s > 0.18) { // facing right: shadow
         x.lineWidth = s > 1.1 ? 0.55 : 0.42;
@@ -83,9 +88,9 @@
       }
     }
     // cross-hatch the deepest shadow: lower part of the steep shadowed faces only
-    x.lineWidth = 0.3; x.strokeStyle = alpha(p.relief, 0.6);
-    for (let i = 1; i < ridge.length; i++) {
-      const a = ridge[i - 1], b = ridge[i]; if ((b[1] - a[1]) / Math.max(1e-6, b[0] - a[0]) < 0.75) continue;
+    x.lineWidth = 0.3; x.strokeStyle = alpha(p.ink2, 0.45);
+    for (let i = 1; i < clean.length; i++) {
+      const a = clean[i - 1], b = clean[i]; if ((b[1] - a[1]) / Math.max(1e-6, b[0] - a[0]) < 0.75) continue;
       x.save(); poly(x, [[a[0], a[1] + (base - a[1]) * 0.35], [b[0], b[1] + (base - b[1]) * 0.2], [b[0], base], [a[0], base]], true); x.clip();
       for (let k = a[0] - h; k < b[0] + 1; k += 1.6) { x.beginPath(); x.moveTo(k, base); x.lineTo(k + h, base - h); x.stroke(); }
       x.restore();
@@ -104,8 +109,8 @@
 
   function drawMount(k, snow, p) {
     const [c, x] = canvas(MW + 4, MH);
-    const ridge = ridgeFrom(PROFILES[k], MW, MH, 1, hash(k));
-    engraveMount(x, ridge, MW, MH, p, { snow: snow ? 0.34 : 0, seed: hash(k) % 97 });
+    const ridge = ridgeFrom(PROFILES[k], MW, MH, 1, hash(k)), clean = PROFILES[k].map((q) => [1 + q[0] * (MW - 2), 1 + q[1] * (MH - 2)]);
+    engraveMount(x, ridge, MW, MH, p, { snow: snow ? 0.34 : 0, seed: hash(k) % 97, clean });
     return img(c);
   }
   function drawVolcano(snow, p) {
@@ -306,7 +311,7 @@
         const pick = (big) => { const k = big ? ['a', 'b', 'd', 'c'][(r() * 4) | 0] : vars[(r() * vars.length) | 0]; return 'mh-' + k + (snowy && big && k !== 'e' ? '-s' : ''); };
         const line = Array.isArray(p.line) && p.line.length > 1 ? p.line : null;
         if (line) {
-          const step = pr === 1 ? 12 : pr === 2 ? 14 : 17;
+          const step = pr === 1 ? 9.5 : pr === 2 ? 11.5 : 14;
           let carry = step * 0.4, n = 0;
           for (let i = 1; i < line.length; i++) {
             const a = line[i - 1], b = line[i], d = hav(a, b), br = brg(a, b);
@@ -372,14 +377,13 @@
 
   // ---------------------------------------------------------------- layers
   function anchorLayer(map) { for (const id of ['route-ahead', 'poi-ring', 'places']) if (map.getLayer(id)) return id; return undefined; }
-  const SIZE_UP = (k) => ['interpolate', ['linear'], ['zoom'], 3, ['*', 0.36 * k, ['get', 's']], 5, ['*', 0.52 * k, ['get', 's']], 7, ['*', 0.8 * k, ['get', 's']], 9, ['*', 1.1 * k, ['get', 's']], 11, ['*', 1.5 * k, ['get', 's']]];
+  const SIZE_UP = (k) => ['interpolate', ['linear'], ['zoom'], 3, ['*', 0.4 * k, ['get', 's']], 5, ['*', 0.6 * k, ['get', 's']], 7, ['*', 0.98 * k, ['get', 's']], 8, ['*', 1.18 * k, ['get', 's']], 9, ['*', 1.28 * k, ['get', 's']], 11, ['*', 1.6 * k, ['get', 's']]];
 
   function waterPaint(p) {
     return {
       rule: { 'fill-pattern': 'wa-rule', 'fill-opacity': p.night ? 0.85 : 0.9 },
-      wl1: { 'line-color': p.water, 'line-opacity': p.night ? 0.42 : 0.38, 'line-width': 0.45, 'line-offset': ['interpolate', ['linear'], ['zoom'], 6, -1.6, 10, -2.6] },
-      wl2: { 'line-color': p.water, 'line-opacity': p.night ? 0.26 : 0.22, 'line-width': 0.4, 'line-offset': ['interpolate', ['linear'], ['zoom'], 6, -3.4, 10, -5.4] },
-      wl3: { 'line-color': p.water, 'line-opacity': p.night ? 0.14 : 0.12, 'line-width': 0.35, 'line-offset': ['interpolate', ['linear'], ['zoom'], 6, -5.4, 10, -8.6] },
+      wl1: { 'line-color': p.water, 'line-opacity': p.night ? 0.5 : 0.45, 'line-width': 0.5, 'line-offset': ['interpolate', ['linear'], ['zoom'], 7, -2.2, 10, -3] },
+      wl2: { 'line-color': p.water, 'line-opacity': p.night ? 0.28 : 0.24, 'line-width': 0.45, 'line-offset': ['interpolate', ['linear'], ['zoom'], 7, -4.6, 10, -6.4] },
     };
   }
 
@@ -395,7 +399,7 @@
         const after = has('water-edge') ? 'water-edge' : undefined;
         map.addLayer({ id: 'illus-water-rule', type: 'fill', source: 'omt', 'source-layer': 'water', minzoom: 4.5, paint: wp.rule }, after);
         const lineBefore = has('streams') ? 'streams' : after;
-        ['wl1', 'wl2', 'wl3'].forEach((k, i) => map.addLayer({ id: 'illus-water-' + k, type: 'line', source: 'omt', 'source-layer': 'water', minzoom: 5.5 + i * 0.6,
+        ['wl1', 'wl2'].forEach((k, i) => map.addLayer({ id: 'illus-water-' + k, type: 'line', source: 'omt', 'source-layer': 'water', minzoom: 7 + i * 0.5,
           filter: ['!=', ['get', 'class'], 'river'], layout: { 'line-join': 'round' }, paint: wp[k] }, lineBefore));
       }
     } catch (e) { console.warn('illus water', e); }
@@ -441,7 +445,7 @@
     addImages(map, p);
     const wp = waterPaint(p);
     const set = (id, paint) => { if (map.getLayer(id)) for (const k in paint) try { map.setPaintProperty(id, k, paint[k]); } catch (e) { /* */ } };
-    set('illus-water-rule', wp.rule); set('illus-water-wl1', wp.wl1); set('illus-water-wl2', wp.wl2); set('illus-water-wl3', wp.wl3);
+    set('illus-water-rule', wp.rule); set('illus-water-wl1', wp.wl1); set('illus-water-wl2', wp.wl2);
     map.triggerRepaint();
   }
 
@@ -456,7 +460,7 @@
     const host = map.getContainer(); if (!host || host.querySelector('.wa-rose')) return;
     if (!document.getElementById('wa-illus-css')) {
       const st = document.createElement('style'); st.id = 'wa-illus-css';
-      st.textContent = '.wa-rose{position:absolute;left:calc(12px + var(--sl,0px));bottom:calc(196px + var(--sb,0px));width:66px;height:66px;z-index:1;pointer-events:none;color:var(--ink-2);opacity:.72;transition:opacity .3s}' +
+      st.textContent = '.wa-rose{position:absolute;left:calc(14px + var(--sl,0px));top:calc(282px + var(--st,0px));width:62px;height:62px;z-index:1;pointer-events:none;color:var(--ink-2);opacity:.72;transition:opacity .3s}' +
         '.wa-rose>div{width:100%;height:100%;transform-origin:50% 50%}.wa-rose svg{width:100%;height:100%;display:block;overflow:visible}' +
         'body.sheet-open .wa-rose{opacity:0}';
       document.head.appendChild(st);

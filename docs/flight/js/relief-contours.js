@@ -13,8 +13,8 @@
     return 'vendor/maplibre-contour/maplibre-contour.min.js';
   })();
   // Contour intervals in feet, [minor, index], keyed by tile zoom (= map zoom for 512-px vector tiles).
-  // Index intervals nest (4000 > 2000 > 1000 > 500 > 200) so lines never jump between tile zooms in the pitched view.
-  const THRESHOLDS = { 0: [2000, 4000], 6: [500, 2000], 8: [200, 1000], 11: [100, 500], 13: [40, 200] };
+  // Index intervals nest (4000 > 2000 > 1000 > 500 > 200; 1000 ft in the z~7.8 window view) so lines never jump between tile zooms in the pitched view.
+  const THRESHOLDS = { 0: [2000, 4000], 5: [1000, 2000], 6: [500, 1000], 8: [200, 1000], 11: [100, 500], 13: [40, 200] };
 
   let loading = null, dem = null, demUrl = null, want = false, gen = 0;
 
@@ -63,7 +63,7 @@
       [L_INDEX]: {
         'line-color': line,
         'line-width': ['interpolate', ['linear'], ['zoom'], 5, 0.7, 8, 0.95, 12, 1.1],
-        'line-opacity': ['interpolate', ['linear'], ['zoom'], 4, 0.55, 7, n ? 0.75 : 0.8],
+        'line-opacity': ['interpolate', ['linear'], ['zoom'], 4, 0.35, 6, 0.5, 7.5, n ? 0.75 : 0.8],
       },
       [L_LABEL]: {
         'text-color': n ? mix(line, '#FFFFFF', 0.1) : mix(line, p.ink || '#1C2629', 0.3),
@@ -88,7 +88,7 @@
     if (!map.getSource(SRC)) {
       map.addSource(SRC, {
         type: 'vector', maxzoom: 13,
-        tiles: [dem.contourProtocolUrl({ multiplier: 3.28084, thresholds: THRESHOLDS, elevationKey: 'ele', levelKey: 'level', contourLayer: 'contours', extent: 4096, buffer: 1 })],
+        tiles: [dem.contourProtocolUrl({ multiplier: 3.28084, thresholds: THRESHOLDS, elevationKey: 'ele', levelKey: 'level', contourLayer: 'contours', extent: 8192, buffer: 1 })],
         attribution: 'Contours: maplibre-contour',
       });
     }
@@ -101,7 +101,7 @@
       map.addLayer({
         id: L_LABEL, type: 'symbol', source: SRC, 'source-layer': 'contours', minzoom: 8, filter: ['>=', ['get', 'level'], 1],
         layout: {
-          'symbol-placement': 'line', 'symbol-spacing': 320, 'text-max-angle': 28, 'text-padding': 3,
+          'symbol-placement': 'line', 'symbol-spacing': 320, 'text-max-angle': 60, 'text-padding': 3,
           'text-field': ['number-format', ['get', 'ele'], { locale: 'en-US', 'max-fraction-digits': 0 }],
           'text-font': ['Noto Sans Italic'], 'text-size': ['interpolate', ['linear'], ['zoom'], 8, 9, 13, 10.5], 'text-letter-spacing': 0.04,
           'text-pitch-alignment': 'viewport', 'text-rotation-alignment': 'map', 'text-keep-upright': true,
@@ -111,15 +111,26 @@
     }
   }
 
+  // The DEM hillshade is only the base tone on the 'chart' basemap; over a raster basemap (Esri relief, topo, imagery)
+  // it would double the shading, so it is hidden and the contours carry the form. Re-applied in a microtask because
+  // map.js resets the hillshade paint right after recolor() when the basemap changes.
+  function applyHS(map, pal) {
+    if (!want || !map.getLayer('hillshade')) return;
+    const bm = WA.map && WA.map.basemap;
+    if (bm && bm !== 'chart') { try { map.setLayoutProperty('hillshade', 'visibility', 'none'); } catch (e) { /* */ } return; }
+    const hs = paints(pal || {}).hillshade;
+    for (const k in hs) try { map.setPaintProperty('hillshade', k, hs[k]); } catch (e) { /* */ }
+    try { map.setLayoutProperty('hillshade', 'visibility', 'visible'); } catch (e) { /* */ }
+  }
+  function applyHSSoon(map, pal) { applyHS(map, pal); Promise.resolve().then(() => applyHS(map, WA.map && WA.map.pal ? WA.map.pal() : pal)); }
+
   WA.reliefStyles.contours = {
     label: 'Survey contours',
     add(map, pal, ctx) {
       want = true;
       const my = ++gen;
       ctx = Object.assign({ beforeId: 'water' }, ctx || {}, { pal });
-      // restyle the base hillshade right away so the switch feels immediate
-      const hs = paints(pal || {}).hillshade;
-      if (map.getLayer('hillshade')) for (const k in hs) try { map.setPaintProperty('hillshade', k, hs[k]); } catch (e) { /* */ }
+      applyHSSoon(map, pal); // base tone right away so the switch feels immediate
       loadLib().then(() => {
         if (!want || my !== gen) return;
         try { build(map, ctx); } catch (e) { console.warn('contours add', e); }
@@ -132,6 +143,8 @@
     },
     recolor(map, pal) {
       const P = paints(pal || {});
+      delete P.hillshade;
+      applyHSSoon(map, pal);
       for (const id in P) {
         if (!map.getLayer(id)) continue;
         for (const k in P[id]) try { map.setPaintProperty(id, k, P[id][k]); } catch (e) { /* */ }

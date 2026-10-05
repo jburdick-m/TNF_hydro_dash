@@ -99,11 +99,12 @@
     function hachures(job, E, mpp, g) {
       const z = job.z, gain = gainFor(z), night = job.n;
       const [gx, gy] = grads(E, mpp);
-      const ink = hex(job.r, night ? [185, 165, 124] : [138, 122, 92]);
+      const rel = hex(job.r, night ? [185, 165, 124] : [138, 122, 92]), dk = hex(job.i, [76, 90, 94]);
+      const ink = night ? rel : rel.map((v, k) => Math.round(v * 0.6 + dk[k] * 0.4 - 18)); // engraved: relief ink pulled toward the chart ink
       const SP = 7.5; // stroke spacing in device px (constant on screen across zooms)
       const M = SP * 1.6; // margin so strokes from neighbouring tiles' seeds are drawn up to the seam
       const mppRef = (40075016.7 * Math.cos(40 * Math.PI / 180)) / (N * Math.pow(2, z));
-      const DH = 1.15 * SP * (0.42 / gain) * mppRef; // contour interval (m) that breaks strokes into terrain-following rows
+      const DH = 1.7 * SP * (0.42 / gain) * mppRef; // contour interval (m) that breaks strokes into terrain-following rows
       const T0 = 0.05, T1 = 0.8; // apparent slope (tan) where hachures begin / reach full weight
       const ox = job.x * N, oy = job.y * N;
       const cl = (v) => (v < 0 ? 0 : v > N - 1 ? N - 1 : v);
@@ -120,14 +121,14 @@
         const shift = (j & 1) * SP * 0.5, i0 = Math.floor((ox - M - shift) / SP), i1 = Math.ceil((ox + N + M - shift) / SP);
         for (let i = i0; i <= i1; i++) {
           const h1 = hash(i, j, z), h2 = hash(i + 7919, j - 104729, z), h3 = hash(j + 31337, i, z);
-          const sx = i * SP + shift + (h1 - 0.5) * 0.7 * SP - ox, sy = j * SP + (h2 - 0.5) * 0.7 * SP - oy;
+          const sx = i * SP + shift + (h1 - 0.5) * 0.4 * SP - ox, sy = j * SP + (h2 - 0.5) * 0.4 * SP - oy;
           const q = (cl(sy) | 0) * N + (cl(sx) | 0);
           let dx = gx[q], dy = gy[q]; const t0 = Math.sqrt(dx * dx + dy * dy), t = t0 * gain;
           if (t < T0) continue;
           const k = Math.min(1, (t - T0) / (T1 - T0));
           if (h3 > 0.25 + k * 2.5) continue; // gentle slopes thin out gradually rather than at a hard edge
           dx /= t0; dy /= t0; // unit uphill direction
-          const e0 = elev(sx, sy), band = Math.floor(e0 / DH), half = SP * (0.32 + 0.48 * Math.sqrt(k));
+          const e0 = elev(sx, sy), band = Math.floor(e0 / DH), half = SP * (0.38 + 0.55 * Math.sqrt(k));
           let a = 0, b = 0; // march uphill (a) and downhill (b) until the row's contour or the stroke half-length
           for (let s = 0.75; s <= half; s += 0.75) { if (Math.floor(elev(sx + dx * s, sy + dy * s) / DH) !== band) break; a = s; }
           for (let s = 0.75; s <= half; s += 0.75) { if (Math.floor(elev(sx - dx * s, sy - dy * s) / DH) !== band) break; b = s; }
@@ -135,9 +136,9 @@
           // light from the NW: slopes facing SE (downhill dir toward +x,+y) are in shadow
           const shade = Math.max(0, Math.min(1, (1 + (-dx - dy) * Math.SQRT1_2) / 2));
           const tone = night ? 1 - shade * 0.75 : 0.25 + shade * 0.75;
-          let w = (0.45 + 1.55 * Math.pow(k, 0.85)) * (0.55 + 0.75 * tone);
-          let al = 0.38 + 0.32 * k + 0.3 * tone;
-          w = Math.max(0.5, Math.min(2.8, Math.round(w * 4) / 4)); al = Math.max(0.2, Math.min(1, Math.round(al * 6) / 6));
+          let w = (0.5 + 1.9 * Math.pow(k, 0.8)) * (0.5 + 0.8 * tone);
+          let al = 0.5 + 0.25 * k + 0.25 * tone;
+          w = Math.max(0.5, Math.min(3.2, Math.round(w * 4) / 4)); al = Math.max(0.2, Math.min(1, Math.round(al * 6) / 6));
           const key = w * 10 + al;
           let arr = buckets.get(key); if (!arr) { arr = { w, al, p: [] }; buckets.set(key, arr); }
           arr.p.push(sx + dx * a, sy + dy * a, sx - dx * b, sy - dy * b);

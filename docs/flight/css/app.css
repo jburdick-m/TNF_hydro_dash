@@ -104,7 +104,9 @@ body.syncing #map { cursor: crosshair; }
 .plane-mk { width: 42px; height: 42px; pointer-events: none; }
 .bb { display: block; color: var(--ink); background: none; }
 .bb-in { display: flex; flex-direction: column; align-items: center; transform-origin: 50% 100%; transition: transform .8s linear; }
-.bb .bb-illo, .bb svg { width: 78px; height: auto; max-height: 60px; color: var(--ink); filter: drop-shadow(0 0 2px var(--paper)) drop-shadow(0 0 3px var(--paper)); }
+.bb .bb-illo, .bb svg { width: 84px; height: auto; max-height: 64px; color: var(--ink); filter: drop-shadow(0 0 1.5px var(--paper)) drop-shadow(0 0 3px var(--paper)) drop-shadow(0 0 6px var(--paper)); }
+/* engraved plates carry hairline weights; thicken them where they are drawn small */
+.bb-illo, .st-illo, .lk .illo { --iw-f: .42px; --iw-h: .55px; --iw-m: .7px; --iw-b: 1px; }
 .bb.mine .bb-illo, .bb.mine svg { color: var(--magenta); }
 .bb-name { font-family: var(--f-display); font-style: italic; font-size: 14px; white-space: nowrap; text-shadow: var(--halo); margin-top: -2px; }
 .bb.mine .bb-name { color: var(--magenta); }
@@ -147,13 +149,17 @@ body.sheet-open #bottom, body.sheet-open .scrim-bottom { display: none; }
 .d-top { display: flex; justify-content: space-between; align-items: center; }
 .d-top .txtbtn { padding-left: 0; }
 .d-kind { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
-.d-fig { position: relative; margin: 6px 0 4px; aspect-ratio: 5 / 3; color: var(--ink); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--paper-2); overflow: hidden; }
+.d-fig { position: relative; margin: 8px 0 0; aspect-ratio: 5 / 3; color: var(--ink); border: 1.25px solid var(--ink); box-shadow: inset 0 0 0 2.5px var(--paper), inset 0 0 0 3.1px var(--ink); background: var(--paper); overflow: hidden; }
+.d-fig .d-illo { --iw-f: .24px; --iw-h: .32px; }
 .d-fig > svg:first-child, .d-fig .d-illo { position: absolute; inset: 8% 6% 4%; width: 88%; height: 88%; }
 .d-noillo { position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, transparent 0 6px, color-mix(in srgb, var(--ink-2) 18%, transparent) 6px 7px); }
-.d-annot { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: var(--ink); stroke-width: .25; pointer-events: none; }
-.d-annot circle { fill: var(--ink); }
-.d-lab1 { position: absolute; left: 3%; top: 4%; font-family: var(--f-display); font-style: italic; font-size: 14px; text-shadow: var(--halo); max-width: 30%; line-height: 1.1; }
-.d-lab2 { position: absolute; right: 3%; bottom: 6%; font-family: var(--f-mono); font-size: 11px; text-shadow: var(--halo); }
+.d-annot { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.d-annot text { fill: var(--ink); stroke: var(--paper); stroke-width: 1.1px; stroke-linejoin: round; paint-order: stroke; }
+.d-t1 { font-family: var(--f-display); font-style: italic; font-size: 4.1px; }
+.d-t2 { font-family: var(--f-display); font-size: 2.9px; letter-spacing: .12px; font-variant: small-caps; font-variant-caps: all-small-caps; fill: var(--ink-2) !important; }
+.d-lead { fill: none; stroke: var(--ink); stroke-width: .16px; }
+.d-dot { fill: var(--paper); stroke: var(--ink); stroke-width: .18px; }
+.d-plate { margin: 5px 0 0 !important; text-align: center; font-family: var(--f-display); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
 .d-name { font-family: var(--f-display); font-weight: 400; font-size: 30px; line-height: 1.05; margin: 12px 0 2px; }
 .d-tagline { font-family: var(--f-display); font-style: italic; font-size: 18px; color: var(--ink-2); margin-top: 0 !important; }
 .d-live { font-family: var(--f-mono); font-size: 11.5px; color: var(--magenta); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 6px 0; }
@@ -240,3 +246,6 @@ body.sheet-open #bottom, body.sheet-open .scrim-bottom { display: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* compass rose: tucked into the bottom-left corner, just above the bottom overlay (main.js sets --rose-b) */
+#map .wa-rose { left: calc(2px + var(--sl)); bottom: var(--rose-b, 150px); width: 58px; height: 58px; }

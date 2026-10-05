@@ -4,9 +4,14 @@
   const OFM = 'https://tiles.openfreemap.org/planet';
   const DEM = 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png';
   const SAT = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+  // Pre-rendered, sharp relief basemaps (CORS-enabled ArcGIS tile services).
+  const ESRI_HS = 'https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}';
+  const ESRI_HS_DARK = 'https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade_Dark/MapServer/tile/{z}/{y}/{x}';
+  const USGS_TOPO = 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}';
+  const BASEMAPS = ['relief', 'topo', 'sat', 'chart'];
   const BIG_RIVERS = ['Mississippi', 'Missouri', 'Platte', 'North Platte', 'South Platte', 'Loup', 'Elkhorn', 'Des Moines', 'Iowa', 'Cedar', 'Rock', 'Fox', 'Laramie', 'Green', 'Bear', 'Weber', 'Jordan', 'Humboldt', 'Truckee', 'Yuba', 'Feather', 'American', 'Sacramento'];
   const BIG_RIVER_NAMES = BIG_RIVERS.map((n) => n + ' River');
-  const M = (WA.map = { reliefStyle: WA.store.get('reliefStyle', 'classic'), mode: WA.store.get('cam', 'window'), follow: true, sat: WA.store.get('sat', false), relief3: WA.store.get('relief3', false), ready: false });
+  const M = (WA.map = { reliefStyle: WA.store.get('reliefStyle', 'classic'), mode: WA.store.get('cam', 'window'), follow: true, basemap: WA.store.get('basemap', 'relief'), relief3: WA.store.get('relief3', false), ready: false });
   if (['window', 'chase', 'map'].indexOf(M.mode) < 0) M.mode = 'window';
   try { const q = new URLSearchParams(location.search).get('relief'); if (q) M.reliefStyle = q; } catch (e) { /* */ }
 
@@ -23,9 +28,12 @@
     const halo = p.paper;
     return [
       { id: 'bg', type: 'background', paint: { 'background-color': p.paper } },
-      { id: 'sat', type: 'raster', source: 'sat', layout: { visibility: M.sat ? 'visible' : 'none' }, paint: { 'raster-opacity': p.night ? 0.75 : 0.9, 'raster-saturation': -0.35, 'raster-contrast': 0.05 } },
+      { id: 'sat', type: 'raster', source: 'sat', layout: { visibility: M.basemap === 'sat' ? 'visible' : 'none' }, paint: { 'raster-opacity': p.night ? 0.8 : 0.95, 'raster-saturation': -0.25, 'raster-contrast': 0.05, 'raster-fade-duration': 0 } },
+      { id: 'topo', type: 'raster', source: 'topo', layout: { visibility: M.basemap === 'topo' ? 'visible' : 'none' }, paint: { 'raster-opacity': p.night ? 0.7 : 0.92, 'raster-saturation': -0.2, 'raster-brightness-max': p.night ? 0.55 : 1, 'raster-fade-duration': 0 } },
+      { id: 'relief-day', type: 'raster', source: 'esri-hs', layout: { visibility: M.basemap === 'relief' && !p.night ? 'visible' : 'none' }, paint: { 'raster-opacity': ['interpolate', ['linear'], ['zoom'], 5, 0.95, 10, 0.88, 14, 0.8], 'raster-contrast': 0.28, 'raster-brightness-min': 0.04, 'raster-brightness-max': 0.98, 'raster-fade-duration': 0 } },
+      { id: 'relief-night', type: 'raster', source: 'esri-hs-dark', layout: { visibility: M.basemap === 'relief' && p.night ? 'visible' : 'none' }, paint: { 'raster-opacity': 0.9, 'raster-contrast': 0.2, 'raster-fade-duration': 0 } },
       { id: 'hillshade', type: 'hillshade', source: 'hs', paint: { 'hillshade-exaggeration': p.night ? 0.45 : 0.6, 'hillshade-shadow-color': p.relief, 'hillshade-highlight-color': p.night ? p.paper2 : '#F4F5EF', 'hillshade-accent-color': p.ink2, 'hillshade-illumination-direction': 315 } },
-      { id: 'water', type: 'fill', source: 'omt', 'source-layer': 'water', paint: { 'fill-color': p.water, 'fill-opacity': M.sat ? 0.15 : p.night ? 0.32 : 0.22 } },
+      { id: 'water', type: 'fill', source: 'omt', 'source-layer': 'water', paint: { 'fill-color': p.water, 'fill-opacity': M.basemap === 'sat' || M.basemap === 'topo' ? 0.12 : p.night ? 0.32 : 0.22 } },
       { id: 'water-edge', type: 'line', source: 'omt', 'source-layer': 'water', minzoom: 5, paint: { 'line-color': p.water, 'line-width': 0.6, 'line-opacity': 0.7 } },
       { id: 'streams', type: 'line', source: 'omt', 'source-layer': 'waterway', minzoom: 8, filter: ['!=', ['get', 'class'], 'river'], paint: { 'line-color': p.water, 'line-width': 0.4, 'line-opacity': 0.45 } },
       { id: 'rivers', type: 'line', source: 'omt', 'source-layer': 'waterway', filter: ['==', ['get', 'class'], 'river'], layout: { 'line-join': 'round', 'line-cap': 'round' },
@@ -82,7 +90,10 @@
       sources: {
         omt: { type: 'vector', url: OFM, attribution: '<a href="https://openfreemap.org">OpenFreeMap</a> © <a href="https://openmaptiles.org">OpenMapTiles</a> © <a href="https://www.openstreetmap.org/copyright">OSM contributors</a>' },
         hs: { type: 'raster-dem', tiles: [DEM], encoding: 'terrarium', tileSize: 256, maxzoom: 15, attribution: 'Terrain Tiles: AWS / Mapzen' },
-        dem: { type: 'raster-dem', tiles: [DEM], encoding: 'terrarium', tileSize: 256, maxzoom: 12 },
+        dem: { type: 'raster-dem', tiles: [DEM], encoding: 'terrarium', tileSize: 256, maxzoom: 14 },
+        'esri-hs': { type: 'raster', tiles: [ESRI_HS], tileSize: 256, maxzoom: 16, attribution: 'Hillshade: Esri, USGS, NASA' },
+        'esri-hs-dark': { type: 'raster', tiles: [ESRI_HS_DARK], tileSize: 256, maxzoom: 16 },
+        topo: { type: 'raster', tiles: [USGS_TOPO], tileSize: 256, maxzoom: 16, attribution: 'USGS The National Map' },
         sat: { type: 'raster', tiles: [SAT], tileSize: 256, maxzoom: 18, attribution: 'Esri, Maxar, Earthstar Geographics' },
         cone: { type: 'geojson', data: EMPTY }, 'route-ahead': { type: 'geojson', data: EMPTY }, 'route-behind': { type: 'geojson', data: EMPTY },
         flown: { type: 'geojson', data: EMPTY }, ticks: { type: 'geojson', data: EMPTY }, pois: { type: 'geojson', data: EMPTY }, poilines: { type: 'geojson', data: EMPTY },
@@ -137,11 +148,10 @@
       return;
     }
     M.map = map;
-    map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
+    // No on-map attribution button; sources are credited in Settings → Credits.
     map.on('error', (e) => { if (e && e.error && /webgl/i.test(String(e.error.message))) M.fail('WebGL failed; the chart is off.'); });
     map.on('load', () => {
       M.ready = true;
-      const at = el.querySelector('.maplibregl-ctrl-attrib'); if (at) at.classList.remove('maplibregl-compact-show');
       addGlyphs(pal());
       try { map.setTerrain({ source: 'dem', exaggeration: M.relief3 ? 4 : 2 }); } catch (e) { /* no terrain */ }
       setSky();
@@ -181,7 +191,7 @@
       if (!M.map.getLayer(L.id)) continue;
       for (const k in L.paint || {}) { try { M.map.setPaintProperty(L.id, k, L.paint[k]); } catch (e) { /* skip */ } }
     }
-    addGlyphs(p); setSky();
+    addGlyphs(p); setSky(); M.showBasemap();
     const R = (WA.reliefStyles || {})[M.reliefStyle];
     if (R && R.recolor) try { R.recolor(M.map, p); } catch (e) { console.warn('relief recolor', e); }
   };
@@ -196,12 +206,21 @@
     // restore the classic hillshade paint, then let the active style restyle it
     const hs = layers(pal()).find((l) => l.id === 'hillshade');
     for (const k in hs.paint) try { map.setPaintProperty('hillshade', k, hs.paint[k]); } catch (e) { /* */ }
-    map.setLayoutProperty('hillshade', 'visibility', 'visible');
+    map.setLayoutProperty('hillshade', 'visibility', M.basemap === 'chart' || M.reliefStyle !== 'classic' ? 'visible' : 'none');
     const R = all[M.reliefStyle];
     if (R && !R._on) { try { R.add(map, pal(), { beforeId: 'water', DEM, G }); R._on = true; } catch (e) { console.warn('relief add', e); } }
+    M.showBasemap();
   };
   M.setReliefStyle = function (name) { M.reliefStyle = name; WA.store.set('reliefStyle', name); M.applyRelief(); };
-  M.setSat = function (on) { M.sat = on; WA.store.set('sat', on); if (M.map && M.ready) { M.map.setLayoutProperty('sat', 'visibility', on ? 'visible' : 'none'); M.recolor(); } };
+  // Basemap: 'relief' (Esri hillshade, sharp to z16), 'topo' (USGS), 'sat' (Esri imagery), 'chart' (hillshade computed from the DEM)
+  M.showBasemap = function () {
+    const map = M.map; if (!map || !M.ready) return;
+    const night = pal().night, b = M.basemap, vis = (id, on) => { if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none'); };
+    vis('sat', b === 'sat'); vis('topo', b === 'topo'); vis('relief-day', b === 'relief' && !night); vis('relief-night', b === 'relief' && night);
+    if (M.reliefStyle === 'classic') vis('hillshade', b === 'chart');
+  };
+  M.setBasemap = function (b) { if (BASEMAPS.indexOf(b) < 0) b = 'relief'; M.basemap = b; WA.store.set('basemap', b); if (M.map && M.ready) { M.recolor(); M.applyRelief(); } };
+  M.setSat = function (on) { M.setBasemap(on ? 'sat' : 'relief'); };
   M.setRelief3 = function (on) { M.relief3 = on; WA.store.set('relief3', on); if (M.map && M.ready) try { M.map.setTerrain({ source: 'dem', exaggeration: on ? 4 : 2 }); } catch (e) { /* */ } };
 
   // ---- data layers ----
@@ -293,7 +312,7 @@
       let mk = M.billboards[f.id];
       if (!mk) {
         const el = document.createElement('button'); el.className = 'bb'; el.type = 'button';
-        let svg = ''; try { svg = window.illo(f.kind, { className: 'bb-illo' }) || ''; } catch (e) { svg = ''; }
+        let svg = ''; try { svg = window.illo(f.kind, { className: 'bb-illo', id: f.id }) || ''; } catch (e) { svg = ''; }
         el.innerHTML = '<span class="bb-in">' + svg + '<span class="bb-name">' + WA.esc(f.name) + '</span><span class="bb-stem"></span></span>';
         el.addEventListener('click', (ev) => { ev.stopPropagation(); WA.ui.openDetail(f.id); });
         mk = M.billboards[f.id] = new maplibregl.Marker({ element: el, anchor: 'bottom', pitchAlignment: 'viewport', rotationAlignment: 'viewport' }).setLngLat([f.lon, f.lat]).addTo(M.map);
