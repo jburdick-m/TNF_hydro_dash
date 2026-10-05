@@ -421,33 +421,31 @@
     const shadow = [[90.4, 12], [91.4, 11.6], [92, 13.2], [92.5, 17.4], [93.1, 22.6], [93.9, 27.8], [95.1, 31.6], [98.6, 34], [104, 35.7], [110, 36.6], [90, 36.8], [90.4, 24]];
     o += t.clip(tp, t.hatch(shadow, { angle: 92, gap: 0.5, op: 0.7 }) + t.hatch([[84, 10], [91, 10], [90.6, 34], [84, 34]], { angle: 88, gap: 1.15, op: 0.45, jitter: 0.3 }) + t.stip([[74, 36.8], [84, 33.4], [86, 31], [96, 31], [100, 34], [110, 36.8]], { n: 80, r: 0.22, op: 0.55 }));
     o += t.line(tusk, 1);
-    // barchans: gentle windward backs (west), steep shadowed slip faces with horns pointing downwind
-    // [cx, cy, size, ground squash, crest weight]; each dune has real height: the crest is lifted off its footprint
-    const dunes = [[66, 39.6, 4.5, 0.3, 0.45], [15, 40.6, 5, 0.3, 0.5], [112, 41, 4, 0.3, 0.45], [44, 43.4, 8, 0.3, 0.6], [101, 47, 9, 0.3, 0.65], [71, 50, 13.5, 0.3, 0.8], [96, 60.4, 8, 0.3, 0.7], [29, 63.4, 23, 0.28, 1.05]];
-    const shapes = dunes.map(([cx, cy, s, k, lw]) => {
-      const S = (u, v, z) => [cx + u * s, cy + v * s * k - (z || 0) * s * 0.42];
-      const outer = [S(1.15, -0.78)], crest = [S(1.15, -0.78)], toe = [S(1.15, -0.78)];
-      for (let a = -110; a <= 110; a += 10) { const r = (a * PI) / 180; outer.push(S(0.32 - 0.92 * M.cos(r), 0.92 * M.sin(r))); }
-      for (let a = -100; a <= 100; a += 10) { const r = (a * PI) / 180; crest.push(S(0.4 - 0.5 * M.cos(r), 0.66 * M.sin(r), M.pow(M.cos(r * 0.9), 1.6))); }
-      for (let a = -90; a <= 90; a += 10) { const r = (a * PI) / 180; toe.push(S(0.64 - 0.4 * M.cos(r), 0.5 * M.sin(r))); }
-      outer.push(S(1.15, 0.78)); crest.push(S(1.15, 0.78)); toe.push(S(1.15, 0.78));
-      return { cx, cy, s, k, lw, S, outer, crest, toe, back: outer.concat(crest.slice().reverse()), slip: crest.concat(toe.slice().reverse()) };
+    // barchans seen low across the field: long gentle windward backs rising from the west to a sharp brink,
+    // steep slip faces in shadow, the near horn curling forward downwind
+    const dunes = [[4, 39.6, 14, 2], [30, 40.2, 12, 1.8], [55, 39.4, 10, 1.6], [104, 40.6, 12, 1.8], [10, 46.4, 24, 4.2], [48, 45.6, 21, 3.8], [84, 48, 22, 4.2], [-8, 58.4, 38, 7.8], [38, 60.6, 42, 9.4], [88, 63.6, 34, 7.2]];
+    const shapes = dunes.map(([x0, yb, len, h]) => {
+      const xc = x0 + len * 0.62, yc = yb - h, prof = [];
+      for (let u = 0; u <= 1.001; u += 0.08) prof.push([x0 + u * (xc - x0), yb - h * M.pow(M.sin((u * PI) / 2), 1.4)]);
+      const Sb = [xc + h * 1.25, yb], H = [xc + h * 1.3 + len * 0.2, yb + h * 0.24], I = [xc + h * 0.2, yb + h * 0.14];
+      const brink = crPts([[xc, yc], [xc + h * 0.5, yc + h * 0.45], [xc + h * 1.1, yb - h * 0.12], H], 5);
+      const toe = crPts([I, [xc + h * 0.9, yb + h * 0.3], H], 5);
+      const slip = brink.concat(toe.slice().reverse());
+      const back = prof.concat([I, [x0 + len * 0.4, yb + h * 0.22]]);
+      return { x0, yb, len, h, xc, yc, prof, brink, toe, Sb, slip, back };
     });
-    // sand sheet, sage and far dune crests between the dunes
     let far = '';
-    for (let i = 0; i < 26; i++) { const x = R(2, 118), y = R(37.2, 40.5), w = R(1.2, 3); far += 'M' + r2(x) + ' ' + r2(y) + 'q' + r2(w * 0.6) + ' ' + r2(-w * 0.35) + ' ' + r2(w) + ' ' + r2(w * 0.1); }
+    for (let i = 0; i < 22; i++) { const x = R(2, 118), y = R(37.2, 39.5), w = R(1.2, 3); far += 'M' + r2(x) + ' ' + r2(y) + 'q' + r2(w * 0.6) + ' ' + r2(-w * 0.3) + ' ' + r2(w) + ' ' + r2(w * 0.12); }
     const ground = [[-1, 36.6], [121, 36.6], [121, 73], [-1, 73]];
-    o += t.hide([].concat.apply([], shapes.map((d) => [d.back, d.slip])), t.s(far, 0.35, 0.55) + t.plain(36.8, 72.5, 18, 0.26) + t.stip(ground, { n: 220, r: 0.22, op: 0.5 }) + t.sage([[-1, 52], [121, 52], [121, 73], [-1, 73]], 30, 1, 0.3, 0.7));
-    shapes.forEach((d) => {
-      const slip = d.slip, back = d.back, nearer = shapes.filter((e) => e.cy > d.cy && M.abs(e.cx - d.cx) < (e.s + d.s) * 1.2);
+    o += t.hide([].concat.apply([], shapes.map((d) => [d.back, d.slip])), t.s(far, 0.35, 0.55) + t.plain(36.8, 72.5, 18, 0.26) + t.stip(ground, { n: 220, r: 0.22, op: 0.5 }) + t.sage([[-1, 50], [121, 50], [121, 73], [-1, 73]], 30, 1, 0.3, 0.7));
+    shapes.forEach((d, i) => {
+      const nearer = shapes.slice(i + 1).filter((e) => e.yb > d.yb + 1);
       let rip = '';
-      [0.22, 0.42, 0.62, 0.8].forEach((f) => {
-        const pts = [];
-        for (let a = -96; a <= 96; a += 8) { const r = (a * PI) / 180; const cu = 0.4 - 0.5 * M.cos(r), cv = 0.66 * M.sin(r), ou = 0.32 - 0.92 * M.cos(r), ov = 0.92 * M.sin(r); pts.push(d.S(cu + (ou - cu) * f, cv + (ov - cv) * f, M.pow(M.cos(r * 0.9), 1.6) * (1 - f) * (1 - f * 0.3))); }
-        for (let i = 0; i < pts.length - 1; i++) if (t.rng() < 0.7) rip += 'M' + P([pts[i], pts[i + 1]]);
-      });
-      let s = t.clip(back, t.s(rip, 0.25, 0.5) + t.hatch(back, { angle: 20, gap: 2.2, op: 0.18 })) + t.hatch(slip, { angle: 96, gap: d.s > 10 ? 0.45 : 0.55, op: 0.75 }) + t.clip(slip, t.hatch(slip, { angle: 150, gap: 1.3, op: 0.35 }));
-      s += t.line(d.outer, 0.3, 0.4) + t.line(d.toe, 0.32, 0.75) + t.line(d.crest, d.lw);
+      [0.3, 0.52, 0.72, 0.88].forEach((f) => { for (let k = 0; k < d.prof.length - 1; k++) if (t.rng() < 0.75) { const a = d.prof[k], b = d.prof[k + 1]; rip += 'M' + P([[a[0] + f * 0.9, d.yb - (d.yb - a[1]) * f], [b[0] + f * 0.9, d.yb - (d.yb - b[1]) * f]]); } });
+      const lw = 0.45 + d.h * 0.07;
+      let s = t.clip(d.back, t.s(rip, 0.25, 0.5) + t.hatch(d.back, { angle: 18, gap: 2.2, op: 0.16 })) +
+        t.hatch(d.slip, { angle: 94, gap: d.h > 5 ? 0.42 : 0.55, op: 0.75 }) + t.clip(d.slip, t.hatch(d.slip, { angle: 148, gap: 1.2, op: 0.35 }));
+      s += t.line(d.toe, 0.3, 0.7) + t.line(d.prof, lw) + t.line(d.brink, lw * 0.85) + t.line([[d.x0 - 1, d.yb + 0.1], [d.x0 + d.len * 0.4, d.yb + d.h * 0.22]], 0.25, 0.4);
       o += nearer.length ? t.hide([].concat.apply([], nearer.map((e) => [e.back, e.slip])), s) : s;
     });
     return plate(K, o);
