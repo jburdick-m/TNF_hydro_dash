@@ -2,6 +2,9 @@
 // survey plates: little hatched "molehill" mountains along the ranges, ruled water, small vignettes at a few
 // landmarks, and a compass-rose cartouche. All sprites are drawn on canvas and redrawn on theme change.
 (function () {
+  // Pictorial sprites (molehills, vignettes) are off: the user prefers no illustrations drawn on the map.
+  // Engraved water lining and the compass rose stay.
+  const DRAW_SPRITES = false;
   if (!window.WA) return;
   const R2D = 180 / Math.PI, D2R = Math.PI / 180, PR = 2;
   const EMPTY = { type: 'FeatureCollection', features: [] };
@@ -403,7 +406,7 @@
           filter: ['!=', ['get', 'class'], 'river'], layout: { 'line-join': 'round' }, paint: wp[k] }, lineBefore));
       }
     } catch (e) { console.warn('illus water', e); }
-    try {
+    if (DRAW_SPRITES) try {
       map.addSource('illus-mounts', { type: 'geojson', data: EMPTY });
       map.addSource('illus-vg', { type: 'geojson', data: EMPTY });
       map.addSource('illus-flat', { type: 'geojson', data: EMPTY });
@@ -427,6 +430,7 @@
 
   let sig = '';
   function rebuild(force) {
+    if (!DRAW_SPRITES) return;
     const map = WA.map && WA.map.map; if (!map || !I.installed) return;
     let list; try { list = poiList(); } catch (e) { list = []; }
     const s = (WA.leg && WA.leg.id) + '|' + list.length + '|' + list.map((q) => q.id).join(',').length;

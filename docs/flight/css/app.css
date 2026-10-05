@@ -248,4 +248,4 @@ body.sheet-open #bottom, body.sheet-open .scrim-bottom { display: none; }
 }
 
 /* compass rose: tucked into the bottom-left corner, just above the bottom overlay (main.js sets --rose-b) */
-#map .wa-rose { left: calc(2px + var(--sl)); bottom: var(--rose-b, 150px); width: 58px; height: 58px; }
+#map .wa-rose { left: calc(2px + var(--sl)); top: auto; bottom: var(--rose-b, 150px); width: 58px; height: 58px; }
