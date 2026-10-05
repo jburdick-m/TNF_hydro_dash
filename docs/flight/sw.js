@@ -1,7 +1,7 @@
 // AA2735 Window Atlas service worker: app shell (network-first, cached fallback), map tiles/fonts cache-first, live APIs network-only.
 const VERSION = 'wa-v1';
 const SHELL = 'shell-' + VERSION, TILES = 'tiles-v1', TILE_CAP = 6000;
-const SHELL_FILES = ['index.html', 'manifest.webmanifest', 'css/app.css', 'vendor/maplibre/maplibre-gl.js', 'vendor/maplibre/maplibre-gl.css',
+const SHELL_FILES = ['index.html', 'manifest.json', 'css/app.css', 'vendor/maplibre/maplibre-gl.js', 'vendor/maplibre/maplibre-gl.css',
   'data/route.js', 'data/pois.js', 'data/pois-extra.js', 'js/relay-feed.js', 'js/illustrations.js', 'js/geo.js', 'js/engine.js', 'js/map.js', 'js/live.js', 'js/ui.js', 'js/main.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 const TILE_HOSTS = ['tiles.openfreemap.org', 's3.amazonaws.com', 'server.arcgisonline.com', 'fonts.gstatic.com', 'fonts.googleapis.com'];
