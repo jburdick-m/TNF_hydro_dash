@@ -206,9 +206,11 @@
     // restore the classic hillshade paint, then let the active style restyle it
     const hs = layers(pal()).find((l) => l.id === 'hillshade');
     for (const k in hs.paint) try { map.setPaintProperty('hillshade', k, hs.paint[k]); } catch (e) { /* */ }
-    map.setLayoutProperty('hillshade', 'visibility', M.basemap === 'chart' || M.reliefStyle !== 'classic' ? 'visible' : 'none');
+    map.setLayoutProperty('hillshade', 'visibility', M.basemap === 'chart' || M.basemap === 'relief' || M.reliefStyle !== 'classic' ? 'visible' : 'none');
     const R = all[M.reliefStyle];
-    if (R && !R._on) { try { R.add(map, pal(), { beforeId: 'water', DEM, G }); R._on = true; } catch (e) { console.warn('relief add', e); } }
+    // (re)add the active style after the hillshade reset so its own hillshade tweaks win
+    if (R && R._on) { try { R.remove(map); } catch (e) { /* */ } R._on = false; }
+    if (R) { try { R.add(map, pal(), { beforeId: 'water', DEM, G }); R._on = true; } catch (e) { console.warn('relief add', e); } }
     M.showBasemap();
   };
   M.setReliefStyle = function (name) { M.reliefStyle = name; WA.store.set('reliefStyle', name); M.applyRelief(); };
@@ -216,8 +218,14 @@
   M.showBasemap = function () {
     const map = M.map; if (!map || !M.ready) return;
     const night = pal().night, b = M.basemap, vis = (id, on) => { if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none'); };
-    vis('sat', b === 'sat'); vis('topo', b === 'topo'); vis('relief-day', b === 'relief' && !night); vis('relief-night', b === 'relief' && night);
-    if (M.reliefStyle === 'classic') vis('hillshade', b === 'chart');
+    // The Esri relief raster only shows under the classic style; contours/hachures/tints bring their own shading.
+    const esri = b === 'relief' && M.reliefStyle === 'classic';
+    vis('sat', b === 'sat'); vis('topo', b === 'topo'); vis('relief-day', esri && !night); vis('relief-night', esri && night);
+    if (M.reliefStyle === 'classic') {
+      // Relief basemap: blend in the DEM hillshade at cruise zooms (the pre-rendered relief is faint there), fading out by z11 where it is crisp.
+      vis('hillshade', b === 'chart' || b === 'relief');
+      if (b === 'relief') try { map.setPaintProperty('hillshade', 'hillshade-exaggeration', ['interpolate', ['linear'], ['zoom'], 4, night ? 0.5 : 0.65, 8, night ? 0.4 : 0.5, 10, 0.2, 11.5, 0]); } catch (e) { /* */ }
+    }
   };
   // Pictorial sprites from js/map-illustrations.js stay hidden (no illustrations on the map); water lining and the compass rose remain.
   const SPRITE_LAYERS = ['illus-flat', 'illus-mounts', 'illus-vg'];
