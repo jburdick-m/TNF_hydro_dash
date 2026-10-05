@@ -1,6 +1,6 @@
 // AA2735 route + schedule. Times are Unix seconds (UTC) from FlightAware, retrieved 2026-10-05.
-// ORD-SMF waypoints are the filed track points; SMF-ORD between BAM and ONL is great-circle
-// interpolated (waypointsApprox) because the intermediate fixes weren't published with coordinates.
+// ORD-SMF waypoints are the filed track points; SMF-ORD is great-circle densified between its filed
+// fixes (coordinates from opennav.com); departure/arrival procedure segments are approximate.
 window.FLIGHT_DATA = {
  "flight": {
   "ident": "AA2735",
@@ -378,6 +378,11 @@ window.FLIGHT_DATA = {
    "route": "RVRCT4 MACUS Q122 MCORD BAM KOHEN BEARR KU72Q BOJOL KD75W ONL FOD MYRRS FYTTE7",
    "fixes": [
     {
+     "id": "MACUS",
+     "lon": -118.8,
+     "lat": 39.8833
+    },
+    {
      "id": "MCORD",
      "lon": -117.94,
      "lat": 40.23
@@ -388,6 +393,31 @@ window.FLIGHT_DATA = {
      "lat": 40.569
     },
     {
+     "id": "KOHEN",
+     "lon": -114.3469,
+     "lat": 41.2394
+    },
+    {
+     "id": "BEARR",
+     "lon": -112.4884,
+     "lat": 41.5308
+    },
+    {
+     "id": "KU72Q",
+     "lon": -110.0,
+     "lat": 42.0
+    },
+    {
+     "id": "BOJOL",
+     "lon": -108.1922,
+     "lat": 42.2866
+    },
+    {
+     "id": "KD75W",
+     "lon": -104.0,
+     "lat": 42.5
+    },
+    {
      "id": "ONL",
      "lon": -98.687,
      "lat": 42.47
@@ -396,9 +426,14 @@ window.FLIGHT_DATA = {
      "id": "FOD",
      "lon": -94.295,
      "lat": 42.611
+    },
+    {
+     "id": "MYRRS",
+     "lon": -92.0599,
+     "lat": 42.5239
     }
    ],
-   "waypointsApprox": true,
+   "waypointsApprox": false,
    "waypoints": [
     [
      -121.5908,
@@ -417,6 +452,14 @@ window.FLIGHT_DATA = {
      39.45
     ],
     [
+     -119.603,
+     39.669
+    ],
+    [
+     -118.8,
+     39.883
+    ],
+    [
      -117.94,
      40.23
     ],
@@ -425,48 +468,60 @@ window.FLIGHT_DATA = {
      40.569
     ],
     [
-     -115.451,
-     40.836
+     -115.641,
+     40.911
     ],
     [
-     -113.969,
-     41.084
+     -114.347,
+     41.239
     ],
     [
-     -112.476,
-     41.312
+     -113.42,
+     41.389
     ],
     [
-     -110.973,
-     41.522
+     -112.488,
+     41.531
     ],
     [
-     -109.46,
-     41.712
+     -111.249,
+     41.772
     ],
     [
-     -107.94,
-     41.881
+     -110.0,
+     42.0
     ],
     [
-     -106.411,
-     42.031
+     -109.098,
+     42.147
     ],
     [
-     -104.876,
-     42.16
+     -108.192,
+     42.287
     ],
     [
-     -103.335,
-     42.269
+     -106.798,
+     42.375
     ],
     [
-     -101.789,
-     42.357
+     -105.4,
+     42.446
     ],
     [
-     -100.239,
-     42.424
+     -104.0,
+     42.5
+    ],
+    [
+     -102.672,
+     42.516
+    ],
+    [
+     -101.343,
+     42.516
+    ],
+    [
+     -100.014,
+     42.501
     ],
     [
      -98.687,
@@ -485,24 +540,28 @@ window.FLIGHT_DATA = {
      42.611
     ],
     [
-     -92.864,
-     42.522
+     -93.177,
+     42.573
     ],
     [
-     -91.437,
-     42.416
+     -92.06,
+     42.524
     ],
     [
-     -90.016,
-     42.292
+     -90.6,
+     42.3
+    ],
+    [
+     -89.3,
+     42.18
     ],
     [
      -88.6,
-     42.15
+     42.1
     ],
     [
      -88.25,
-     42.05
+     42.03
     ],
     [
      -87.9081,
