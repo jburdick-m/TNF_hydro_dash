@@ -297,7 +297,7 @@
       return;
     }
     // WINDOW: camera roughly over the aircraft, looking out the window side
-    const pitch = 76, zoom = 7.8, H = map.getContainer().clientHeight || innerHeight;
+    const pitch = 38, zoom = 7.4, H = map.getContainer().clientHeight || innerHeight; // pitch halved from 76 at the user's request; zoom out a touch to keep the view wide
     const mpp = 40075016 * Math.cos(pos.lat * G.D2R) / (512 * Math.pow(2, zoom));
     const camKm = (1.5 * H * mpp) / 1000, fov2 = 18.43;
     const alt = camKm * Math.cos(pitch * G.D2R), back = camKm * Math.sin(pitch * G.D2R);
