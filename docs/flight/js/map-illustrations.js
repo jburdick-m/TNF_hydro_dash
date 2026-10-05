@@ -464,7 +464,7 @@
     const host = map.getContainer(); if (!host || host.querySelector('.wa-rose')) return;
     if (!document.getElementById('wa-illus-css')) {
       const st = document.createElement('style'); st.id = 'wa-illus-css';
-      st.textContent = '.wa-rose{position:absolute;left:calc(14px + var(--sl,0px));top:calc(282px + var(--st,0px));width:62px;height:62px;z-index:1;pointer-events:none;color:var(--ink-2);opacity:.72;transition:opacity .3s}' +
+      st.textContent = '.wa-rose{position:absolute;left:calc(2px + var(--sl,0px));top:auto;bottom:var(--rose-b,150px);width:58px;height:58px;z-index:1;pointer-events:none;color:var(--ink-2);opacity:.72;transition:opacity .3s}' +
         '.wa-rose>div{width:100%;height:100%;transform-origin:50% 50%}.wa-rose svg{width:100%;height:100%;display:block;overflow:visible}' +
         'body.sheet-open .wa-rose{opacity:0}';
       document.head.appendChild(st);

@@ -155,14 +155,14 @@
     }
     o += t.clip(body, t.s(led, 0.3, 0.55) + t.flank(main, { gap: 0.7, len: 13, w: 0.32, op: 0.75, base: 46 }) + t.flank(main, { gap: 1.4, len: 24, w: 0.26, op: 0.3, shadowOnly: true, base: 46 }));
     // cirque headwalls under the flat summits
-    [[41, 67, 37.5], [70, 94, 35.5], [10, 34, 39]].forEach(([a, b, yb]) => {
+    [[42, 66, 31], [71, 93, 30], [11, 33, 32.5]].forEach(([a, b, yb]) => {
       const top = main.filter((p) => p[0] >= a && p[0] <= b).map((p) => [p[0], p[1] + 1.6]);
       const yt = (top[0][1] + top[top.length - 1][1]) / 2, c = (a + b) / 2, bowl = [];
-      for (let k = 0; k <= 14; k++) { const th = (k / 14) * PI; bowl.push([c + ((b - a) / 2) * M.cos(th), yt + (yb - yt) * M.pow(M.sin(th), 0.7)]); }
+      for (let k = 0; k <= 14; k++) { const th = (k / 14) * PI; bowl.push([c + ((b - a) / 2) * M.cos(th), yt + (yb - yt) * M.pow(M.sin(th), 0.45)]); }
       const poly = top.concat(bowl);
       const left = poly.filter((p) => p[0] <= c + 2).concat([[c + 2, yb + 1]]);
-      o += t.hatch(poly, { angle: 90, gap: 1.05, w: 0.28, op: 0.45, jitter: 0.4 }) + t.clip(poly, t.hatch(left, { angle: 68, gap: 0.8, w: 0.28, op: 0.5 }));
-      o += t.curve(bowl.slice(2, 13), 0.4, 0.7);
+      o += t.hatch(poly, { angle: 90, gap: 1.1, w: 0.26, op: 0.38, jitter: 0.5 }) + t.clip(poly, t.hatch(left, { angle: 68, gap: 0.85, w: 0.26, op: 0.42 }));
+      o += t.curve(bowl.slice(3, 12), 0.35, 0.5);
     });
     // talus and moraine aprons
     o += t.clip(body, t.stip([[0, 40], [120, 37.5], [120, 48], [0, 48]], { n: 170, r: 0.22, op: 0.55 }));
@@ -194,13 +194,27 @@
     let o = t.sky(sk, { gap: 1.2, op: 0.4 });
     // the far bend: pale mesa beyond the gorge
     const farP = far.filter((p) => p[0] > 60 && p[0] < 70);
-    o += t.clip([[61, 0], [69, 0], [69.5, 30.4], [61.5, 30.4]], t.line(far, 0.45, 0.6) + t.hatch(t.below(farP, 30.4), { angle: 90, gap: 1.1, op: 0.35 }));
+    o += t.clip([[61, 0], [69, 0], [69.5, 30.4], [61.5, 30.4]], t.line(far, 0.45, 0.6) + t.hatch(t.below(farP, 30.4), { angle: 0, gap: 0.75, op: 0.4 }) + t.hatch(t.below(farP, 30.4), { angle: 95, gap: 1.8, op: 0.25 }));
+    // buttresses and ravines on both walls: spurs run from the rim down to the water, alternate facets in shadow; benches where the hard beds crop out
+    const facets = (rim, wl, x0, x1, xw0, xw1, n, dir) => {
+      const P2 = (f, g) => { const xr = x0 + (x1 - x0) * f, xw = xw0 + (xw1 - xw0) * f; const a = [xr, yAt(rim, xr)], b = [xw, yAt(wl, xw)]; return [a[0] + (b[0] - a[0]) * g + dir * M.sin(PI * g) * 1.6 * (1 - f * 0.7), a[1] + (b[1] - a[1]) * g]; };
+      let sp = '', dk = '', bn = '';
+      for (let i = 0; i < n; i++) {
+        const f0 = (i + R(0.1, 0.3)) / n, f1 = (i + R(0.55, 0.75)) / n, sl = [], rv = [];
+        for (let g = 0; g <= 1.001; g += 0.2) { sl.push(P2(f0, g)); rv.push(P2(f1, g * 0.98)); }
+        sp += cr(sl); dk += t.hatch(sl.concat(rv.slice().reverse()), { angle: dir > 0 ? 70 : 110, gap: 0.55, op: 0.5 });
+      }
+      [0.34, 0.6].forEach((g) => { const pts = []; for (let f = 0; f <= 1.001; f += 0.04) pts.push(P2(f, g + R(-0.02, 0.02))); bn += 'M' + P(pts); });
+      return dk + t.s(sp, 0.4, 0.75) + t.s(bn, 0.45, 0.65);
+    };
     // left wall faces east, away from the light: dense fluting crossed by the steeply tilted red beds
     o += t.hatch(wallL, { angle: 84, gap: 0.78, w: 0.3, op: 0.55, jitter: 0.3 }) + t.hatch(wallL, { angle: 150, gap: 1.8, w: 0.42, op: 0.62, jitter: 0.7 }) + t.hatch(wallL, { angle: 18, gap: 2.6, w: 0.24, op: 0.3 });
     o += t.clip(wallL, t.line(off(rimL, 0, 2.6), 0.45, 0.6) + t.line(off(rimL, 0, 3.5), 0.3, 0.45));
+    o += t.clip(wallL, facets(rimL, wlL, 0, 61, 0, 61.5, 7, 1));
     // right wall catches the light: the bright tilted strata read as bands
     o += t.hatch(wallR, { angle: 30, gap: 1.6, w: 0.4, op: 0.55, jitter: 0.6 }) + t.hatch(wallR, { angle: 96, gap: 2.8, w: 0.26, op: 0.35, jitter: 0.5 });
     o += t.clip(wallR, t.line(off(rimR, 0, 2.4), 0.45, 0.55) + t.stip(t.band(off(wlR, 0, -3.6), wlR), { n: 90, r: 0.22, op: 0.5 }));
+    o += t.clip(wallR, facets(rimR, wlR, 120, 69, 120, 69.5, 7, -1));
     // water: long reservoir winding away, ruling tighter with distance
     const water = wlL.concat(wlR, [[120, 72.5], [38, 72.5], [32, 68.5], [22, 64.5], [10, 61], [0, 60]]);
     o += t.clip(water, t.rule(-1, 121, 30.6, 38, { gap: 0.68, op: 0.5, breaks: 0.3 }) + t.rule(-1, 121, 38.6, 52, { gap: 1.0, op: 0.5, breaks: 0.3 }) + t.rule(-1, 121, 53, 72, { gap: 1.42, op: 0.5, breaks: 0.35 }) +
@@ -348,7 +362,7 @@
   /* ---------- Fossil Butte: buff Green River cliffs over banded red Wasatch slopes, with a Knightia ---------- */
   B['fossil-butte'] = (K) => {
     const t = T(K, 'fossil-butte'), R = t.R;
-    const sil = K.ridge(t.rng, [[0, 55], [5, 53.2], [10, 47], [14, 40], [18, 32.5], [21, 26.5], [23, 21.5], [25.5, 19], [33, 18.4], [48, 18.8], [62, 18.2], [78, 18.6], [93, 18.2], [96, 20], [98.5, 24], [100.5, 29], [104, 36], [108.5, 43.5], [113.5, 50.2], [118, 54], [120, 55]], 0.35, 0.9);
+    const sil = K.ridge(t.rng, [[0, 55.4], [6, 54.4], [12, 51], [17, 45], [21, 37.6], [24, 30], [26.4, 24.6], [28.6, 21.4], [32, 19.8], [42, 19], [56, 18.2], [70, 17.6], [82, 17.9], [90, 18.6], [94.6, 20.6], [97.6, 24.4], [100, 29.4], [103, 36.4], [107.6, 44], [113, 50.6], [118, 54.2], [121, 55.4]], 0.4, 0.9);
     const cut = K.ridge(t.rng, [[0, 28.2], [30, 28.8], [60, 28.4], [90, 28.9], [120, 28.5]], 0.5, 2);
     const butte = t.below(sil, 55.6);
     const cart = ell(103, 61.4, 14.5, 9, 56);
@@ -357,7 +371,7 @@
     const up = [[-1, -2], [121, -2]].concat(cut.slice().reverse());
     land += t.clip(butte, t.clip(up,
       t.rule(-1, 121, 19, 29, { gap: 0.72, w: 0.24, op: 0.35, breaks: 0.45 }) + t.hatch([[0, 0], [120, 0], [120, 30], [0, 30]], { angle: 90, gap: 2.1, w: 0.26, op: 0.4, jitter: 0.8 }) +
-      t.hatch([[91, 0], [121, 0], [121, 31], [91, 31]], { angle: 100, gap: 0.65, op: 0.5 }) + t.hatch([[-1, 0], [24, 0], [24, 31], [-1, 31]], { angle: 80, gap: 1.2, op: 0.35 })));
+      t.hatch([[89, 0], [121, 0], [121, 31], [89, 31]], { angle: 100, gap: 0.6, op: 0.55 }) + t.hatch([[-1, 0], [29, 0], [29, 31], [-1, 31]], { angle: 80, gap: 1.2, op: 0.35 })));
     // lower slopes: alternating red-purple (dense) and gray (open) Wasatch bands, scored by rills
     const ys = [28.6, 30.6, 32.8, 35.8, 37.6, 41, 42.8, 46.2, 48.2, 51.6, 55.6];
     let lo = '', bd = '';
@@ -368,7 +382,7 @@
     land += t.clip(butte, t.clip(t.band([[-1, 28]].concat(cut, [[121, 28]]), [[-1, 56], [121, 56]]), lo + t.s(bd, 0.35, 0.65) + t.s(rill, 0.28, 0.45) + t.stip([[0, 29], [120, 29], [120, 55], [0, 55]], { n: 160, r: 0.2, op: 0.4 })));
     // limber pine on the summit flat
     let cap = '';
-    for (let x = 27; x < 92; x += R(2, 6)) cap += t.pine(x, yAt(sil, x) + 0.3, R(1.2, 2.3), 0.5);
+    for (let x = 30; x < 92; x += R(2, 6)) cap += t.pine(x, yAt(sil, x) + 0.3, R(1.2, 2.3), 0.5);
     land += t.s(cap, 0.32, 0.8);
     // sage flat in front
     land += t.plain(55.6, 72.5, 12, 0.3) + t.sage([[-1, 58], [121, 58], [121, 73], [-1, 73]], 36, 1.1, 0.32, 0.7) + t.line(sil, 1);
@@ -638,7 +652,7 @@
       });
       return t.line(a, 0.45, 0.9) + t.line(b, 0.45, 0.9) + t.s(ar, 0.4, 0.8);
     };
-    o += stream([[55, 39], [48, 43.4], [40, 48], [30, 52.6], [19, 57], [8, 61], [-1, 63.4]], 1) + stream([[65.5, 39], [72, 43.4], [80, 48], [90, 52.6], [101, 57], [112, 61], [121, 63.4]], -1);
+    o += stream([[55.4, 38.6], [50, 42.6], [46.4, 43.4], [41, 47.6], [35.6, 48.4], [29, 53.2], [22, 54.6], [15, 59.4], [7, 60.6], [-1, 64.4]], 1) + stream([[65, 38.6], [70.6, 42.6], [74, 43.6], [79.6, 47.6], [85, 48.6], [91.6, 53.2], [99, 54.8], [106, 59.4], [114, 60.8], [121, 64.2]], -1);
     o += t.s('M57.6 37.4Q55.6 39.4 52.8 40.6M58.8 46Q54 47.6 46.6 46.2M60.4 54Q50 56 38 51.2M62.4 37.4Q64.6 39.4 67.4 40.6M61.6 46Q66.4 47.6 74 46.2M62.6 55Q72 57 83 51.2', 0.28, 0.55);
     // the monument: stepped base, tapering shaft, pyramid cap; shadow side to the right
     const shaftR = [[mx + 0.05, mb - 13], [mx + 0.85, mb - 11], [mx + 1.25, mb - 2.2], [mx + 1.9, mb - 2.2], [mx + 1.9, mb - 1.2], [mx + 2.7, mb - 1.2], [mx + 2.7, mb], [mx + 0.05, mb]];
