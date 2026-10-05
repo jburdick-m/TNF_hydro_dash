@@ -11,7 +11,7 @@
   const BASEMAPS = ['relief', 'topo', 'sat', 'chart'];
   const BIG_RIVERS = ['Mississippi', 'Missouri', 'Platte', 'North Platte', 'South Platte', 'Loup', 'Elkhorn', 'Des Moines', 'Iowa', 'Cedar', 'Rock', 'Fox', 'Laramie', 'Green', 'Bear', 'Weber', 'Jordan', 'Humboldt', 'Truckee', 'Yuba', 'Feather', 'American', 'Sacramento'];
   const BIG_RIVER_NAMES = BIG_RIVERS.map((n) => n + ' River');
-  const M = (WA.map = { showBillboards: false, reliefStyle: WA.store.get('reliefStyle2', 'classic'), mode: WA.store.get('cam', 'window'), follow: true, basemap: WA.store.get('basemap', 'relief'), relief3: WA.store.get('relief3', false), ready: false });
+  const M = (WA.map = { userView: WA.store.get('camView', {}) || {}, adjusting: 0, showBillboards: false, reliefStyle: WA.store.get('reliefStyle2', 'classic'), mode: WA.store.get('cam', 'window'), follow: true, basemap: WA.store.get('basemap', 'relief'), relief3: WA.store.get('relief3', false), ready: false });
   if (['window', 'chase', 'map'].indexOf(M.mode) < 0) M.mode = 'window';
   try { const q = new URLSearchParams(location.search).get('relief'); if (q) M.reliefStyle = q; } catch (e) { /* */ }
 
@@ -163,8 +163,22 @@
       map.on('click', (e) => { if (WA.S.syncPending) { WA.S.syncPending = false; document.body.classList.remove('syncing'); WA.syncTo(e.lngLat); WA.toast('Position synced to the route.'); M.follow = true; } });
       WA.emit('mapready');
     });
+    // Pinch-zoom and tilt keep following and are remembered per camera mode; a one-finger pan or a rotate pauses follow.
     const pause = (e) => { if (e && e.originalEvent && M.follow && !M.flying) { M.follow = false; WA.emit('follow'); } };
-    ['dragstart', 'rotatestart', 'pitchstart', 'zoomstart'].forEach((n) => map.on(n, pause));
+    ['dragstart', 'rotatestart'].forEach((n) => map.on(n, pause));
+    const adjustStart = (e) => { if (e && e.originalEvent && M.follow) M.adjusting = Date.now(); };
+    const adjustEnd = (e) => {
+      if (!e || !e.originalEvent || !M.follow || M.mode === 'map') return;
+      M.userView[M.mode] = { zoom: map.getZoom(), pitch: map.getPitch() };
+      WA.store.set('camView', M.userView);
+      M.adjusting = Date.now();
+      setTimeout(() => { if (Date.now() - M.adjusting >= 1100) { M.adjusting = 0; M.camera(WA.pos); } }, 1200);
+    };
+    ['zoomstart', 'pitchstart', 'zoom', 'pitch'].forEach((n) => map.on(n, adjustStart)); // refreshed through long gestures
+    ['zoomend', 'pitchend'].forEach((n) => map.on(n, adjustEnd));
+    // while following, two-finger gestures zoom and tilt but don't rotate (rotation would fight the window bearing)
+    const syncRotate = () => { try { if (M.follow && M.mode !== 'map') map.touchZoomRotate.disableRotation(); else map.touchZoomRotate.enableRotation(); } catch (e) { /* */ } };
+    WA.on('follow', syncRotate); syncRotate();
     // aircraft
     const pe = document.createElement('div'); pe.className = 'plane-mk'; pe.innerHTML = planeSVG();
     M.plane = new maplibregl.Marker({ element: pe, rotationAlignment: 'map', pitchAlignment: 'viewport' }).setLngLat([WA.from.lon, WA.from.lat]).addTo(map);
@@ -277,9 +291,15 @@
   };
 
   // ---- camera ----
-  M.setMode = function (m) { M.mode = m; WA.store.set('cam', m); M.follow = true; M.camera(WA.pos, true); WA.emit('follow'); };
+  // Tapping the mode that is already active resets its zoom/tilt to the default view.
+  M.setMode = function (m) {
+    if (m === M.mode && M.follow && M.userView[m]) { delete M.userView[m]; WA.store.set('camView', M.userView); }
+    M.mode = m; WA.store.set('cam', m); M.follow = true; M.adjusting = 0; M.camera(WA.pos, true); WA.emit('follow');
+  };
   M.camera = function (pos, force) {
     const map = M.map; if (!map || !pos || (!M.follow && !force)) return;
+    if (!force && M.adjusting && Date.now() - M.adjusting < 1100) return; // user is pinching/tilting
+    const uv = M.userView[M.mode] || {};
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const ease = (o) => { M.flying = true; if (reduce || force) map.jumpTo(o); else map.easeTo(Object.assign({ duration: 950, easing: (t) => t }, o)); setTimeout(() => (M.flying = false), force ? 50 : 1000); };
     const here = [pos.lon, pos.lat];
@@ -293,11 +313,11 @@
     }
     M.mapFitDone = false;
     if (M.mode === 'chase') {
-      ease({ center: G.dest(here, pos.trk, 25), zoom: 8.2, pitch: 60, bearing: pos.trk });
+      ease({ center: G.dest(here, pos.trk, 25), zoom: uv.zoom != null ? uv.zoom : 8.2, pitch: uv.pitch != null ? uv.pitch : 60, bearing: pos.trk });
       return;
     }
     // WINDOW: camera roughly over the aircraft, looking out the window side
-    const pitch = 38, zoom = 7.4, H = map.getContainer().clientHeight || innerHeight; // pitch halved from 76 at the user's request; zoom out a touch to keep the view wide
+    const pitch = uv.pitch != null ? uv.pitch : 38, zoom = uv.zoom != null ? uv.zoom : 7.4, H = map.getContainer().clientHeight || innerHeight; // pitch halved from 76 at the user's request; zoom out a touch to keep the view wide
     const mpp = 40075016 * Math.cos(pos.lat * G.D2R) / (512 * Math.pow(2, zoom));
     const camKm = (1.5 * H * mpp) / 1000, fov2 = 18.43;
     const alt = camKm * Math.cos(pitch * G.D2R), back = camKm * Math.sin(pitch * G.D2R);
