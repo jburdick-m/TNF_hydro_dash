@@ -485,7 +485,12 @@
     $('#sheet-body').addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('g[data-id]')) { e.preventDefault(); U.openDetail(e.target.dataset.id); } });
     $('#sheet-body').addEventListener('scroll', () => { if (!strip.auto) strip.lastUserScroll = Date.now(); }, { passive: true });
     $('#cam').addEventListener('click', (e) => { const b = e.target.closest('button[data-cam]'); if (b) WA.map.setMode(b.dataset.cam); });
-    $('#follow').addEventListener('click', () => WA.map.setFollow(!WA.map.follow));
+    // Follow: single tap toggles on/off; double tap returns to the default follow view (and turns follow on).
+    let followTap = null;
+    $('#follow').addEventListener('click', () => {
+      if (followTap) { clearTimeout(followTap); followTap = null; WA.map.resetView(); WA.toast('Default view'); return; }
+      followTap = setTimeout(() => { followTap = null; WA.map.setFollow(!WA.map.follow); }, 300);
+    });
     $('#theme-btn').addEventListener('click', () => { const m = { auto: 'day', day: 'night', night: 'auto' }[WA.themeMode]; WA.setTheme(m); });
     $('#pv-range').addEventListener('input', (e) => WA.setPreview(+e.target.value / 1000));
     $('#pv-60').addEventListener('click', () => WA.playPreview(60));

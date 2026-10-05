@@ -293,6 +293,7 @@
   };
 
   // ---- camera ----
+  M.resetView = function () { if (M.mode !== 'map' && M.userView[M.mode]) { delete M.userView[M.mode]; WA.store.set('camView', M.userView); } M.setFollow(true); };
   M.setFollow = function (on) { M.follow = !!on; M.adjusting = 0; if (on) M.camera(WA.pos, true); WA.emit('follow'); };
   // Tapping the mode that is already active resets its zoom/tilt/pan to the default view.
   M.setMode = function (m) {
