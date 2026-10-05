@@ -334,8 +334,8 @@
     mask(p.concat([[x1, cy + .5], [x0, cy + .5]]));
   }
   function ground(y0, t, st) {
-    var g = .7, k = 0;
-    for (var y = y0 + .6; y < 76; y += g, g *= 1.14, k++) {
+    var g = .5, k = 0;
+    for (var y = y0 + .5; y < 76; y += g, g *= 1.11, k++) {
       var nz = noise();
       tl([[-1, y], [121, y]], st || 'f', function (x) { return t * (.45 + .55 * (.5 + .5 * fbm(nz, x * .07))); }, ((k * .618 + .2) % 1) * .7 + .1);
     }
@@ -441,7 +441,7 @@
     hatch(bank, 62, .85, 'h', function (x, y) { return .35 + .55 * sm(56, 70, y); });
     mask(bank);
     var m = ridge(-2, 122, sh, [[20, 24, 26, 1.4], [50, 15, 18, 1.2], [86, 29, 28, 1.5], [114, 14, 14]], 2), mf = prof(m);
-    for (y = sh + .55, g = .55, k = 0; y < 76; y += g, g *= 1.07, k++) {
+    for (y = sh + .4, g = .4, k = 0; y < 76; y += g, g *= 1.05, k++) {
       (function (y, d) {
         tl([[-2, y], [122, y]], 'f', function (x) {
           var tp = mf(x), hg = tp === null ? 0 : sh - tp, rf = d < hg * .92 ? .95 - .45 * d / (hg + 4) : .2;
@@ -720,43 +720,61 @@
     return end();
   };
 
+  // reservoir: looking up a drowned canyon to a concrete arch dam; pale "bathtub ring" on both shores
   G.reservoir = function () {
     begin(127);
-    var cr = function (x) { var u = (x - 60) / 30; return 41 - 3.6 * (1 - u * u); }, bs = function (x) { var u = (x - 60) / 15; return 61 - 1.3 * (1 - u * u); };
-    var LW = [[-4, 17], [8, 18.5], [17, 23], [24, 30], [30, 41], [44, 61], [45, 67], [38, 76], [-4, 76]];
-    var RW = [[124, 15], [110, 17.5], [101, 22.5], [95, 29], [90, 41], [76, 61], [75, 67], [82, 76], [124, 76]];
-    [[LW, -1, .4], [RW, 1, .85]].forEach(function (W) {
-      var P = W[0], sd = W[1], edge = P.slice(1, 5);
-      hatch(P, sd < 0 ? 72 : 102, .75, 'h', function (x, y) { var ex = xAt(edge, y); return y < 41 && y > 18 && (x - ex) * sd < 2.6 && (x - ex) * sd > -.5 ? 0 : W[2] * (.7 + .3 * vn(x * .2, y * .1)); });
-      for (var y = 22; y < 74; y += rr(3, 5)) { var xe = y < 41 ? xAt(edge, y) - 2.6 * sd : xAt(P.slice(4, 7), y); ln([[xe, y], [xe - sd * rr(6, 14), y + rr(-.6, .6)]], 'h', .1); }
-      ln(edge.map(function (q) { return [q[0] - 2.6 * sd, q[1]]; }), 'h', .05);
-      ln(P.slice(1, 8), 'm', .02);
-      mask(P);
+    var nz = noise(), x, i;
+    var SL = crs([[47, 38.7], [38, 40.4], [26, 42.8], [12, 45.4], [-4, 47.2]], 6), SR = crs([[73, 38.7], [82, 40.3], [95, 42.4], [108, 44.3], [124, 45.6]], 6);
+    var HL = [], HR = [];
+    for (x = -4; x <= 47; x += .6) HL.push([x, 13 + 22 * M.pow(cl((x + 4) / 51, 0, 1), 1.6) + 1.2 * fbm(nz, x * .2)]);
+    for (x = 73; x <= 124; x += .6) HR.push([x, 33 - 20 * M.pow(cl((x - 73) / 51, 0, 1), .8) + 1.3 * fbm(nz, x * .2 + 9)]);
+    var RING = 2.6;
+    [[HL, SL, -1], [HR, SR, 1]].forEach(function (W) {
+      var H = W[0], S = W[1], sd = W[2], hf = prof(H);
+      var poly = sd < 0 ? H.concat(S) : S.slice().reverse().concat(H, [[124, 46]]);
+      var hi = S.map(function (q) { return [q[0], q[1] - RING]; }), hif = prof(sd < 0 ? hi.slice().reverse() : hi);
+      var inRing = function (x, y) { var t = hif(x); return t !== null && y > t; };
+      // fall-line hatching on the canyon wall, contour hatching over it on the shadowed (left) wall
+      hatch(poly, sd < 0 ? 62 : 118, .7, 'h', function (x, y) { return inRing(x, y) ? 0 : (sd < 0 ? .62 : .26) * (.6 + .5 * vn(x * .25, y * .25)) * (.75 + .25 * sm(10, 40, y)); });
+      if (sd < 0) hatch(poly, -14, .9, 'f', function (x, y) { return inRing(x, y) ? 0 : .55 * sm(18, 38, y) * vn(x * .3 + 4, y * .3); });
+      else stip(73, 14, 124, 46, .9, function (x, y) { var t = hf(x); return t !== null && y > t + .4 && !inRing(x, y) ? .22 : 0; }, 'f');
+      // the ring: bare rock left white, a few strata lines and the crisp high-water mark
+      for (var k = 1; k < 3; k++) tl(S.map(function (q) { return [q[0], q[1] - k * RING / 3 + rr(-.1, .1)]; }), 'f', .55, .25);
+      ln(hi, 'h', .02); ln(S, 'm', .02);
+      for (i = 0; i < 9; i++) { var gx = sd < 0 ? rr(4, 40) : rr(80, 118), gy = prof(sd < 0 ? H : H)(gx); if (gy !== null) ln([[gx, gy + .4], [gx + sd * -.6, gy + rr(3, 7)]], 'h', .1); }
+      ln(H, sd < 0 ? 'b' : 'm', .02);
+      mask(poly);
     });
-    var C1 = [], C2 = [], BB = [], u, x;
-    for (x = 30; x <= 90; x += 1) { C1.push([x, cr(x)]); C2.push([x, cr(x) + .9]); }
-    for (x = 45; x <= 75; x += 1) BB.push([x, bs(x)]);
-    for (u = 0; u <= 1.0001; u += 1 / 40) {
-      var xc = 30 + 60 * u, xb = 45 + 30 * u, A = [xc, cr(xc) + .9], Bp = [xb, bs(xb)], mid = [(A[0] + Bp[0]) / 2 + (u - .5) * 2.5, (A[1] + Bp[1]) / 2];
-      tl(crs([A, mid, Bp], 5), 'f', .3 + .65 * sm(.45, 1, u) + .25 * sm(.2, 0, u), rr(0, .25));
-    }
-    for (var v = .14; v < 1; v += .14) {
-      var arc = []; for (u = 0; u <= 1.0001; u += .05) { var xc2 = 30 + 60 * u, xb2 = 45 + 30 * u; arc.push([xc2 + (xb2 - xc2) * v, cr(xc2) + .9 + (bs(xb2) - cr(xc2) - .9) * v]); }
-      ln(arc, 'f', .1);
-    }
-    ln(C1, 'm', 0); ln(C2, 'h', 0);
-    var face = C1.concat(BB.slice().reverse());
-    mask(face);
-    var PH = [[47, 60.5], [73, 60.5], [73, 66], [47, 66]];
-    hatch(PH, 90, 1.1, 'f', .5); lnc(PH, 'h', 0); ln([[47, 62.3], [73, 62.3]], 'f', 0);
-    mask(PH);
-    var RB1 = [[50, 66], [44, 70], [36, 76]], RB2 = [[70, 66], [77, 70], [86, 76]];
-    ln(RB1, 'h', .05); ln(RB2, 'h', .05);
-    hatch(RB1.concat(RB2.slice().reverse()), 0, .9, 'f', .55);
-    lines(23, 41, .75, .5, 1.05);
-    var ms = ridge(-2, 122, 23, [[30, 5, 10, .4], [62, 4, 8, .3], [88, 6, 12, .4]], .6);
-    mtn(ms, 23.5, { d: .7, sw: 'f', ol: 'h' });
-    sky(1, 22, .45);
+    // the dam: arch crest bowed toward us, ruled concrete face above the waterline, two intake towers
+    var cr = function (x) { var u = (x - 60) / 13.5; return 35 + 1.1 * (1 - u * u); }, wl = function (x) { var u = (x - 60) / 13.5; return 38.7 + .7 * (1 - u * u); };
+    var C1 = [], W1 = [];
+    for (x = 46.5; x <= 73.5; x += .5) { C1.push([x, cr(x)]); W1.push([x, wl(x)]); }
+    [[52.5, 33, 2], [64.5, 33.4, 1.8]].forEach(function (T) {
+      var tx = T[0], ty = T[1], tw = T[2], F = [[tx, wl(tx) + .2], [tx + tw, wl(tx) + .2], [tx + tw, ty], [tx, ty]];
+      hatch(F, 90, .4, 'f', function (x) { return x > tx + tw * .55 ? .95 : .25; }); lnc(F, 'h', 0);
+      ln([[tx - .4, ty], [tx + tw + .4, ty], [tx + tw / 2, ty - 1.2], [tx - .4, ty]], 'h', 0);
+      ln([[tx + tw / 2, ty + 1.2], [tx + tw / 2, ty + 2.2]], 'f', 0);
+      mask(F); mask([[tx - .4, ty], [tx + tw + .4, ty], [tx + tw / 2, ty - 1.2]]);
+    });
+    var FACE = C1.concat(W1.slice().reverse());
+    hatch(FACE, 90, .5, 'f', function (x) { return .3 + .25 * sm(52, 74, x); });
+    [1.2, 2.4].forEach(function (d) { tl(C1.map(function (q) { return [q[0], q[1] + d]; }), 'f', .8, .2); });
+    for (x = 69; x < 73.4; x += .7) ln([[x, cr(x) - .2], [x, wl(x)]], 'h', 0);
+    ln(C1, 'm', 0); ln(C1.map(function (q) { return [q[0], q[1] - .55]; }), 'h', 0);
+    for (x = 47; x < 73.5; x += 1.6) ln([[x, cr(x) - .55], [x, cr(x)]], 'f', 0);
+    mask(FACE.concat([[73.5, 34.3], [46.5, 34.3]]));
+    // log boom curving across the forebay
+    for (i = 0; i < 26; i++) { var t = i / 25, bx = 41 + 38 * t, by = 42.3 + 2.2 * M.sin(PI * t); ln([[bx - .55, by], [bx + .55, by + .02]], 'h', 0); }
+    // water: ruled, with the shadowed left wall reflected dark and the lit right wall pale
+    water(38.7, 76, .85, function (x, y) {
+      var l = sm(48, 18, x) * (1 - sm(48, 74, y) * .5), r = sm(72, 104, x) * .45;
+      var rd = M.abs(x - 60) < 14 && y < 44 ? .9 : 0;
+      return .38 + .9 * M.max(l, r, rd);
+    });
+    // canyon country beyond the dam
+    var far = ridge(-2, 122, 34, [[60, 7, 22, .9], [30, 5, 18, 0], [92, 6, 18, .8]], 1);
+    mtn(far, 35, { d: .45, sw: 'f', ol: 'h', len: .6, xh: false });
+    sky(1, 26, .5);
     return end();
   };
 
@@ -986,33 +1004,63 @@
   };
 
   function flame(x, y, h) {
-    var w = h * rr(.22, .3), le = h * rr(.1, .35), L = [], R = [];
-    for (var i = 0; i <= 10; i++) {
-      var t = i / 10, c = x + le * t * t + .5 * M.sin(t * 6 + x) * t * h * .08, hw = w * M.pow(1 - t, .7) * (1 + .25 * M.sin(t * 9 + x));
+    var w = h * rr(.2, .27), le = h * rr(.15, .4), L = [], R = [];
+    for (var i = 0; i <= 12; i++) {
+      var t = i / 12, c = x + le * t * t + .45 * M.sin(t * 7 + x) * t * h * .07, hw = w * M.pow(1 - t, .75) * (1 + .22 * M.sin(t * 10 + x));
       L.push([c - hw, y - h * t + .5]); R.push([c + hw, y - h * t + .5]);
     }
     var P = L.concat(R.reverse());
-    tone(P, .2); ln(P, 'h', 0); mask(P);
+    hatch(P, 80, .45, 'f', function (xx, yy) { return .25 + .6 * sm(y - h * .2, y, yy); });
+    ln(P, 'h', 0); mask(P);
   }
-  function billow(cx, cy, r, t) {
-    var c = ell(cx, cy, r, r * .88, 0, TAU, M.max(16, M.round(r * 4)));
-    ln(c, t < .3 ? 'm' : 'h', .05);
-    hatch(c, -25, .6, 'f', function (x, y) { var u = ((x - cx) * .45 + (y - cy) * .9) / r; return cl(.05 + .75 * u + (1 - t) * .45, 0, 1); });
-    mask(c);
+  // smoke column: a leaning, widening plume built of flowing streamlines, its lee side in
+  // shadow, its outline scalloped into billows only near the cap
+  function plume(bx, by, tx, ty, w0, w1, lean) {
+    var N = 70, C = [], i, t;
+    for (i = 0; i <= N; i++) {
+      t = i / N;
+      C.push([bx + (tx - bx) * M.pow(t, lean), by + (ty - by) * M.pow(t, .82), w0 + (w1 - w0) * M.pow(t, .85)]);
+    }
+    var nrm = function (i) { var a = C[M.max(0, i - 1)], b = C[M.min(N, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], d = M.hypot(dx, dy) || 1; return [-dy / d, dx / d]; };
+    var edge = function (i, s) { var t = i / N, sc = 1 + (.05 + .14 * t) * M.abs(M.sin(t * 26 + (s > 0 ? 1.1 : 0))); return C[i][2] * sc; };
+    var Lft = [], Rgt = [];
+    for (i = 0; i <= N; i++) { var n = nrm(i); Lft.push([C[i][0] - n[0] * edge(i, -1), C[i][1] - n[1] * edge(i, -1)]); Rgt.push([C[i][0] + n[0] * edge(i, 1), C[i][1] + n[1] * edge(i, 1)]); }
+    var cap = []; for (i = 0; i <= 14; i++) { var a = PI + PI * i / 14, nN = nrm(N), cx = C[N][0], cy = C[N][1], r = C[N][2] * (1.05 + .12 * M.abs(M.sin(i * 1.3))); cap.push([cx + r * M.cos(a) * (nN[0] < 0 ? -1 : 1), cy + r * M.sin(a) * .7]); }
+    var OUT = Lft.concat(cap, Rgt.slice().reverse());
+    // streamlines
+    for (var s = -1; s <= 1.0001; s += .075) {
+      var pts = [];
+      for (i = 0; i <= N; i++) { var nn = nrm(i), tt = i / N, ww = C[i][2] * s * (1 + .05 * M.sin(tt * 30 + s * 9)); pts.push([C[i][0] + nn[0] * ww, C[i][1] + nn[1] * ww]); }
+      (function (s) {
+        tl(pts, 'f', function (x, y) {
+          var tt = cl((by - y) / (by - ty), 0, 1);
+          return (.18 + .62 * sm(-.5, .95, s) + .3 * (1 - tt)) * (.45 + .75 * vn(x * .28 + s * 3, y * .28));
+        }, .3, .6);
+      })(s);
+    }
+    // billow arcs on the upper, lit flank
+    for (i = Math.round(N * .45); i < N; i += 3) {
+      var n2 = nrm(i), e = edge(i, -1), px = C[i][0] - n2[0] * e * .82, py = C[i][1] - n2[1] * e * .82, rb = C[i][2] * .28;
+      tl(ell(px, py, rb, rb * .8, PI * .9, PI * 1.9, 10), 'f', .9, rr(.1, .5));
+    }
+    ln(Lft, 'h', .05); ln(Rgt, 'h', .05); ln(cap, 'h', .05);
+    mask(OUT);
   }
   G.fire = function () {
     begin(181);
     var rg = ridge(-4, 124, 57, [[104, 17, 74, 0], [26, 6, 30, 0]], 1.2, .8), rf = prof(rg), x, i;
-    for (x = 50; x < 98; x += rr(2.4, 4.2)) flame(x, rf(x), rr(4, 9) * (1 - M.abs(x - 74) / 50));
-    for (x = 44; x < 104; x += rr(4, 8)) { var y = rf(x), sh = rr(4, 9); ln([[x, y], [x + rr(-.4, .4), y - sh]], 'm', 0); ln([[x, y - sh * .6], [x - 1.2, y - sh * .5]], 'h', 0); }
-    for (i = 0; i < 26; i++) {
-      var t = i / 25, r = 2.6 + 8 * t, cx = 72 + 32 * M.pow(t, 1.5), cy = 40 - 30 * M.pow(t, .85), j = (i % 3 - 1) * r * 1.05 + rr(-1.5, 1.5);
-      billow(cx + j * .55, cy + j * .8, r * rr(.75, 1.1), t);
-    }
-    trees(rg, 0, 42, 3, 4, 6.5, .8, 1);
-    mtn(rg, 78, { d: 1.2, ol: 'm', lit: .35 });
+    for (x = 50; x < 98; x += rr(2.2, 3.8)) flame(x, rf(x), rr(3.5, 8) * (1 - M.abs(x - 74) / 50));
+    for (x = 44; x < 104; x += rr(3.5, 7)) { var y = rf(x), sh = rr(4, 9); ln([[x, y], [x + rr(-.4, .4), y - sh]], 'm', 0); ln([[x, y - sh * .6], [x - 1.2, y - sh * .5]], 'h', 0); ln([[x, y - sh * .35], [x + 1, y - sh * .28]], 'f', 0); }
+    plume(74, rf(74) - 3, 104, 6, 2.2, 15, 1.7);
+    // a second, thinner column further down the ridge
+    plume(58, rf(58) - 2, 66, 30, 1, 4.5, 1.4);
+    trees(rg, 0, 44, 2.6, 4, 6.5, .8, 1);
+    mtn(rg, 78, { d: 1.2, ol: 'b', lit: .35 });
     ground(64, .4);
-    sky(1, 40, .45);
+    // the sun, a dull disc through the haze
+    put('hM', pd(ell(28, 14, 3.6, 3.6, 0, TAU, 28), 1));
+    mask(ell(28, 14, 4.2, 4.2, 0, TAU, 20));
+    sky(1, 40, .62);
     return end();
   };
 
