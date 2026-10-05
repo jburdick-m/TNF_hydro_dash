@@ -31,6 +31,9 @@
         paint: { 'line-color': p.water, 'line-opacity': 0.85,
           'line-width': ['interpolate', ['linear'], ['zoom'], 4, 0.45, 9, 0.8],
           'line-gap-width': ['interpolate', ['linear'], ['zoom'], 3, ['case', BIG, 0.8, 0], 7, ['case', BIG, 2.2, 0.9], 10, ['case', BIG, 3.5, 1.6]] } },
+      { id: 'big-rivers', type: 'line', source: 'rivers', filter: ['==', ['geometry-type'], 'LineString'], layout: { 'line-join': 'round', 'line-cap': 'round' },
+        paint: { 'line-color': p.water, 'line-opacity': 0.9, 'line-width': ['interpolate', ['linear'], ['zoom'], 4, 0.6, 9, 1],
+          'line-gap-width': ['interpolate', ['linear'], ['zoom'], 3, 1, 6, 2, 9, 3.6] } },
       { id: 'states', type: 'line', source: 'omt', 'source-layer': 'boundary', filter: ['all', ['==', ['get', 'admin_level'], 4], ['!=', ['get', 'maritime'], 1]], paint: { 'line-color': p.ink2, 'line-width': 0.8, 'line-opacity': 0.55, 'line-dasharray': [6, 2, 1, 2] } },
       { id: 'country', type: 'line', source: 'omt', 'source-layer': 'boundary', filter: ['all', ['==', ['get', 'admin_level'], 2], ['!=', ['get', 'maritime'], 1]], paint: { 'line-color': p.ink2, 'line-width': 1.2, 'line-opacity': 0.6 } },
       { id: 'interstates', type: 'line', source: 'omt', 'source-layer': 'transportation', minzoom: 5, filter: ['==', ['get', 'class'], 'motorway'], paint: { 'line-color': p.ink2, 'line-width': ['interpolate', ['linear'], ['zoom'], 5, 0.4, 10, 1.1], 'line-opacity': 0.32 } },
@@ -52,7 +55,11 @@
         layout: { 'text-field': ['upcase', nameExpr], 'text-font': ['Noto Sans Regular'], 'text-size': 10, 'text-letter-spacing': 0.45 }, paint: { 'text-color': p.ink2, 'text-opacity': 0.55, 'text-halo-color': halo, 'text-halo-width': 1.2 } },
       { id: 'water-names', type: 'symbol', source: 'omt', 'source-layer': 'water_name', layout: { 'text-field': nameExpr, 'text-font': ['Noto Sans Italic'], 'text-size': 11, 'text-letter-spacing': 0.08, 'text-max-width': 7 }, paint: { 'text-color': p.water, 'text-halo-color': halo, 'text-halo-width': 1.4 } },
       { id: 'river-names', type: 'symbol', source: 'omt', 'source-layer': 'waterway', filter: ['all', ['==', ['get', 'class'], 'river'], ['in', nameExpr, ['literal', BIG_RIVER_NAMES]]],
-        layout: { 'symbol-placement': 'line', 'text-field': nameExpr, 'text-font': ['Noto Sans Italic'], 'text-size': ['interpolate', ['linear'], ['zoom'], 5, 10, 10, 13], 'text-letter-spacing': 0.18, 'symbol-spacing': 280, 'text-offset': [0, -0.9], 'text-max-angle': 35 }, paint: { 'text-color': p.water, 'text-halo-color': halo, 'text-halo-width': 1.6 } },
+        layout: { 'symbol-placement': 'line', 'text-field': nameExpr, 'text-font': ['Noto Sans Italic'], 'text-size': ['interpolate', ['linear'], ['zoom'], 5, 10, 10, 13], 'text-letter-spacing': 0.18, 'symbol-spacing': 280, 'text-offset': [0, -0.9], 'text-max-angle': 35, 'text-pitch-alignment': 'viewport' }, paint: { 'text-color': p.water, 'text-halo-color': halo, 'text-halo-width': 2 } },
+      { id: 'big-river-names', type: 'symbol', source: 'rivers', filter: ['==', ['geometry-type'], 'Point'],
+        layout: { 'text-field': ['get', 'name'], 'text-font': ['Noto Sans Italic'], 'text-size': ['case', ['==', ['get', 'x'], 1], 15, 12.5],
+          'text-letter-spacing': 0.12, 'text-pitch-alignment': 'viewport', 'text-padding': 6, 'symbol-sort-key': ['-', 1, ['get', 'x']], 'text-anchor': 'bottom', 'text-offset': [0, -0.3] },
+        paint: { 'text-color': p.water, 'text-halo-color': halo, 'text-halo-width': 2.4, 'text-halo-blur': 0.4 } },
       { id: 'peaks', type: 'symbol', source: 'omt', 'source-layer': 'mountain_peak', minzoom: 7, filter: ['<=', ['coalesce', ['get', 'rank'], 9], 3],
         layout: { 'text-field': ['case', ['has', 'ele_ft'], ['concat', nameExpr, '\n', ['to-string', ['get', 'ele_ft']], ' ft'], nameExpr], 'text-font': ['Noto Sans Italic'], 'text-size': 10, 'text-max-width': 9, 'text-padding': 8 }, paint: { 'text-color': p.relief, 'text-halo-color': halo, 'text-halo-width': 1.5 } },
       { id: 'fires', type: 'circle', source: 'fires', paint: { 'circle-radius': ['interpolate', ['linear'], ['coalesce', ['get', 'acres'], 1], 1, 3, 1000, 5, 50000, 9], 'circle-color': ['case', ['==', ['get', 'rx'], true], p.paper, p.fire], 'circle-stroke-color': p.fire, 'circle-stroke-width': 1.4, 'circle-opacity': 0.9 } },
@@ -78,7 +85,7 @@
         sat: { type: 'raster', tiles: [SAT], tileSize: 256, maxzoom: 18, attribution: 'Esri, Maxar, Earthstar Geographics' },
         cone: { type: 'geojson', data: EMPTY }, 'route-ahead': { type: 'geojson', data: EMPTY }, 'route-behind': { type: 'geojson', data: EMPTY },
         flown: { type: 'geojson', data: EMPTY }, ticks: { type: 'geojson', data: EMPTY }, pois: { type: 'geojson', data: EMPTY }, poilines: { type: 'geojson', data: EMPTY },
-        fires: { type: 'geojson', data: EMPTY }, perims: { type: 'geojson', data: EMPTY }, wx: { type: 'geojson', data: EMPTY },
+        rivers: { type: 'geojson', data: window.RIVERS || EMPTY }, fires: { type: 'geojson', data: EMPTY }, perims: { type: 'geojson', data: EMPTY }, wx: { type: 'geojson', data: EMPTY },
       },
       layers: layers(p),
     };
@@ -135,7 +142,7 @@
       M.ready = true;
       const at = el.querySelector('.maplibregl-ctrl-attrib'); if (at) at.classList.remove('maplibregl-compact-show');
       addGlyphs(pal());
-      try { map.setTerrain({ source: 'dem', exaggeration: M.relief3 ? 3 : 1.5 }); } catch (e) { /* no terrain */ }
+      try { map.setTerrain({ source: 'dem', exaggeration: M.relief3 ? 4 : 2 }); } catch (e) { /* no terrain */ }
       setSky();
       map.on('click', 'poi-dot', (e) => { if (WA.S.syncPending) return; const f = e.features && e.features[0]; if (f) WA.ui.openDetail(f.properties.id); });
       map.on('click', 'fires', (e) => { if (WA.S.syncPending) return; const f = e.features && e.features[0]; if (f) WA.ui.openDetail(f.properties.id); });
@@ -175,7 +182,7 @@
     addGlyphs(p); setSky();
   };
   M.setSat = function (on) { M.sat = on; WA.store.set('sat', on); if (M.map && M.ready) { M.map.setLayoutProperty('sat', 'visibility', on ? 'visible' : 'none'); M.recolor(); } };
-  M.setRelief3 = function (on) { M.relief3 = on; WA.store.set('relief3', on); if (M.map && M.ready) try { M.map.setTerrain({ source: 'dem', exaggeration: on ? 3 : 1.5 }); } catch (e) { /* */ } };
+  M.setRelief3 = function (on) { M.relief3 = on; WA.store.set('relief3', on); if (M.map && M.ready) try { M.map.setTerrain({ source: 'dem', exaggeration: on ? 4 : 2 }); } catch (e) { /* */ } };
 
   // ---- data layers ----
   M.setData = function (src, data) { if (M.map && M.ready && M.map.getSource(src)) M.map.getSource(src).setData(data); };
@@ -193,11 +200,23 @@
     M.setData('route-behind', behind.length > 1 ? line(behind) : EMPTY);
     M.setData('route-ahead', ahead.length > 1 ? line(ahead) : EMPTY);
   };
+  // Only label what could actually be seen: limit point labels to ~380 km around the aircraft.
+  const WINDOWED = ['places', 'peaks', 'water-names', 'state-labels', 'big-river-names'];
+  M.labelWindow = function (pos, force) {
+    const map = M.map; if (!map || !M.ready || !pos) return;
+    if (!force && M.lwAt && G.hav([pos.lon, pos.lat], M.lwAt) < 25) return;
+    M.lwAt = [pos.lon, pos.lat];
+    const ring = []; for (let b = 0; b <= 360; b += 10) ring.push(G.dest(M.lwAt, b, 380));
+    const within = ['within', { type: 'Polygon', coordinates: [ring] }];
+    const base = {}; layers(pal()).forEach((l) => { base[l.id] = l.filter; });
+    WINDOWED.forEach((id) => { if (map.getLayer(id)) try { map.setFilter(id, base[id] ? ['all', base[id], within] : within); } catch (e) { /* */ } });
+  };
   M.drawCone = function (pos, horizonKm) {
     const wb = WA.windowBearing(pos), rad = Math.min(horizonKm, 250), pts = [[pos.lon, pos.lat]];
     for (let b = -55; b <= 55; b += 5) pts.push(G.dest([pos.lon, pos.lat], wb + b, rad));
     pts.push([pos.lon, pos.lat]);
     M.setData('cone', { type: 'Feature', geometry: { type: 'Polygon', coordinates: [pts] }, properties: {} });
+    M.labelWindow(pos);
   };
   M.drawFlown = function (track) {
     if (!track || track.length < 2) return M.setData('flown', EMPTY);
