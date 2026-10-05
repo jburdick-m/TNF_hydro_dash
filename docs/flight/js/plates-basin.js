@@ -200,7 +200,8 @@
     }
     s += S(asp, 0.3, 0.75, ' fill="currentColor" fill-opacity="0.12"');
     const tr = [];
-    for (let i = 0; i < 30; i++) { const side = i % 2, p = resample(side ? fr : fl, 40)[4 + Math.floor(R() * 34)], up = R() * 6; tr.push([p[0] + (side ? 1 : -1) * up * 0.7, p[1] - up, 1.0 + (p[1] - 45) * 0.14]); }
+    const frS = resample(fr, 40), flS = resample(fl, 40);
+    for (let i = 0; i < 30; i++) { const side = i % 2, p = (side ? frS : flS)[4 + Math.floor(R() * 34)], up = R() * 6; tr.push([p[0] + (side ? 1 : -1) * up * 0.7, p[1] - up, 1.0 + (p[1] - 45) * 0.14]); }
     s += firs(R, tr, 2);
     s += line(fl, 0.4, 0.55) + line(fr, 0.4, 0.55);
     s += line(ls, 0.85, 0.95) + line(rs, 0.85, 0.95) + K.path(lr, { w: 1.0 }) + K.path(rr, { w: 1.0 });
@@ -601,9 +602,10 @@
     let tr = '';
     for (let k = 1; k < N; k++) {
       const e = lev[k], h = 1.0 + 0.5 * (1 - k / N), C = ell(e, -0.3, Math.PI + 0.3, 0, 0, 40), Tt = ell(e, -0.3, Math.PI + 0.3, h, 0.35, 40);
-      const band = C.concat(Tt.slice().reverse());
-      tr += clip(rect(-2, e.cx - e.rx * 0.25, 0, 80), K.hatch(band, { angle: 90, gap: 0.45, w: 0.25, op: 0.62, rng: R }) + K.hatch(band, { angle: 60, gap: 1.0, w: 0.22, op: 0.35, rng: R }));
-      tr += clip(rect(e.cx - e.rx * 0.25, 122, 0, 80), K.hatch(band, { angle: 90, gap: 0.9, w: 0.25, op: 0.45, rng: R }));
+      const nn = Math.round((Math.PI * e.rx * 1.15) / 0.5), Cr = resample(C, nn), Tr = resample(Tt, nn), sx = e.cx - e.rx * 0.25;
+      let dk = '', lt = '';
+      for (let i = 0; i < nn; i++) { const seg = 'M' + pt(Cr[i]) + 'L' + pt(Tr[i]); if (Cr[i][0] < sx) dk += seg; else if (i % 2 === 0) lt += seg; }
+      tr += S(dk, 0.28, 0.7) + S(lt, 0.25, 0.45);
       tr += line(C, 0.42, 0.85) + line(Tt, 0.25, 0.45);
     }
     tr = knock(tr, road.map((r) => ({ d: pd(r), w: 1.6 })));
