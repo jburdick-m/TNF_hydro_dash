@@ -218,7 +218,7 @@
     return 'Plate ' + (i >= 0 ? roman(i + 1) : '—') + ' · ' + p.name + (p.kind === 'crossing' ? '' : ', from the ' + DIR8[Math.round(from / 45) % 8]);
   }
   function plateAnnot(p, elev) {
-    let a = [.5, .3]; try { if (window.illo && window.illo.anchor) a = window.illo.anchor(p.kind, { id: p.id }); } catch (e) { /* default */ }
+    let a = [.5, .3]; try { const I = window.ILLUSTRATIONS; if (I && I.anchor) a = I.anchor(p.kind, { id: window.hasBespoke && window.hasBespoke(p.id) ? null : p.id }); } catch (e) { /* default */ }
     // the illustration sits at inset 8% 6% 4% of a 5:3 figure, the annotation layer is 100 x 60
     const ax = 6 + 88 * a[0], ay = 0.6 * (8 + 88 * a[1]), left = a[0] > 0.42;
     const tx = left ? 4.5 : 95.5, anc = left ? 'start' : 'end';

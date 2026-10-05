@@ -478,6 +478,7 @@
       if (j + 1 < V.length) for (i = -R.n; i <= R.n; i++) if (((i + j) & 1) === 0) tl([R.r[i + R.n], V[j + 1].r[i + V[j + 1].n]], st, tn, rr(0, .3));
     }
     lines(hz, hz + K / V[V.length - 1].D, .3, .5, 1.2);
+    stip(-2, hz + .6, 122, 76, .85, function (x, y) { return .22 * sm(hz, 76, y); }, 'f');
     var is = ridge(66, 114, hz - 1.6, [[79, 6, 11, 1.2], [93, 8.5, 12, 1.3], [105, 5, 8, 1.1]], .5, .5), isf = prof(is);
     for (var y = hz - 1.2; y < hz; y += .45) tl([[66, y], [114, y]], 'f', function (x) { var t = isf(x); return t !== null && hz - 1.6 - t > 1.2 ? .55 : 0; }, rr(.1, .4));
     mtn(is, hz - 1.6, { d: .8, sw: 'f', ol: 'h', len: .8 });
@@ -678,6 +679,10 @@
         tl(pts, 'f', function (x, y) { var a = f(x - .6), b = f(x + .6); return a !== null && b !== null && y < base && b - a < -.03 ? .8 * (1 - d / 32) : 0; }, rr(0, .3));
       })(d);
     }
+    stip(-2, base - 40, 122, base, far ? 1.1 : .75, function (x, y) {
+      var a = f(x - .6), b = f(x + .6), t = f(x); if (a === null || b === null || y < t + .3) return 0;
+      return b - a > .05 ? (far ? .14 : .26) * (1 - (y - t) / 30) : 0;
+    }, 'f');
     occR(p);
   }
   G.dunes = function () {
@@ -1133,7 +1138,7 @@
     cloud(96, 9, 18, 4);
     sky(1, 30, .55);
     return end();
-  }, [60, 27]];
+  }, [60, 31]];
 
   S['mount-shasta'] = ['volcano', function () {
     begin(223);
@@ -1553,6 +1558,7 @@
     if (k[0] === '#') return;
     Object.defineProperty(k === 'plane' || k === 'compass' ? API : API.kinds, k, { enumerable: true, get: function () { return illo(k); } });
   });
+  API.anchor = illo.anchor; API.has = illo.has;
   API.build = function () { var t = Date.now(); names.forEach(body); return Date.now() - t; };
   root.ILLUSTRATIONS = API;
   root.illo = illo;

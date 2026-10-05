@@ -40,6 +40,15 @@
     return '<mask id="' + id + '" maskUnits="userSpaceOnUse" x="-5" y="-5" width="130" height="82"><rect x="-5" y="-5" width="130" height="82" fill="#fff" stroke="none"/>' +
       pgs.map((p) => '<path d="' + K.d(p, true) + '" fill="#000" stroke="#000" stroke-width="' + (grow == null ? 0.9 : grow) + '"/>').join('') + '</mask><g mask="url(#' + id + ')">' + body + '</g>';
   }
+  // printed-vignette finish: soft radial fade plus a slightly ragged plate edge, so ruled lines never end on a ruler-straight border
+  function finish(K, R, body) {
+    const e = [];
+    for (let x = 0; x < 120; x += 2.5) e.push([x, 0.5 + R() * 1.6]);
+    for (let y = 0; y < 72; y += 2.5) e.push([119.5 - R() * 1.6, y]);
+    for (let x = 120; x > 0; x -= 2.5) e.push([x, 71.5 - R() * 1.6]);
+    for (let y = 72; y > 0; y -= 2.5) e.push([0.5 + R() * 1.6, y]);
+    return K.vignetteOpen() + clip(K, e, body) + K.vignetteClose();
+  }
   const hatch = (K, R, pg, angle, gap, op, w) => K.hatch(pg, { angle, gap, op, w: w || 0.3, jitter: 0.25, rng: R });
   const skyRule = (K, R, s, o) => K.hatch(skyOf(s), Object.assign({ angle: 0, gap: 1.6, w: 0.26, op: 0.3, jitter: 0.2, rng: R }, o || {}));
   // cross-hatch the right-descending (shadow) face under each peak of skyline s
@@ -85,10 +94,10 @@
   /* ---------------- Sutter Buttes: a crown of volcanic spires alone on the valley floor ---------------- */
   B['sutter-buttes'] = (K) => {
     const R = K.rng('sutter-buttes'), HZ = 50;
-    const core = K.ridge(R, [[22, 47], [27, 40], [30, 33], [33, 35], [36, 27], [39, 30], [42, 21], [45, 24], [47, 19], [50, 25], [53, 22], [56, 27], [58, 18], [61, 13], [63.5, 9.5], [66, 12], [68.5, 17], [71, 15], [74, 21], [77, 18], [80, 25], [83, 23], [87, 30], [91, 34], [95, 39], [100, 47]], 0.7, 0.7);
-    const rim = K.ridge(R, [[6, HZ], [12, 46.5], [19, 43.5], [26, 42.8], [33, 44], [40, 41.6], [48, 43.2], [56, 40.8], [64, 42.4], [72, 40.4], [80, 42.6], [88, 41], [96, 43], [104, 42.2], [110, 45.5], [116, HZ]], 0.35, 1);
+    const core = K.ridge(R, [[18, 47], [23, 42.5], [26.5, 38], [29, 39.6], [32, 34], [35, 36], [38, 30.5], [41, 32.6], [44, 27], [46.5, 29.4], [49, 25.6], [52, 28.6], [55, 23.4], [58, 21], [61, 18.2], [63.5, 17], [66, 19.4], [68.5, 23.6], [71, 21.6], [74, 26], [77, 23.8], [80, 28.4], [83, 27], [86.5, 31.6], [90, 30.6], [94, 35.6], [98, 39], [104, 47]], 0.85, 0.7);
+    const rim = K.ridge(R, [[4, HZ], [10, 47], [17, 44.6], [24, 44], [31, 45], [38, 43.2], [46, 44.4], [54, 42.6], [62, 43.8], [70, 42.2], [78, 44], [86, 42.8], [94, 44.2], [102, 43.4], [109, 45.6], [116, HZ]], 0.35, 1);
     const rimPg = under(rim, HZ + 0.5);
-    let o = K.vignetteOpen();
+    let o = '';
     o += skyRule(K, R, [[0, HZ]].concat(core, [[120, HZ]]), { gap: 1.7 });
     o += P(M(0, 48.6) + 'Q8 47.4 17 48.4', 0.4, 0.3) + P(M(104, 48.2) + 'Q112 47 120 47.8', 0.4, 0.3); // far Coast Range / Sierra haze
     // the jagged lava-dome crown, hidden below by the nearer rim
@@ -96,10 +105,11 @@
       hatch(K, R, under(core, HZ), 22, 2.1, 0.22) +
       shade(K, R, core, { depth: 16, angle: 66, gap: 0.75, op: 0.6, cross: -30, min: 1.5 }) +
       K.flank(core, { gap: 0.75, len: 11, w: 0.32, op: 0.75, rng: R }) +
-      P(core.filter((p, i) => i % 9 === 4).map((p) => M(p[0] + 0.6, p[1] + 3) + L(p[0] + 1.6 + R() * 2, p[1] + 9 + R() * 6)).join(''), 0.3, 0.5) +
+      P(core.filter((p, i) => i % 7 === 3 && p[1] < 36).map((p) => M(p[0] + 0.6, p[1] + 2.5) + L(p[0] + 1.4 + R() * 1.6, p[1] + 7 + R() * 4)).join(''), 0.3, 0.5) +
       P(K.d(core), 1.05));
     // radio masts on South Butte
-    o += P(M(63.2, 9.6) + L(63.2, 4.4) + M(64.7, 10.4) + L(64.7, 6.4) + M(62.3, 5.6) + L(64.1, 5.6) + M(61.9, 7.6) + L(64.5, 7.6) + M(66, 11.6) + L(66, 8.4), 0.3, 0.9);
+    const sb = core.reduce((a, p) => (p[1] < a[1] ? p : a));
+    o += P(M(sb[0] - 0.6, sb[1] + 0.2) + 'v-3.6' + M(sb[0] + 0.9, sb[1] + 0.3) + 'v-2.4' + M(sb[0] + 2.2, sb[1] + 0.9) + 'v-1.8', 0.28, 0.85);
     // outer moat-and-rim of tilted sediments: low rounded hills with oak dots
     o += hatch(K, R, rimPg, 18, 1.5, 0.3) + K.flank(rim, { gap: 1, len: 3.5, base: HZ, w: 0.3, op: 0.6, rng: R }) + P(K.d(rim), 0.6, 0.9);
     o += K.stipple(under(rim.map(([x, y]) => [x, y + 1.2]), HZ - 0.6), { n: 60, r: 0.42, op: 0.55, rng: R });
@@ -124,8 +134,7 @@
     cols.forEach((xh) => { const xb = X(xh, 72); if (xb > -30 && xb < 150) g += M(X(xh, HZ), HZ) + L(xb, 72); });
     o += P(g, 0.3, 0.55);
     o += P(M(0, HZ) + L(120, HZ), 0.55, 0.9);
-    o += K.vignetteClose();
-    return o;
+    return finish(K, R, o);
   };
 
   /* ---------------- Sierra Nevada: the long tilted block, gentle west slope, abrupt east scarp ---------------- */
@@ -135,7 +144,7 @@
     const main = K.ridge(R, [[0, 59], [8, 56], [18, 52.5], [28, 48], [38, 43], [48, 37.5], [57, 31.5], [65, 26], [72, 21.5], [78, 18], [82, 15.6], [85, 14.6], [87, 15.8], [88.6, 20], [90, 28], [91.6, 37], [93.4, 45], [95.6, 52], [98, 56], [102, 57.6], [120, 57.6]], 0.55, 0.8);
     const mainPg = under(main, 73);
     const east = main.filter((p) => p[0] >= 86 && p[0] <= 100);
-    let o = K.vignetteOpen();
+    let o = '';
     o += skyRule(K, R, main.map(([x, y]) => [x, x > 36 && x < 72 ? Math.min(y, yAt(far, x)) : y]), { gap: 1.7 });
     // a farther stretch of the same block echoes the profile behind
     o += behind(K, [mainPg], K.flank(far, { gap: 1.2, len: 5, w: 0.3, op: 0.45, rng: R }) + shade(K, R, far, { depth: 9, op: 0.3, gap: 1.1 }) + P(K.d(far), 0.5, 0.55));
@@ -168,19 +177,20 @@
     // desert floor: sage and a dry lake
     o += water(R, 98, 122, 58, 72, { g0: 1, grow: 1.12, breaks: 0.6, op: 0.25, w: 0.26 }) + F(poly(ell(110, 61, 6, 1.1, 0, 2 * PI, 20)), 0.06) + P(K.d(ell(110, 61, 6, 1.1, 0, 2 * PI, 20)), 0.3, 0.5);
     o += P(K.d(main), 1.05);
-    o += K.vignetteClose();
-    return o;
+    return finish(K, R, o);
   };
 
   /* ---------------- Donner Lake & Pass: the lake below the granite notch, snowsheds on the cliffs ---------------- */
   B['donner-lake-pass'] = (K) => {
     const R = K.rng('donner-lake-pass'), SH = 46;
     const main = K.ridge(R, [[0, 15], [7, 11], [14, 13], [21, 9.5], [27, 12.5], [33, 8], [36, 7.2], [39, 11], [45, 16], [51, 20.5], [56, 24.5], [59, 25.2], [62, 22.5], [68, 18], [75, 20], [83, 15.5], [92, 18.5], [101, 22], [110, 20.5], [120, 24]], 0.55, 0.7);
-    const nl = K.ridge(R, [[-1, 37], [9, 39], [19, 42], [28, 45.5], [36, 49], [43, 53], [47, 56]], 0.5, 1);
-    const nr = K.ridge(R, [[79, 55], [86, 50.5], [95, 47], [105, 44.5], [114, 42.5], [121, 41]], 0.5, 1);
-    const nlPg = nl.concat([[47, 73], [-1, 73]]), nrPg = nr.concat([[121, 73], [79, 73]]);
+    const nl = K.ridge(R, [[-1, 39], [8, 41], [16, 43.6], [24, 46.4], [31, 48.6]], 0.5, 1);
+    const nr = K.ridge(R, [[89, 48.2], [96, 46.4], [104, 44.8], [112, 43.4], [121, 42.4]], 0.5, 1);
+    const lsh = K.ridge(R, [[31, 48.6], [26, 51.6], [18, 56.4], [9, 61.6], [-1, 66.6]], 0.3, 1.2);
+    const rsh = K.ridge(R, [[89, 48.2], [95, 51.4], [103, 56], [112, 60.6], [121, 64.4]], 0.3, 1.2);
+    const nlPg = nl.concat(lsh.slice(1), [[-1, 73]]), nrPg = nr.slice().reverse().concat(rsh.slice(1), [[121, 73]]);
     const mtn = under(main, SH);
-    let o = K.vignetteOpen();
+    let o = '';
     o += skyRule(K, R, main);
     // granite faces of the crest: hatched shadows, glacier-polished slabs left pale
     o += behind(K, [nlPg, nrPg],
@@ -200,21 +210,21 @@
       hatch(K, R, [[46, 29.6], [53, 28.7], [53.8, 33.6], [45.4, 34.6]], 0, 0.55, 0.6) + P(M(46, 31.2) + L(53.4, 30.4) + M(45.8, 33) + L(53.6, 32) + M(49, 29.2) + L(49.2, 34.2), 0.25, 0.6) +
       P(K.d(main), 1.05));
     // the lake: ruled still water with the crest reflected beneath the far shore
-    const lake = [[-2, SH], [122, SH], [122, 66], [-2, 66]];
-    o += behind(K, [nlPg, nrPg],
-      water(R, 0, 120, SH + 0.7, 66, { g0: 0.62, grow: 1.075, breaks: 0.45 }) +
-      clip(K, lake, P(main.filter((p, i) => i % 2 === 0).map(([x, y]) => M(x, SH + 0.5) + L(x + (R() - 0.5) * 0.6, SH + 0.5 + (SH - y) * 0.32)).join(''), 0.28, 0.4)) +
-      P(M(-2, SH) + L(122, SH), 0.5, 0.85));
-    // near shores: forested ridges framing the lake
-    o += hatch(K, R, nlPg, 42, 0.9, 0.5) + hatch(K, R, nrPg, -42, 1.0, 0.45);
-    o += K.flank(nl, { gap: 0.7, len: 6, w: 0.3, op: 0.7, rng: R }) + K.flank(nr, { gap: 0.9, len: 5, w: 0.3, op: 0.6, rng: R });
-    [[3, 38.6, 7], [7.5, 39.6, 6], [12, 41, 6.4], [16.5, 41.6, 5], [24, 44.3, 4.5], [31, 47.4, 4], [91, 48.6, 5], [98, 46.3, 6], [104, 45.2, 5.5], [111, 43.4, 7], [116, 42.4, 6]].forEach(([x, y, h]) => { o += pine(x, y, h, 0.95, 0.42); });
-    o += P(K.d(nl), 0.8) + P(K.d(nr), 0.8);
-    // foreground: granite boulders at the water's edge
-    o += P(boulder(30, 69, 3.4) + boulder(36, 70.4, 2) + boulder(84, 68.6, 2.8) + boulder(90, 70, 1.8), 0.5, 0.85);
-    o += hatch(K, R, [[31, 66], [33.4, 69], [27, 69]], 64, 0.7, 0.5) + hatch(K, R, [[85.5, 66], [86.8, 68.6], [82, 68.6]], 64, 0.7, 0.5);
-    o += K.vignetteClose();
-    return o;
+    const beach = K.ridge(R, [[-1, 67.6], [20, 66.4], [44, 67.4], [70, 66.2], [96, 67], [121, 66.4]], 0.3, 2);
+    const lake = [[24, SH], [96, SH]].concat(rsh, beach.slice().reverse(), lsh.slice().reverse());
+    o += clip(K, lake,
+      water(R, 0, 120, SH + 0.7, 68, { g0: 0.55, grow: 1.07, breaks: 0.45 }) +
+      P(main.filter((p, i) => i % 2 === 0 && p[0] > 26 && p[0] < 96).map(([x, y]) => M(x, SH + 0.5) + L(x + (R() - 0.5) * 0.6, SH + 0.5 + (SH - y) * 0.3)).join(''), 0.28, 0.4));
+    o += P(M(24, SH) + L(96, SH), 0.5, 0.85);
+    // near shores: forested slopes curving down to the water
+    o += hatch(K, R, nlPg, 42, 1.25, 0.4) + hatch(K, R, nrPg, -42, 1.35, 0.36);
+    o += K.flank(nl, { gap: 0.8, len: 5, w: 0.3, op: 0.6, rng: R }) + K.flank(nr, { gap: 1, len: 4, w: 0.3, op: 0.55, rng: R });
+    [[3, 40.4, 6.4], [8, 41.6, 5], [13.5, 43, 5.6], [21, 45.6, 4], [27, 47.6, 3.4], [93.6, 47.4, 3.6], [100, 46, 4.6], [107, 44.8, 5], [113, 43.6, 6], [118, 43, 5.2], [6, 56, 5], [11, 52.6, 4], [110, 55, 4.6], [116, 57, 5.4]].forEach(([x, y, h]) => { o += pine(x, y, h, 0.95, 0.4); });
+    o += P(K.d(nl), 0.8) + P(K.d(nr), 0.8) + P(K.d(lsh) + K.d(rsh), 0.5, 0.9);
+    // foreground beach: granite boulders at the water's edge
+    o += P(K.d(beach), 0.5, 0.85) + P(boulder(30, 70.6, 3.4) + boulder(36, 71.6, 2) + boulder(84, 70.4, 2.8) + boulder(90, 71.6, 1.8), 0.5, 0.85);
+    o += hatch(K, R, [[31, 67.6], [33.4, 70.6], [27, 70.6]], 64, 0.7, 0.5) + hatch(K, R, [[85.5, 68], [86.8, 70.4], [82, 70.4]], 64, 0.7, 0.5);
+    return finish(K, R, o);
   };
 
   /* ---------------- Lake Tahoe: Emerald Bay and Fannette Island, the great lake and the Carson Range beyond ---------------- */
@@ -227,7 +237,7 @@
     const rShore = K.ridge(R, [[66.5, 42.8], [69, 45.6], [73, 49.6], [79, 54.6], [86, 61], [92, 67], [96, 73]], 0.4, 1);
     const lPg = left.concat(lShore.slice(1), [[-1, 73]]), rPg = right.concat([[121, 73]], rShore.slice().reverse());
     const bay = lShore.concat(rShore.slice().reverse());
-    let o = K.vignetteOpen();
+    let o = '';
     o += skyRule(K, R, carson);
     // Carson Range across the lake: pale, snow on the crest
     o += behind(K, [lPg, rPg], K.flank(carson, { gap: 1.1, len: 3.2, base: FS, w: 0.26, op: 0.45, rng: R }) + shade(K, R, carson, { depth: 4, base: FS, op: 0.3, gap: 1, drop: 1 }) + P(K.d(carson), 0.45, 0.6) +
@@ -251,21 +261,20 @@
     o += P(K.d(right), 0.8) + P(K.d(rShore), 0.6, 0.9);
     // framing pines on the overlook
     [[108, 72, 30], [114, 73, 36], [6, 73, 26]].forEach(([x, y, h]) => { o += pine(x, y, h, 1, 0.5); });
-    o += K.vignetteClose();
-    return o;
+    return finish(K, R, o);
   };
 
   /* ---------------- Sierra Buttes: saw-tooth crest and lookout above Lower Sardine Lake ---------------- */
   B['sierra-buttes'] = (K) => {
     const R = K.rng('sierra-buttes'), SH = 50;
-    const crest = K.ridge(R, [[-1, 44], [6, 38], [12, 33], [17, 27], [20, 23], [22.5, 26], [25.5, 19], [28, 22], [31, 15.5], [33.5, 19], [36.5, 13], [39, 16.5], [42, 11], [44.5, 14.5], [47, 10.5], [50, 13], [53, 8], [54.6, 7], [58.6, 6.8], [60.2, 9.6], [62.4, 8.6], [64.6, 13], [67.4, 10.6], [70, 15.6], [73, 13.8], [76.4, 20], [80, 18.4], [84, 25], [90, 30], [98, 35], [108, 40.5], [121, 45]], 0.55, 0.55);
+    const crest = K.ridge(R, [[-1, 45], [7, 41.6], [14, 38.4], [20, 35.4], [25, 31.6], [28, 32.8], [32, 27.4], [35, 28.6], [39, 22.6], [41.5, 23.8], [45, 18.4], [47.5, 19.4], [51, 14], [54.6, 11.2], [56.4, 8.6], [60.4, 8.2], [61.6, 11.4], [63.6, 10.2], [65.2, 14.6], [67, 12.4], [68.6, 18.4], [70.4, 16.8], [72.2, 24.6], [74.6, 22], [77.4, 27.4], [81, 26], [86, 31], [93, 35], [101, 38.6], [110, 42], [121, 45]], 0.5, 0.55);
     const shore = K.ridge(R, [[-1, SH], [20, SH - 0.6], [50, SH - 0.2], [80, SH - 0.8], [121, SH]], 0.3, 2);
     const mtn = under(crest, SH);
-    let o = K.vignetteOpen();
+    let o = '';
     o += skyRule(K, R, crest);
     // rock: deep couloirs and buttresses, shadowed on the right of every spire
     o += shade(K, R, crest, { depth: 28, angle: 74, gap: 0.68, op: 0.62, cross: -24, min: 1.4, drop: 1.2 });
-    o += K.flank(crest, { gap: 0.6, len: 16, base: SH, w: 0.3, op: 0.75, rng: R });
+    o += K.flank(crest, { gap: 0.65, len: 12, base: SH, w: 0.3, op: 0.7, rng: R });
     o += clip(K, mtn, hatch(K, R, [[0, 10], [120, 10], [120, SH], [0, SH]], 84, 1.6, 0.3) +
       // gullies: dark clefts falling from each notch, with snow left white beside them
       P(crest.filter((p, i, a) => i > 0 && i < a.length - 1 && p[1] > a[i - 1][1] && p[1] > a[i + 1][1] && p[1] < 30).map(([x, y]) => M(x, y + 0.6) + 'q' + r2(0.8 + R()) + ' 8 ' + r2(-0.4 + R()) + ' ' + r2(18 + R() * 8)).join(''), 0.55, 0.8));
@@ -273,47 +282,47 @@
     const talus = [[4, SH], [14, 40], [24, 38.6], [34, 40], [48, 37.4], [62, 39], [76, 38], [90, 40.6], [104, 42.6], [116, SH]];
     o += K.stipple(talus, { n: 240, r: 0.3, op: 0.6, rng: R }) + P(M(14, 40) + 'q4 -1.8 10 -1.4' + M(48, 37.4) + 'q6 0.6 14 1.6' + M(76, 38) + 'q6 1 14 2.6', 0.3, 0.6);
     // the fire lookout perched on the summit block, its steel stairs hung on the cliff
-    o += F(poly([[55.3, 6.9], [55.3, 3.9], [58.9, 3.9], [58.9, 6.8]]), 0.12);
-    o += P(M(55.3, 6.9) + L(55.3, 3.9) + L(58.9, 3.9) + L(58.9, 6.8) + M(54.5, 4) + L(56, 2.9) + L(58.2, 2.9) + L(59.7, 4) + M(54.6, 5.6) + L(59.6, 5.6) + M(56.5, 4.6) + L(57.7, 4.6), 0.4);
-    o += P(M(54.6, 5.6) + L(54.6, 6.7) + M(59.6, 5.6) + L(59.6, 6.7) + M(54.4, 7.2) + L(53.4, 8.4) + L(54.4, 9.4) + L(53, 10.8) + L(54, 11.8) + L(52.8, 13.2), 0.3, 0.9);
+    const lk = 1.6; o += F(poly([[56.9, 8.5], [56.9, 5.5], [60.5, 5.5], [60.5, 8.4]]), 0.12);
+    o += '<g transform="translate(' + lk + ' 1.6)">' + P(M(55.3, 6.9) + L(55.3, 3.9) + L(58.9, 3.9) + L(58.9, 6.8) + M(54.5, 4) + L(56, 2.9) + L(58.2, 2.9) + L(59.7, 4) + M(54.6, 5.6) + L(59.6, 5.6) + M(56.5, 4.6) + L(57.7, 4.6), 0.4) +
+      P(M(54.6, 5.6) + L(54.6, 6.7) + M(59.6, 5.6) + L(59.6, 6.7) + M(54.4, 7.2) + L(53.4, 8.4) + L(54.4, 9.4) + L(53, 10.8) + L(54, 11.8) + L(52.8, 13.2), 0.3, 0.9) + '</g>';
     // shore forest
-    for (let x = -1; x < 122; x += 2.2 + R() * 2) { const y = yAt(shore, x) + 0.2; o += pine(x, y, 3 + R() * 3.2, 0.9, 0.34); }
+    for (let x = -1; x < 122; x += 1.6 + R() * 3.4) { if (R() < 0.18) { x += 3; continue; } const y = yAt(shore, x) + 0.2; o += pine(x, y, 2.2 + R() * R() * 6, 0.9, 0.34); }
     o += P(K.d(crest), 1.05);
     // Lower Sardine Lake: still water mirroring the spires
     const lake = [[-2, SH], [122, SH], [122, 66], [-2, 66]];
     o += water(R, 0, 120, SH + 0.7, 65, { g0: 0.62, grow: 1.08, breaks: 0.45 });
-    o += clip(K, lake, P(crest.filter((p, i) => i % 2 === 0 && p[1] < 32).map(([x, y]) => M(x, SH + 1) + L(x + (R() - 0.5), SH + 1 + (SH - y) * 0.36)).join(''), 0.3, 0.38));
+    o += clip(K, lake, P(crest.filter((p, i) => i % 2 === 0 && p[1] < 32).map(([x, y]) => M(x, SH + 1.2) + L(x + (R() - 0.5), SH + 1.2 + (SH - y) * 0.2)).join(''), 0.28, 0.26));
     o += P(K.d(shore), 0.5, 0.9);
     // foreground shore: boulders and a framing fir
     o += P(boulder(16, 70, 3.6) + boulder(23, 71, 2.2) + boulder(98, 69.4, 3) + M(-2, 66.6) + 'Q20 65.4 44 67.2' + M(80, 67) + 'Q100 65.8 122 66.4', 0.5, 0.85);
     o += hatch(K, R, [[17.6, 66.8], [19.6, 70], [13, 70]], 64, 0.7, 0.5);
     o += pine(112, 73, 26, 1, 0.48) + pine(6, 73, 18, 1, 0.45);
-    o += K.vignetteClose();
-    return o;
+    return finish(K, R, o);
   };
 
   /* ---------------- Castle Peak: three volcanic turrets above Donner Summit ---------------- */
   B['castle-peak'] = (K) => {
     const R = K.rng('castle-peak'), j = () => (R() - 0.5) * 0.25;
     const back = K.ridge(R, [[56, 30], [68, 26], [80, 23.5], [92, 24.5], [104, 27.5], [121, 31]], 0.5, 1.1);
-    const slopeL = K.ridge(R, [[-1, 50], [9, 45], [18, 39.5], [26, 33.8], [32, 29.6], [35, 27.6]], 0.6, 1);
-    const crown = [[35.5, 26.6], [36.2, 21], [37.2, 20.6], [37.5, 17], [38.6, 16.8], [38.8, 18], [39.8, 18], [40, 15.6], [41.4, 15.4], [41.8, 17.4], [42.6, 20], [43.4, 22.6], [44.4, 22.4], [44.8, 17], [45.4, 14.2], [46.4, 14], [46.6, 15.6], [47.4, 15.6], [47.6, 13], [48.8, 12.8], [49.2, 14.6], [49.8, 17.4], [50.8, 20.6], [51.8, 20.8], [52.4, 15.6], [53.2, 12.2], [53.6, 10.4], [54.8, 10.2], [55, 11.8], [55.8, 11.8], [56, 9.8], [57.4, 9.6], [57.8, 12], [58.8, 15.2], [60.2, 19], [61.6, 22.4], [63.4, 23.8]].map(([x, y]) => [x + j(), y + j()]);
-    const slopeR = K.ridge(R, [[63.4, 23.8], [69, 25.2], [76, 27.4], [84, 30], [93, 33.6], [103, 37.4], [112, 40], [121, 42]], 0.55, 1);
+    const slopeL = K.ridge(R, [[-1, 50], [9, 45], [18, 39.5], [26, 33.8], [31, 29.6], [34.6, 27]], 0.6, 1);
+    const crown = [[34.6, 27], [35.4, 24], [36, 17.4], [36.4, 13.6], [37.8, 13.2], [38, 14.8], [39.2, 14.8], [39.4, 12.4], [41, 12.2], [41.4, 14.6], [42, 18.6], [42.8, 22.4], [44.2, 22.2], [44.8, 15.6], [45.2, 11.2], [46.6, 10.8], [46.8, 12.6], [47.8, 12.6], [48, 9.8], [49.6, 9.6], [50, 12], [50.6, 16.6], [51.4, 20.6], [52.8, 20.8], [53.4, 14.2], [53.8, 8.6], [54.2, 6.8], [55.8, 6.6], [56, 8.4], [57, 8.4], [57.2, 5.8], [58.8, 5.6], [59.2, 8.2], [59.8, 12.6], [60.8, 17.6], [62.2, 21.6], [64, 23.6]].map(([x, y]) => [x + j(), y + j()]);
+    const slopeR = K.ridge(R, [[64, 23.6], [69, 25.2], [76, 27.4], [84, 30], [93, 33.6], [103, 37.4], [112, 40], [121, 42]], 0.55, 1);
     const sky = slopeL.concat(crown, slopeR), mtn = under(sky, 73);
-    let o = K.vignetteOpen();
+    let o = '';
     o += skyRule(K, R, sky.map(([x, y]) => [x, Math.min(y, x > 56 ? yAt(back, x) : y)]));
     o += behind(K, [mtn], K.flank(back, { gap: 1.1, len: 5, w: 0.28, op: 0.4, rng: R }) + P(K.d(back), 0.45, 0.5));
     // turrets: columnar dark rock, vertical hatching, shadowed on their east faces
-    const turrets = [[35.5, 26.6, 43.4, 22.6], [43.4, 22.4, 51.8, 20.8], [51.8, 20.8, 63.4, 23.8]];
+    const turrets = [[34.6, 27, 43.5, 22.3], [43.5, 22.3, 52.1, 20.7], [52.1, 20.7, 64, 23.6]];
     turrets.forEach(([xa, ya, xb, yb]) => {
       const top = crown.filter((p) => p[0] >= xa - 0.01 && p[0] <= xb + 0.01), pg = top.concat([[xb, 29], [xa, 29]]);
       const mid = top.reduce((a, p) => (p[1] < a[1] ? p : a))[0];
       o += clip(K, pg, hatch(K, R, [[xa, 5], [mid + 0.4, 5], [mid + 0.4, 30], [xa, 30]], 90, 1.15, 0.45) + hatch(K, R, [[mid + 0.4, 5], [xb, 5], [xb, 30], [mid + 0.4, 30]], 86, 0.5, 0.75) + hatch(K, R, [[mid + 0.4, 5], [xb, 5], [xb, 30], [mid + 0.4, 30]], -35, 1.2, 0.4) +
-        P(M(xa, 19.5) + L(xb, 19.8) + M(xa, 23) + L(xb, 23.3) + M(xa, 16.4) + L(xb, 16.2), 0.3, 0.6));
+        P(M(xa, 19.5) + L(xb, 19.8) + M(xa, 23) + L(xb, 23.3) + M(xa, 16.4) + L(xb, 16.2) + M(xa, 13) + L(xb, 12.8) + M(xa, 9.6) + L(xb, 9.8), 0.3, 0.6));
     });
-    o += F(poly(crown.concat([[63.4, 27], [35.5, 28]])), 0.1);
+    o += F(poly(crown.concat([[64, 27], [34.6, 28]])), 0.12);
     // shoulders: talus and long snowfields, the right side in shade
-    const snow = [[[40, 29.6], [46, 28.4], [50, 31.6], [47, 37.4], [43.2, 42], [41.6, 37]], [[56, 27.4], [62, 26.4], [66, 30.6], [61.6, 34.4], [58.6, 39.6], [57.6, 33]], [[72, 31], [79, 30.2], [80.4, 33.4], [76, 35], [73.6, 38.2]]];
+    const snow = [[[42.6, 24.4], [44.2, 24.6], [45, 29], [46.4, 33], [46, 37.6], [44.4, 41], [44, 35], [43.2, 30]], [[51.2, 23.2], [52.8, 23.4], [53.6, 27.6], [55.4, 31], [55, 35.6], [53.4, 38.4], [52.6, 32.6], [51.6, 28]],
+      [[64.6, 26.6], [68, 27.4], [71.6, 29], [70.4, 30.4], [67.6, 30.2], [66, 33.4], [65, 30]], [[30, 34], [32.4, 33.2], [33.4, 36], [32, 39.6], [30.6, 37]], [[76, 30.4], [81.6, 31.6], [79.4, 33], [76.8, 35.2]]];
     o += behind(K, snow,
       hatch(K, R, mtn, 30, 1.5, 0.3) + clip(K, under(sky.filter((p) => p[0] >= 58), 73), hatch(K, R, mtn, 68, 0.9, 0.5)) +
       K.flank(sky, { gap: 0.7, len: 9, w: 0.3, op: 0.65, rng: R }) +
@@ -326,8 +335,7 @@
     o += P(M(-2, 66) + 'C20 62 36 69 56 64.6S90 63 122 65.4', 0.45, 0.6) + P(M(30, 70.6) + 'Q50 65.6 64 67.6T94 66.6', 0.3, 0.6);
     o += scatter(R, [[-2, 62], [122, 61], [122, 73], [-2, 73]], 70, (x, y) => P(tuft(x, y, 0.8 + (y - 60) * 0.06), 0.28, 0.6));
     o += pine(8, 73, 20, 1, 0.45) + pine(113, 73, 24, 1, 0.48);
-    o += K.vignetteClose();
-    return o;
+    return finish(K, R, o);
   };
 
   /* ---------------- Virginia City: the Comstock town hung on the flank of Mount Davidson ---------------- */
@@ -340,7 +348,7 @@
     const town = [[27, 29], [60, 37.6], [94, 47.4], [96, 55], [86, 56.8], [27, 44]];
     const dumps = [[16, 30.6, 9, 7.5], [64, 30.4, 10, 6], [96, 50.4, 12, 8]];
     const dumpPg = dumps.map(([x, y, w, h]) => [[x, y], [x + w, y + 0.4], [x + w + h * 0.9, y + h], [x - h * 0.25, y + h]]);
-    let o = K.vignetteOpen();
+    let o = '';
     o += skyRule(K, R, dav.map(([x, y]) => [x, Math.min(y, x > 66 ? yAt(east, x) : y)]));
     o += behind(K, [mtn], P(K.d(east), 0.45, 0.5) + K.flank(east, { gap: 1.2, len: 3, w: 0.26, op: 0.4, rng: R }));
     // the bare sage slope, hatched; the town and the pale dumps stand out of it
@@ -387,8 +395,7 @@
     // foreground: sage flat and the old road
     o += P(M(-2, 63) + 'C26 58 60 64 122 59', 0.4, 0.6) + P(M(-2, 65) + 'C30 60.4 62 66 122 61', 0.3, 0.45);
     o += scatter(R, [[-2, 56], [40, 52], [70, 60], [122, 62], [122, 73], [-2, 73]], 90, (x, y) => P(tuft(x, y, 0.7 + (y - 55) * 0.07), 0.3, 0.65));
-    o += K.vignetteClose();
-    return o;
+    return finish(K, R, o);
   };
 
   /* ---------------- Humboldt River: the green meander ribbon across the sagebrush basin ---------------- */
@@ -397,7 +404,7 @@
     const fl = K.ridge(R, [[-1, 19.4], [8, 14], [16, 11.6], [26, 13.8], [36, 17.6], [44, HZ]], 0.5, 1);
     const fr = K.ridge(R, [[70, HZ], [80, 16.6], [90, 13.4], [99, 11.4], [108, 13.8], [121, 15.6]], 0.5, 1);
     const fm = K.ridge(R, [[30, HZ], [44, 18.6], [56, 19.2], [70, 18.2], [84, HZ]], 0.3, 1.2);
-    let o = K.vignetteOpen();
+    let o = '';
     o += skyRule(K, R, [[-2, fl[0][1]]].concat(fl.slice(0, -1), fm.filter((p) => p[0] > 44 && p[0] < 70), fr.slice(1)), { gap: 1.8 });
     o += P(K.d(fm), 0.35, 0.45) + K.flank(fm, { gap: 1.6, len: 1.6, base: HZ, w: 0.25, op: 0.35, rng: R });
     [fl, fr].forEach((s) => { o += K.flank(s, { gap: 0.9, len: 6, base: HZ, w: 0.28, op: 0.55, rng: R }) + shade(K, R, s, { depth: 8, base: HZ, op: 0.4, gap: 1 }) + P(K.d(s), 0.6, 0.75); });
@@ -441,8 +448,7 @@
     o += P(line([scr(-36, 1), scr(-36, 30)]) + line([scr(-40, 1), scr(-40, 30)]), 0.4, 0.75) + P(line([scr(-38, 1), scr(-38, 30)]), 0.25, 0.6, ' stroke-dasharray="1 1.4"');
     // sagebrush basin: tufts thinning with distance
     o += scatter(R, [[-2, 24], [122, 24], [122, 73], [-2, 73]], 300, (x, y) => (inside(mLite, x, y) ? '' : P(tuft(x, y, Math.max(0.3, (y - HZ) * 0.03)), 0.25, 0.55)));
-    o += K.vignetteClose();
-    return o;
+    return finish(K, R, o);
   };
 
   /* ---------------- Carlin Trend: terraced open pit, flat-topped waste dumps, leach pads in sage hills ---------------- */
@@ -451,7 +457,7 @@
     const far = K.ridge(R, [[-1, 22], [12, 18.6], [26, 20.4], [40, 17], [56, 19.6], [72, 16.4], [88, 19.4], [104, 17.2], [121, 19.6]], 0.5, 1.1);
     const hills = K.ridge(R, [[-1, 31], [14, 27.4], [30, 29.6], [46, 26.4], [62, 28.6], [78, 25.8], [94, 28.2], [108, 26.4], [121, 28.6]], 0.4, 1.1);
     const hPg = under(hills, 73);
-    let o = K.vignetteOpen();
+    let o = '';
     o += skyRule(K, R, far);
     o += behind(K, [hPg], K.flank(far, { gap: 1.2, len: 3, w: 0.26, op: 0.4, rng: R }) + P(K.d(far), 0.45, 0.5));
     o += hatch(K, R, hPg, 18, 2, 0.22) + K.flank(hills, { gap: 1.1, len: 3, w: 0.28, op: 0.5, rng: R }) + P(K.d(hills), 0.55, 0.75);
@@ -487,7 +493,6 @@
     o += P(M(cx + RX - 1, cy - 2) + 'Q' + (cx + RX + 8) + ' ' + (cy - 4) + ' 84 ' + (38.5 - 0.6) + M(cx - RX + 4, cy - 4) + 'Q16 ' + (cy - 6) + ' 18 37', 0.5, 0.75) + P(M(cx + RX - 1, cy - 1) + 'Q' + (cx + RX + 8.6) + ' ' + (cy - 3) + ' 85 ' + 38.6, 0.3, 0.55);
     o += scatter(R, [[-2, 56], [122, 52], [122, 73], [-2, 73]], 120, (x, y) => (inside(rim, x, y) ? '' : P(tuft(x, y, 0.6 + (y - 50) * 0.06), 0.28, 0.65)));
     o += scatter(R, [[-2, 37], [122, 38], [122, 56], [-2, 58]], 60, (x, y) => (inside(rim, x, y) || inside(lp, x, y) ? '' : P(tuft(x, y, 0.5), 0.25, 0.5)));
-    o += K.vignetteClose();
-    return o;
+    return finish(K, R, o);
   };
 })();

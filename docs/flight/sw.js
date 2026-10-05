@@ -1,5 +1,5 @@
 // AA2735 Window Atlas service worker: app shell (network-first, cached fallback), map tiles/fonts cache-first, live APIs network-only.
-const VERSION = 'wa-v6';
+const VERSION = 'wa-v7';
 const SHELL = 'shell-' + VERSION, TILES = 'tiles-v1', TILE_CAP = 6000;
 const SHELL_FILES = ['index.html', 'manifest.json', 'css/app.css', 'vendor/maplibre/maplibre-gl.js', 'vendor/maplibre/maplibre-gl.css',
   'data/route.js', 'data/rivers.js', 'data/pois.js', 'data/pois-extra.js', 'js/relay-feed.js', 'js/illustrations.js', 'js/engrave-kit.js', 'js/plates-sierra.js', 'js/plates-basin.js', 'js/plates-rockies.js', 'js/geo.js', 'js/relief-contours.js', 'js/relief-engraved.js', 'js/engine.js', 'js/map.js', 'js/map-illustrations.js', 'js/live.js', 'js/ui.js', 'js/main.js',
@@ -37,7 +37,7 @@ self.addEventListener('fetch', (e) => {
     }));
     return;
   }
-  if (url.origin === self.location.origin) e.respondWith(netFirst(req, SHELL, 4500));
+  if (url.origin === self.location.origin) e.respondWith(netFirst(req, SHELL, 9000));
 });
 async function netFirst(req, cacheName, ms) {
   const c = await caches.open(cacheName);

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AA2735 Window Atlas</title>
+<meta name="theme-color" content="#E8EBE4">
+<style>
+  :root { --paper: #E8EBE4; --ink: #1C2629; --ink-2: #4C5A5E; --magenta: #A8336B; }
+  @media (prefers-color-scheme: dark) { :root { --paper: #0E1519; --ink: #D9DED6; --ink-2: #93A0A2; --magenta: #E36FA6; } }
+  html, body { height: 100%; margin: 0; background: var(--paper); color: var(--ink); }
+  body { display: grid; place-items: center; font: 15px/1.5 "B612", system-ui, sans-serif; padding: 0 16px; text-align: center; }
+  p { margin: 0; color: var(--ink-2); letter-spacing: .04em; }
+  a { color: var(--magenta); }
+</style>
+</head>
+<body>
+<!-- The branch URL on raw.githack lags pushes by a few minutes. This page asks GitHub for the branch's
+     newest commit and opens that exact build, so it is always current. -->
+<p id="msg">Opening the newest build…</p>
+<script>
+(function () {
+  var OWNER = 'jburdick-m', REPO = 'TNF_hydro_dash', BRANCH = 'ccr-54893a69-6ojswu';
+  var fallback = 'https://raw.githack.com/' + OWNER + '/' + REPO + '/' + BRANCH + '/docs/flight/index.html';
+  var go = function (base) { location.replace(base + location.search + location.hash); };
+  var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  var t = setTimeout(function () { if (ctl) ctl.abort(); go(fallback); }, 6000);
+  fetch('https://api.github.com/repos/' + OWNER + '/' + REPO + '/commits/' + BRANCH, { headers: { Accept: 'application/vnd.github.sha' }, cache: 'no-store', signal: ctl && ctl.signal })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(function (sha) {
+      clearTimeout(t);
+      sha = sha.trim();
+      if (!/^[0-9a-f]{40}$/.test(sha)) throw new Error('bad sha');
+      go('https://raw.githack.com/' + OWNER + '/' + REPO + '/' + sha + '/docs/flight/index.html');
+    })
+    .catch(function () { clearTimeout(t); go(fallback); });
+})();
+</script>
+</body>
+</html>
